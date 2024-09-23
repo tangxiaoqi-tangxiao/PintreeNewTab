@@ -1,73 +1,34 @@
-# Pintree
+# PintreeNewTab
 
-[English](README.md) | [中文](README.zh.md)
+PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)的开源项目，旨在将浏览器书签作为标签页。通过安装插件将不方便管理的书签转换成一个美观且易用的导航页面。
 
-Pintree is an open-source project that aims to convert browser bookmarks into a navigation website. With just a few simple steps, you can transform your bookmarks into a beautiful and user-friendly navigation page.
+![](Plugin\assets\og.png)
 
-![](https://github.com/Pintree-io/pintree/blob/main/assets/preview.png)
+## 安装和运行
 
-## Features and Goals
+### 步骤 1：下载浏览器书签
 
-- Export browser bookmarks
-- Convert bookmark files to JSON format
-- Generate a static navigation website
-
-## Installation and Running
-
-### Step 1: Download Browser Bookmarks
-
-1. Install the [Pintree Bookmarks Exporter](https://chromewebstore.google.com/detail/pintree-bookmarks-exporte/mjcglnkikjidokobpfdcdmcnfdicojce) extension.
-2. Use the extension to export browser bookmarks and save the JSON file locally.
+1. 安装 [PintreeNewTab](https://chromewebstore.google.com/detail/pintree-bookmarks-exporte/mjcglnkikjidokobpfdcdmcnfdicojce) 插件。
+2. 点击插件图标，就会打开新标签页。
 
 ![](https://github.com/Pintree-io/pintree/blob/main/assets/guide/step1.png)
 
-### Step 2: Fork the Project
+---
 
-1. Visit the [Pintree GitHub repository](https://github.com/Pintree-io/pintree).
-2. Click the `Fork` button in the upper right corner of the page to fork the project to your GitHub account.
-
-![](https://github.com/Pintree-io/pintree/blob/main/assets/guide/step2.png)
-
-### Step 3: Replace the JSON File
-
-1. Open the `pintree` repository in your GitHub account (the one you just forked).
-2. Click on the `json` folder in the repository.
-3. Click the `Upload files` button, select the JSON file you downloaded earlier, and upload it.
-4. Make sure the uploaded file is named `pintree.json`, and select `Commit changes`.
-
-![](https://github.com/Pintree-io/pintree/blob/main/assets/guide/step3.png)
-
-### Step 4: Enable GitHub Pages
-
-1. In your `pintree` repository page, click on `Settings`.
-2. Find the `Pages` option.
-3. In the `Source` dropdown menu, select the `gh-pages` branch and click `Save`.
-4. After a few minutes, your static website will be available at `https://yourusername.github.io/pintree`. Remember to replace `yourusername`.
-
-![](https://github.com/Pintree-io/pintree/blob/main/assets/guide/step4.png)
-
-## Technologies Used
+## 使用技术
 
 - HTML/CSS/JavaScript
-- JSON format processing
-- Static website hosting
+- JSON格式处理
+- 浏览器扩展
 
-## Contribution Guidelines
+## 贡献指南
 
-Contributions are welcome! Please follow these steps to participate in the project:
+欢迎贡献代码和提出建议！请遵循以下步骤参与项目：
 
-1. Fork this repository: https://github.com/Pintree-io/pintree/tree/main
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Submit a Pull Request
+1. Fork 本仓库：https://github.com/Pintree-io/pintree/tree/main
+2. 创建一个新的分支 (`git checkout -b feature/your-feature`)
+3. 提交您的修改 (`git commit -am 'Add some feature'`)
+4. 推送到分支 (`git push origin feature/your-feature`)
+5. 提交一个 Pull Request
 
-Please note that the `main` branch is the source code branch of the project, while the `gh-pages` branch is the branch for the packaged static website code. Develop and submit changes on the `main` branch, and we will be responsible for packaging and publishing the code to the `gh-pages` branch.
-
-## Contact
-
-If you have any questions or suggestions, please contact us through the following ways:
-- Project website: [Pintree](https://pintree.io/)
-- Email: viggo.zw@gmail.com
-
-Thank you for using and supporting Pintree!
+请注意，`main` 分支是项目的源代码分支，而 `gh-pages` 分支是打包出来的静态网站代码分支。请在 `main` 分支上进行开发和提交，然后我们会负责将代码打包并发布到 `gh-pages` 分支。

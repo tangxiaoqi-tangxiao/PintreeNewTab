@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Pintree",
+  "name": "PintreeNewTab",
   "version": "1",
-  "description": "Pintree",
+  "description": " 管理书签",
   "permissions": [
     "bookmarks"
   ],
@@ -21,8 +21,6 @@
       "css": [
         "css/styles.css",
         "css/tailwind.css"
-      ],
-      "js": [
       ]
     }
   ],
