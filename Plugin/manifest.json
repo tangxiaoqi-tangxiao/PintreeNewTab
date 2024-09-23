@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Pintree",
+  "version": "1",
+  "description": "Pintree",
+  "permissions": [
+    "bookmarks"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "css": [
+        "css/styles.css",
+        "css/tailwind.css"
+      ],
+      "js": [
+      ]
+    }
+  ],
+  "action": {
+    "default_title": "书签"
+  },
+  "icons": {
+    "16": "assets/favicon/IMG_202409239328_16x16.png",
+    "48": "assets/favicon/IMG_202409234619_48x48.png",
+    "128": "assets/favicon/IMG_202409238296_128x128.png"
+  }
+}

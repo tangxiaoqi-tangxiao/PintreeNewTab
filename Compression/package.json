@@ -1,0 +1,15 @@
+{
+  "name": "compression",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "html-minifier": "^4.0.0",
+    "terser": "^5.31.6"
+  }
+}
