@@ -1,0 +1,45 @@
+:root {
+  --text-color: #374151;
+  --bg-color: #ffffff;
+}
+
+[data-theme="dark"],
+.dark {
+  --text-color: #8a919b;
+  --bg-color: #111418;
+}
+
+#open {
+  margin-left: 10px;
+}
+
+#modal {
+  background-color: hsla(220, 14%, 4%, 0.616);
+}
+
+#modal>div {
+  width: 20%;
+  height: 10vh;
+  padding: 20px;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+}
+
+#modal>div>div {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#modal>div>div>div {
+  width: 204px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#modal>div>div>div:not(:first-child) {
+  margin-top: 20px;
+}

@@ -1,3 +1,9 @@
+document.addEventListener('DOMContentLoaded', () => {
+    //设置默认打开方式为新标签页
+    openLinkInNewTab();
+});
+
+
 //将浏览器书签节点转换为结构化数据格式
 function bookmarkToStructuredData(bookmarkNode) {
     const { id, title, dateAdded, children } = bookmarkNode;
@@ -503,6 +509,41 @@ document.getElementById('open-sidebar-button')?.addEventListener('click', functi
     var navigation = document.getElementById('navigation').cloneNode(true);
     document.getElementById('sidebar-2').appendChild(navigation);
 });
+
+// modal
+document.addEventListener('DOMContentLoaded', (event) => {
+    const modal = document.getElementById('modal');
+    const openButton = document.getElementById('open');
+
+    openButton.onclick = () => {
+        modal.classList.remove('hidden');
+    };
+
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            modal.classList.add('hidden');
+        }
+    };
+});
+
+//设置新标签页
+function openLinkInNewTab() {
+    const checkbox = document.getElementById('NewTabCheckbox');
+    chrome.storage.sync.get('openInNewTab', (data) => {
+        if (data.openInNewTab) {
+            checkbox.checked = true;
+        } else {
+            checkbox.checked = false;
+        }
+    });
+    checkbox.onclick = () => {
+        if (checkbox.checked) {
+            chrome.storage.sync.set({ 'openInNewTab': true });
+        } else {
+            chrome.storage.sync.set({ 'openInNewTab': false });
+        }
+    }
+}
 
 //更新日期
 document.addEventListener('DOMContentLoaded', (event) => {

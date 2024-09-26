@@ -4,7 +4,9 @@
   "version": "1",
   "description": " 管理书签",
   "permissions": [
-    "bookmarks"
+    "bookmarks",
+    "storage",
+    "tabs"
   ],
   "host_permissions": [
     "<all_urls>"
