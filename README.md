@@ -1,8 +1,20 @@
 # PintreeNewTab
 
+[中文](README.md) | [English](README_en.md)
+
 PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)的开源项目，旨在将浏览器书签作为标签页。通过安装插件将不方便管理的书签转换成一个美观且易用的导航页面。
 
 ![](.github/imgs/og.png)
+
+## 支持语言
+
+- 简体中文
+- 繁体中文
+- 英文
+- 日文
+- 俄语
+- 韩语
+- 德语
 
 ## 安装和运行
 
@@ -26,7 +38,6 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)的
 ![](.github/imgs/屏幕截图-2024-09-24-143305.png)
 
 ![](.github/imgs/屏幕截图-2024-09-24-142600.png)
----
 
 ## 使用技术
 

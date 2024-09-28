@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTab는 북마크를 탐색 페이지로 변환하여 쉽게 보고 찾을 수 있게 해줍니다."
+    },
+    "appTitle": {
+        "message": "북마크"
+    },
+    "setNewTab": {
+        "message": "새 탭 설정"
+    },
+    "search": {
+        "message": "검색..."
+    },
+    "clear": {
+        "message": "지우기"
+    },
+    "closeSidebar": {
+        "message": "사이드바 닫기"
+    },
+    "nope": {
+        "message": "여기에는 아무것도 없습니다!"
+    },
+    "searchTips": {
+        "message": "다른 키워드로 검색해 보거나 다른 기능을 시도해 보세요!"
+    },
+    "searchResults": {
+        "message": "검색 결과"
+    },
+    "errorSearch": {
+        "message": "검색 결과를 지우는 중 오류가 발생했습니다"
+    },
+    "errorSearchBookmark": {
+        "message": "북마크를 검색하는 중 오류가 발생했습니다"
+    },
+    "errorLoadingBookmarks": {
+        "message": "북마크를 로드하는 중 오류가 발생했습니다"
+    }
+}
