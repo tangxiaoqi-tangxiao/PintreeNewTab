@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTabはブックマークをナビゲーションページに変換し、簡単に閲覧や検索ができます。"
+    },
+    "appTitle": {
+        "message": "ブックマーク"
+    },
+    "setNewTab": {
+        "message": "新しいタブを設定"
+    },
+    "search": {
+        "message": "検索..."
+    },
+    "clear": {
+        "message": "クリア"
+    },
+    "closeSidebar": {
+        "message": "サイドバーを閉じる"
+    },
+    "nope": {
+        "message": "ここには何もありません!"
+    },
+    "searchTips": {
+        "message": "別のキーワードで検索するか、他の機能を試してみてください!"
+    },
+    "searchResults": {
+        "message": "検索結果"
+    },
+    "errorSearch": {
+        "message": "検索結果のクリア中にエラーが発生しました"
+    },
+    "errorSearchBookmark": {
+        "message": "ブックマークを検索中にエラーが発生しました"
+    },
+    "errorLoadingBookmarks": {
+        "message": "ブックマークの読み込み中にエラーが発生しました"
+    }
+}

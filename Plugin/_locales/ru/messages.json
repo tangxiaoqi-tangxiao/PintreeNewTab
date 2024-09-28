@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTab превращает закладки в навигационную страницу, что облегчает просмотр и поиск."
+    },
+    "appTitle": {
+        "message": "Закладки"
+    },
+    "setNewTab": {
+        "message": "Настроить новую вкладку"
+    },
+    "search": {
+        "message": "Поиск..."
+    },
+    "clear": {
+        "message": "Очистить"
+    },
+    "closeSidebar": {
+        "message": "Закрыть боковую панель"
+    },
+    "nope": {
+        "message": "Здесь ничего нет!"
+    },
+    "searchTips": {
+        "message": "Попробуйте поискать другое ключевое слово или испытайте другие функции!"
+    },
+    "searchResults": {
+        "message": "Результаты поиска"
+    },
+    "errorSearch": {
+        "message": "Ошибка при очистке результатов поиска"
+    },
+    "errorSearchBookmark": {
+        "message": "Ошибка при поиске закладок"
+    },
+    "errorLoadingBookmarks": {
+        "message": "Ошибка при загрузке закладок"
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTab can turn bookmarks into a navigation page for easy viewing and searching."
+    },
+    "appTitle": {
+        "message": "Bookmarks"
+    },
+    "setNewTab": {
+        "message": "Set New Tab"
+    },
+    "search": {
+        "message": "Search..."
+    },
+    "clear": {
+        "message": "Clear"
+    },
+    "closeSidebar": {
+        "message": "Close Sidebar"
+    },
+    "nope": {
+        "message": "There's nothing here!"
+    },
+    "searchTips": {
+        "message": "Try searching with a different keyword or explore other features!"
+    },
+    "searchResults": {
+        "message": "Search Results"
+    },
+    "errorSearch": {
+        "message": "Error clearing search results"
+    },
+    "errorSearchBookmark": {
+        "message": "Error searching bookmarks"
+    },
+    "errorLoadingBookmarks": {
+        "message": "Error loading bookmarks"
+    }
+}

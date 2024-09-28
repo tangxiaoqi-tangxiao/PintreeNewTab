@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTab 可以將書籤轉為導航頁，方便查看和查找。"
+    },
+    "appTitle": {
+        "message": "書籤"
+    },
+    "setNewTab": {
+        "message": "設定新標籤頁"
+    },
+    "search": {
+        "message": "搜尋..."
+    },
+    "clear": {
+        "message": "清除"
+    },
+    "closeSidebar": {
+        "message": "關閉側邊欄"
+    },
+    "nope": {
+        "message": "這裡什麼都沒有!"
+    },
+    "searchTips": {
+        "message": "可以嘗試換一個關鍵詞搜尋，或者試試其他功能吧!"
+    },
+    "searchResults": {
+        "message": "搜尋結果"
+    },
+    "errorSearch": {
+        "message": "清除搜尋結果時出錯"
+    },
+    "errorSearchBookmark": {
+        "message": "搜尋書籤時出錯"
+    },
+    "errorLoadingBookmarks": {
+        "message": "載入書籤時出錯"
+    }
+}

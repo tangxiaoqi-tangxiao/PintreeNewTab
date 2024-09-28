@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    //国际化
+    i18n();
     //设置默认打开方式为新标签页
     openLinkInNewTab();
 });
@@ -29,6 +31,11 @@ async function fetchBookmarks() {
             const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
             resolve(structuredBookmarks);
         });
+        // fetch('json/pintree.json')
+        //     .then(response => response.json())
+        //     .then((data) => {
+        //         resolve(data);
+        //     });
     });
 }
 
@@ -70,9 +77,9 @@ function searchBookmarks(query) {
     fetchBookmarks()
         .then(data => {
             const results = searchInData(data, query.toLowerCase());
-            renderBookmarks(results, [{ title: '搜索结果', children: results }]);
+            renderBookmarks(results, [{ title: chrome.i18n.getMessage("searchResults"), children: results }]);
         })
-        .catch(error => console.error('搜索书签时出错:', error));
+        .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
 }
 
 function searchInData(data, query) {
@@ -106,7 +113,7 @@ function clearSearchResults() {
             document.getElementById('searchInput').value = '';
             document.getElementById('clearSearchButton').classList.add('hidden');
         })
-        .catch(error => console.error('清除搜索结果时出错:', error));
+        .catch(error => console.error(`${chrome.i18n.getMessage("errorSearch")}:`, error));
 }
 
 document.getElementById('clearSearchButton').addEventListener('click', clearSearchResults);
@@ -115,10 +122,10 @@ function searchBookmarks(query) {
     fetchBookmarks()
         .then(data => {
             const results = searchInData(data, query.toLowerCase());
-            renderBookmarks(results, [{ title: '搜索结果', children: results }]);
+            renderBookmarks(results, [{ title: chrome.i18n.getMessage("searchResults"), children: results }]);
             document.getElementById('clearSearchButton').classList.remove('hidden');
         })
-        .catch(error => console.error('Error searching bookmarks:', error));
+        .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
 }
 
 // Create bookmark card element
@@ -329,11 +336,11 @@ function showNoResultsMessage() {
 
     const title = document.createElement('h2');
     title.className = 'text-gray-500 text-xl font-semibold mt-4';
-    title.innerText = '这里什么都没有!';
+    title.textContent = chrome.i18n.getMessage("nope");
 
     const message = document.createElement('p');
     message.className = 'text-gray-500 mt-2';
-    message.innerText = '可以尝试换一个关键词搜索，或者试试其他功能吧!';
+    message.textContent = chrome.i18n.getMessage("searchTips");
 
 
     messageContainer.appendChild(icon);
@@ -411,7 +418,7 @@ fetchBookmarks()
             renderBookmarks(firstItem.children, [{ title: 'Bookmark', children: firstLayer }, { title: firstItem.title, children: firstItem.children }]);
         }
     })
-    .catch(error => console.error('Error loading bookmarks:', error));
+    .catch(error => console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error));
 
 // Search functionality on pressing Enter
 document.getElementById('searchInput').addEventListener('keydown', function (event) {
@@ -477,7 +484,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         })
         .catch(error => {
-            console.error('Error loading bookmarks:', error);
+            console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error);
             // Optionally hide the spinner and show an error message
             document.getElementById('loading-spinner').style.display = 'none';
         });
@@ -551,3 +558,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const currentYear = new Date().getFullYear();
     yearElement.textContent = currentYear;
 });
+
+// i18n 多语言国际化
+function i18n() {
+    document.getElementById("setNewTab_i18n").textContent = chrome.i18n.getMessage("setNewTab");
+    let appName_i18ns = [...document.getElementsByClassName("appName_i18n")];
+    appName_i18ns.forEach((item) => {
+        item.textContent = chrome.i18n.getMessage("appName");
+    });
+    document.getElementById("searchInput").setAttribute("placeholder", chrome.i18n.getMessage("search"));
+    document.getElementById("clear_i18n").textContent = chrome.i18n.getMessage("clear");
+    document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
+}

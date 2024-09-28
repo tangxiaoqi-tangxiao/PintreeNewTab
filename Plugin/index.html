@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PintreeNewTab</title>
+  <title class="appName_i18n"></title>
   <meta name="keywords" content="Pintree, Bookmarks, Link Management, Export Bookmarks, Website Bookmarks">
   <meta name="description"
     content="Pintree is a powerful tool that helps you manage and export your browser bookmarks, converting them into an aesthetically pleasing website that is easy to share and access.">
@@ -38,7 +38,7 @@
           <!-- Close button for the off-canvas menu -->
           <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
             <button id="close-sidebar-button" type="button" class="-m-2.5 p-2.5">
-              <span class="sr-only">Close sidebar</span>
+              <span class="sr-only" id="closeSidebar_i18n"></span>
               <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
                 aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -50,7 +50,7 @@
           <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:pintree-bg-gray-900 px-6 pb-4">
             <div class="flex h-16 shrink-0 items-center">
               <img class="pl-2 h-8 w-auto" src="assets/logo.svg" alt="Pintree">
-              <a href="" class="ml-4 font-extrabold text-2xl dark:text-white">PintreeNewTab</a>
+              <a href="" class="ml-4 font-extrabold text-2xl dark:text-white"><span class="appName_i18n">PintreeNewTab</span></a>
             </div>
             <div id="sidebar-2" class="flex flex-1 flex-col">
               <!-- Sidebar content will be injected here -->
@@ -66,7 +66,7 @@
         class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
         <div class="flex p-0 h-16 shrink-0 items-center">
           <img class="pl-2 h-8 w-auto" src="assets/logo.svg" alt="Pintree">
-          <a href="" class="ml-4 font-extrabold text-lg dark:text-white">PintreeNewTab</a>
+          <a href="" class="ml-4 font-extrabold text-lg dark:text-white"><span class="appName_i18n">PintreeNewTab</span></a>
         </div>
         <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
           <div id="sidebar" class="flex flex-1 flex-col">
@@ -96,11 +96,11 @@
               </button>
               <input id="searchInput" type="search"
                 class="text-sm text-gray-900 dark:text-gray-400 pl-8 h-full border-0 focus:outline-none focus:ring-0 dark:pintree-bg-gray-900"
-                placeholder="搜索...">
-              <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden">清除</button>
+                placeholder="">
+              <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden"><span id="clear_i18n"></span></button>
             </div>
           </div>
-          <a href="" class="lg:hidden ml-4 font-extrabold text-2xl dark:text-white">PintreeNewTab</a>
+          <a href="" class="lg:hidden ml-4 font-extrabold text-2xl dark:text-white"><span class="appName_i18n"></span></a>
           <div class="relative">
             <button id="themeToggleButton" type="button" aria-label="Switch theme"
               class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
@@ -190,7 +190,7 @@
                     </clipPath>
                   </defs>
                 </svg>
-                PintreeNewTab
+                <span class="appName_i18n"></span>
               </a>
             </p>
           </div>
@@ -203,7 +203,7 @@
       <div class="bg-white p-5 rounded shadow-md">
         <div>
           <div>
-            <label for="NewTabCheckbox">设置为新标签页</label>
+            <label for="NewTabCheckbox"><span id="setNewTab_i18n"></span></label>
             <input type="checkbox" class="form-checkbox" id="NewTabCheckbox" style="margin-left: auto;">
           </div>
         </div>

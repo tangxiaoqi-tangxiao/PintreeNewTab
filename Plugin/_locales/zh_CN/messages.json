@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTab 可以将书签转为导航页，方便查看和查找。"
+    },
+    "appTitle": {
+        "message": "书签"
+    },
+    "setNewTab": {
+        "message": "设置新标签页"
+    },
+    "search": {
+        "message": "搜索..."
+    },
+    "clear": {
+        "message": "清除"
+    },
+    "closeSidebar": {
+        "message": "关闭侧边栏"
+    },
+    "nope": {
+        "message": "这里什么都没有!"
+    },
+    "searchTips": {
+        "message": "可以尝试换一个关键词搜索，或者试试其他功能吧!"
+    },
+    "searchResults": {
+        "message": "搜索结果"
+    },
+    "errorSearch": {
+        "message": "清除搜索结果时出错"
+    },
+    "errorSearchBookmark": {
+        "message": "搜索书签时出错"
+    },
+    "errorLoadingBookmarks": {
+        "message": "加载书签时出错"
+    }
+}

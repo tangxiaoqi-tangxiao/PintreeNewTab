@@ -1,0 +1,41 @@
+{
+    "appName": {
+        "message": "PintreeNewTab"
+    },
+    "appDesc": {
+        "message": "PintreeNewTab verwandelt Lesezeichen in eine Navigationsseite, die das Anzeigen und Suchen erleichtert."
+    },
+    "appTitle": {
+        "message": "Lesezeichen"
+    },
+    "setNewTab": {
+        "message": "Neuen Tab festlegen"
+    },
+    "search": {
+        "message": "Suche..."
+    },
+    "clear": {
+        "message": "Löschen"
+    },
+    "closeSidebar": {
+        "message": "Seitenleiste schließen"
+    },
+    "nope": {
+        "message": "Hier ist nichts!"
+    },
+    "searchTips": {
+        "message": "Versuchen Sie, ein anderes Schlüsselwort zu suchen, oder probieren Sie andere Funktionen aus!"
+    },
+    "searchResults": {
+        "message": "Suchergebnisse"
+    },
+    "errorSearch": {
+        "message": "Fehler beim Löschen der Suchergebnisse"
+    },
+    "errorSearchBookmark": {
+        "message": "Fehler bei der Suche nach Lesezeichen"
+    },
+    "errorLoadingBookmarks": {
+        "message": "Fehler beim Laden der Lesezeichen"
+    }
+}
