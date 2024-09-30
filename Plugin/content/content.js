@@ -613,7 +613,7 @@ function ContextMenu(e, bookmarkId) {
             posX = windowWidth + scrollX - menuWidth - (IsScrollY ? fixedValue : 10);
         }
 
-        if (posY + menuHeight > windowHeight + scrollY - (IsScrollX ? fixedValue : 10)) {
+        if (posY + menuHeight > (windowHeight + scrollY) - (IsScrollX ? fixedValue : 10)) {
             posY = windowHeight + scrollY - menuHeight - (IsScrollX ? fixedValue : 10);
         }
 
