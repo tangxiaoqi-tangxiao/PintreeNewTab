@@ -242,7 +242,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                 container.appendChild(subList);
 
                 if (isFirstRender && index === 0) {
-                    // Expand the first item on initial render
+                    // 在初始渲染时展开第一个项目
                     subList.classList.remove('hidden');
                     if (subList.children.length > 0) {
                         toggleIcon.classList.toggle('rotate-90');
@@ -253,8 +253,9 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                     e.stopPropagation();
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
                     navItem.classList.add('sidebar-active');
-                    subList.classList.toggle('hidden');
+
                     if (subList.children.length > 0) {
+                        subList.classList.toggle('hidden');
                         toggleIcon.classList.toggle('rotate-90');
                     }
                     renderBookmarks(folder.children, path.concat({ title: folder.title, children: folder.children }));
