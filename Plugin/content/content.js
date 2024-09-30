@@ -30,15 +30,15 @@ function bookmarkToStructuredData(bookmarkNode) {
 
 async function fetchBookmarks() {
     return new Promise((resolve) => {
-        chrome.bookmarks.getTree((bookmarks) => {
-            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
-            resolve(structuredBookmarks);
-        });
-        // fetch('json/pintree.json')
-        //     .then(response => response.json())
-        //     .then((data) => {
-        //         resolve(data);
-        //     });
+        // chrome.bookmarks.getTree((bookmarks) => {
+        //     const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
+        //     resolve(structuredBookmarks);
+        // });
+        fetch('json/pintree.json')
+            .then(response => response.json())
+            .then((data) => {
+                resolve(data);
+            });
     });
 }
 
@@ -605,12 +605,16 @@ function ContextMenu(e, bookmarkId) {
         const scrollX = window.scrollX;
         const scrollY = window.scrollY;
 
-        if (posX + menuWidth > (windowWidth + scrollX) - (scrollY > 0 ? 25 : 0)) {
-            posX = windowWidth + scrollX - menuWidth - (scrollY > 0 ? 25 : 10);
+        let IsScrollY = window.innerHeight < document.documentElement.scrollHeight;
+        let IsScrollX = window.innerWidth < document.documentElement.scrollWidth;
+
+        const fixedValue = 25;// 固定值，防止菜单超出窗口边界（滚动条宽度+距离滚动条宽度）
+        if (posX + menuWidth > (windowWidth + scrollX) - (IsScrollY ? fixedValue : 10)) {
+            posX = windowWidth + scrollX - menuWidth - (IsScrollY ? fixedValue : 10);
         }
 
-        if (posY + menuHeight > windowHeight + scrollY - (scrollX > 0 ? 25 : 0)) {
-            posY = windowHeight + scrollY - menuHeight - (scrollX > 0 ? 25 : 10);
+        if (posY + menuHeight > windowHeight + scrollY - (IsScrollX ? fixedValue : 10)) {
+            posY = windowHeight + scrollY - menuHeight - (IsScrollX ? fixedValue : 10);
         }
 
         contextMenu.style.top = `${posY}px`;
