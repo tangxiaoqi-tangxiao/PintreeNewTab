@@ -1,3 +1,5 @@
+let DelCardList = [];//记录被删除的书签节点
+
 document.addEventListener('DOMContentLoaded', () => {
     //国际化
     i18n();
@@ -28,16 +30,15 @@ function bookmarkToStructuredData(bookmarkNode) {
 
 async function fetchBookmarks() {
     return new Promise((resolve) => {
-        // chrome.bookmarks.getTree((bookmarks) => {
-        //     console.log(bookmarks);
-        //     const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
-        //     resolve(structuredBookmarks);
-        // });
-        fetch('json/pintree.json')
-            .then(response => response.json())
-            .then((data) => {
-                resolve(data);
-            });
+        chrome.bookmarks.getTree((bookmarks) => {
+            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
+            resolve(structuredBookmarks);
+        });
+        // fetch('json/pintree.json')
+        //     .then(response => response.json())
+        //     .then((data) => {
+        //         resolve(data);
+        //     });
     });
 }
 
@@ -130,7 +131,7 @@ function searchBookmarks(query) {
         .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
 }
 
-// Create bookmark card element
+// 创建书签卡元素
 function createCard(link) {
     const { title, url, icon, id } = link;
     const card = document.createElement('div');
@@ -171,7 +172,7 @@ function createCard(link) {
     return card;
 }
 
-// Create folder card element
+// 创建文件夹卡片元素
 function createFolderCard(title, children, path) {
     const card = document.createElement('div');
     card.className = 'folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
@@ -270,7 +271,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
     });
 }
 
-// Render breadcrumbs for navigation
+// 为导航渲染面包屑
 function renderBreadcrumbs(path) {
     const breadcrumbsPath = document.getElementById('breadcrumbs-path');
     breadcrumbsPath.innerHTML = ''; // Clear previous breadcrumbs
@@ -297,7 +298,7 @@ function renderBreadcrumbs(path) {
     });
 }
 
-// Update the active state of sidebar items
+// 更新侧边栏项的活动状态
 function updateSidebarActiveState(path) {
     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
 
@@ -324,7 +325,7 @@ function updateSidebarActiveState(path) {
     });
 }
 
-// Show a message when no search results are found
+// 未找到搜索结果时显示消息
 function showNoResultsMessage() {
     const container = document.getElementById('bookmarks');
     container.innerHTML = ''; // Clear previous content
@@ -364,11 +365,12 @@ function renderBookmarks(data, path) {
     // Render breadcrumbs
     renderBreadcrumbs(path);
 
-    // Separate folders and links
+    // 单独的文件夹和链接
     const folders = data.filter(item => item.type === 'folder');
     // const links = data.filter(item => item.type === 'link').sort((a, b) => b.addDate - a.addDate);
     const links = data.filter(item => item.type === 'link');
 
+    // 如果没有文件夹和链接，显示未找到搜索结果的消息
     if (folders.length === 0 && links.length === 0) {
         showNoResultsMessage();
         return;
@@ -396,7 +398,8 @@ function renderBookmarks(data, path) {
     if (links.length > 0) {
         const linkSection = document.createElement('div');
         linkSection.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-6';
-        links.forEach(link => {
+        //过滤已删除的书签，之后再创建书签卡片
+        links.filter(item => !DelCardList.includes(item.id)).forEach(link => {
             const card = createCard(link);
             linkSection.appendChild(card);
         });
@@ -410,14 +413,14 @@ function renderBookmarks(data, path) {
 // 获取和渲染数据
 fetchBookmarks()
     .then(data => {
-        // Use the first layer of the data directly
+        // 直接使用第一层数据
         const firstLayer = data;
-        // Render navigation using the first layer of data
+        // 使用第一层数据渲染导航
         renderNavigation(firstLayer, document.getElementById('navigation'), true);
-        // Render bookmarks using the first layer of data, starting from the Bookmark
+        // 使用第一层数据渲染书签，从书签开始
         renderBookmarks(firstLayer, [{ title: 'Bookmark', children: firstLayer }]);
 
-        // Automatically select and show the first item
+        // 自动选择并显示第一项
         if (firstLayer.length > 0) {
             const firstItem = firstLayer[0];
             updateSidebarActiveState([{ title: firstItem.title, children: firstItem.children }]);
@@ -600,8 +603,6 @@ function ContextMenu(e, bookmarkId) {
 
         const scrollX = window.scrollX;
         const scrollY = window.scrollY;
-        console.log(scrollX, (scrollX > 0 ? 20 : 10));
-
 
         if (posX + menuWidth > (windowWidth + scrollX) - (scrollY > 0 ? 25 : 0)) {
             posX = windowWidth + scrollX - menuWidth - (scrollY > 0 ? 25 : 10);
@@ -622,6 +623,7 @@ function ContextMenu(e, bookmarkId) {
                 return;
             }
             chrome.bookmarks.remove(bookmarkId, function () {
+                DelCardList.push(bookmarkId);
                 //删除书签后移除元素
                 const targetElement = e.target.closest('.card_bookmarks');
                 if (targetElement) {
