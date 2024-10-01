@@ -250,6 +250,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                 }
 
                 navItem.onclick = (e) => {
+                    closeMenu();//关闭右键菜单
                     e.stopPropagation();
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
                     navItem.classList.add('sidebar-active');
@@ -589,6 +590,9 @@ function ContextMenu(e, bookmarkId) {
     {
         e.preventDefault();
 
+        let IsScrollY = window.innerHeight < document.documentElement.scrollHeight;
+        let IsScrollX = window.innerWidth < document.documentElement.scrollWidth;
+
         // 提前显示菜单，否则可能获取不到菜单宽高
         contextMenu.style.display = 'block';
 
@@ -605,15 +609,13 @@ function ContextMenu(e, bookmarkId) {
         const scrollX = window.scrollX;
         const scrollY = window.scrollY;
 
-        let IsScrollY = window.innerHeight < document.documentElement.scrollHeight;
-        let IsScrollX = window.innerWidth < document.documentElement.scrollWidth;
-
         const fixedValue = 25;// 固定值，防止菜单超出窗口边界（滚动条宽度+距离滚动条宽度）
-        if (posX + menuWidth > (windowWidth + scrollX) - (IsScrollY ? fixedValue : 10)) {
+        if (posX + menuWidth > (windowWidth + scrollX)) {
+            console.log(IsScrollY, (IsScrollY ? fixedValue : 10), window.innerHeight, document.documentElement.scrollHeight)
             posX = windowWidth + scrollX - menuWidth - (IsScrollY ? fixedValue : 10);
         }
 
-        if (posY + menuHeight > (windowHeight + scrollY) - (IsScrollX ? fixedValue : 10)) {
+        if (posY + menuHeight > (windowHeight + scrollY)) {
             posY = windowHeight + scrollY - menuHeight - (IsScrollX ? fixedValue : 10);
         }
 
@@ -644,22 +646,24 @@ function ContextMenu(e, bookmarkId) {
 
     //关闭菜单
     {
-        const closeMenu = (event) => {
-            if (event.type == "contextmenu") {
-                const targetElement = event.target.closest('.card_bookmarks');
-                // 判断点击的目标是否为指定元素
-                if (!targetElement) {
-                    contextMenu.style.display = 'none'; // 关闭自定义菜单
-                }
-            } else {
-                contextMenu.style.display = 'none';
-            }
-        };
         // 添加多个事件监听器来关闭菜单
         document.onclick = closeMenu;
         document.onscroll = closeMenu; // 捕获所有滚动事件
         document.onkeydown = closeMenu; // 按下任意键关闭菜单
         document.oncontextmenu = closeMenu; // 按下任意键关闭菜单
         window.onresize = closeMenu; // 窗口大小改变时关闭菜单
+    }
+}
+
+function closeMenu(event) {
+    const contextMenu = document.getElementById('context-menu');
+    if (event && event.type == "contextmenu") {
+        const targetElement = event.target.closest('.card_bookmarks');
+        // 判断点击的目标是否为指定元素
+        if (!targetElement) {
+            contextMenu.style.display = 'none'; // 关闭自定义菜单
+        }
+    } else {
+        contextMenu.style.display = 'none';
     }
 }
