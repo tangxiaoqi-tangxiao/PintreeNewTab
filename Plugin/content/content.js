@@ -30,15 +30,15 @@ function bookmarkToStructuredData(bookmarkNode) {
 
 async function fetchBookmarks() {
     return new Promise((resolve) => {
-        // chrome.bookmarks.getTree((bookmarks) => {
-        //     const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
-        //     resolve(structuredBookmarks);
-        // });
-        fetch('json/pintree.json')
-            .then(response => response.json())
-            .then((data) => {
-                resolve(data);
-            });
+        chrome.bookmarks.getTree((bookmarks) => {
+            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
+            resolve(structuredBookmarks);
+        });
+        // fetch('json/pintree.json')
+        //     .then(response => response.json())
+        //     .then((data) => {
+        //         resolve(data);
+        //     });
     });
 }
 
@@ -133,11 +133,11 @@ function searchBookmarks(query) {
 
 // 创建书签卡元素
 function createCard(link) {
-    const { title, url, icon, id } = link;
+    const { title, url, icon } = link;
     const card = document.createElement('div');
     card.className = 'card_bookmarks cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
     card.onclick = () => window.open(url, '_blank'); // Make the whole card clickable
-    card.oncontextmenu = (e) => ContextMenu(e, id);
+    card.oncontextmenu = (e) => ContextMenu(e, link);
 
     const cardIcon = document.createElement('img');
     cardIcon.src = icon || 'assets/default-icon.svg'; // Use provided icon or default icon
@@ -583,7 +583,8 @@ function i18n() {
 }
 
 //右键菜单
-function ContextMenu(e, bookmarkId) {
+function ContextMenu(e, link) {
+    let { id, url } = link;
     const contextMenu = document.getElementById('context-menu');
 
     // 右键菜单逻辑
@@ -611,7 +612,6 @@ function ContextMenu(e, bookmarkId) {
 
         const fixedValue = 25;// 固定值，防止菜单超出窗口边界（滚动条宽度+距离滚动条宽度）
         if (posX + menuWidth > (windowWidth + scrollX)) {
-            console.log(IsScrollY, (IsScrollY ? fixedValue : 10), window.innerHeight, document.documentElement.scrollHeight)
             posX = windowWidth + scrollX - menuWidth - (IsScrollY ? fixedValue : 10);
         }
 
@@ -626,17 +626,20 @@ function ContextMenu(e, bookmarkId) {
     //菜单事件
     {
         document.getElementById("del").onclick = () => {
-            if (bookmarkId == "" || bookmarkId == "0") {
+            if (id == "" || id == "0") {
                 return;
             }
-            chrome.bookmarks.remove(bookmarkId, function () {
-                DelCardList.push(bookmarkId);
+            chrome.bookmarks.remove(id, function () {
+                DelCardList.push(id);
                 //删除书签后移除元素
                 const targetElement = e.target.closest('.card_bookmarks');
                 if (targetElement) {
                     targetElement.remove();
                 }
             });
+        }
+        document.getElementById("copy").onclick = () => {
+            copyToClipboard(url);
         }
     }
 
@@ -654,7 +657,7 @@ function ContextMenu(e, bookmarkId) {
         window.onresize = closeMenu; // 窗口大小改变时关闭菜单
     }
 }
-
+//关闭右键菜单
 function closeMenu(event) {
     const contextMenu = document.getElementById('context-menu');
     if (event && event.type == "contextmenu") {
@@ -665,5 +668,17 @@ function closeMenu(event) {
         }
     } else {
         contextMenu.style.display = 'none';
+    }
+}
+
+async function copyToClipboard(text) {
+    if (navigator.clipboard) {
+        try {
+            await navigator.clipboard.writeText(text);
+        } catch (err) {
+            console.error('无法复制', err);
+        }
+    } else {
+        console.log('浏览器不支持复制到剪贴板');
     }
 }

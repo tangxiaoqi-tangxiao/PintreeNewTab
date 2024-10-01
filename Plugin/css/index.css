@@ -99,6 +99,10 @@
   align-items: center;
 }
 
+#context-menu li:not(:first-child){
+  margin-top: 5px;
+}
+
 #context-menu li svg {
   display: inline-block;
   size: 2px;
