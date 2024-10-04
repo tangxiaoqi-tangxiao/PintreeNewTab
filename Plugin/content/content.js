@@ -34,15 +34,15 @@ function bookmarkToStructuredData(bookmarkNode) {
 
 async function fetchBookmarks() {
     return new Promise((resolve) => {
-        // chrome.bookmarks.getTree((bookmarks) => {
-        //     const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
-        //     resolve(structuredBookmarks);
-        // });
-        fetch('json/pintree.json')
-            .then(response => response.json())
-            .then((data) => {
-                resolve(data);
-            });
+        chrome.bookmarks.getTree((bookmarks) => {
+            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
+            resolve(structuredBookmarks);
+        });
+        // fetch('json/pintree.json')
+        //     .then(response => response.json())
+        //     .then((data) => {
+        //         resolve(data);
+        //     });
     });
 }
 

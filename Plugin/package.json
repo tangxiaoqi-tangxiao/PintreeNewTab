@@ -2,7 +2,8 @@
   "name": "plugin",
   "version": "1.0.0",
   "scripts": {
-    "watch:css": "tailwindcss -i ./css/index.css -o ./css/tailwind.css --watch"
+    "watch:css": "tailwindcss -i ./css/index.css -o ./css/tailwind.css --watch",
+    "build:css": "tailwindcss -i ./css/index.css -o ./css/tailwind.css --minify"
   },
   "keywords": [],
   "author": "",
