@@ -4,7 +4,7 @@
 
 PintreeNewTab is an open-source project based on [Pintree](https://github.com/Pintree-io/pintree), designed to turn browser bookmarks into a tab page. By installing the extension, inconveniently managed bookmarks are transformed into a beautiful and user-friendly navigation page.
 
-![](.github/imgs/og.png)
+![cover](.github/imgs/og.png)
 
 ## Supported Languages
 

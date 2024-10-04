@@ -1,3 +1,5 @@
+import { fetchFaviconAsBase64 } from "./utils.js"
+
 let DelCardList = [];//记录被删除的书签节点
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -5,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     i18n();
     //设置默认打开方式为新标签页
     openLinkInNewTab();
+
+    // fetchFaviconAsBase64("https://registry.hub.docker.com/")
 });
 
 
@@ -30,15 +34,15 @@ function bookmarkToStructuredData(bookmarkNode) {
 
 async function fetchBookmarks() {
     return new Promise((resolve) => {
-        chrome.bookmarks.getTree((bookmarks) => {
-            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
-            resolve(structuredBookmarks);
-        });
-        // fetch('json/pintree.json')
-        //     .then(response => response.json())
-        //     .then((data) => {
-        //         resolve(data);
-        //     });
+        // chrome.bookmarks.getTree((bookmarks) => {
+        //     const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
+        //     resolve(structuredBookmarks);
+        // });
+        fetch('json/pintree.json')
+            .then(response => response.json())
+            .then((data) => {
+                resolve(data);
+            });
     });
 }
 
@@ -76,14 +80,14 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Search functionality
-function searchBookmarks(query) {
-    fetchBookmarks()
-        .then(data => {
-            const results = searchInData(data, query.toLowerCase());
-            renderBookmarks(results, [{ title: chrome.i18n.getMessage("searchResults"), children: results }]);
-        })
-        .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
-}
+// function searchBookmarks(query) {
+//     fetchBookmarks()
+//         .then(data => {
+//             const results = searchInData(data, query.toLowerCase());
+//             renderBookmarks(results, [{ title: chrome.i18n.getMessage("searchResults"), children: results }]);
+//         })
+//         .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
+// }
 
 function searchInData(data, query) {
     let results = [];
@@ -121,6 +125,7 @@ function clearSearchResults() {
 
 document.getElementById('clearSearchButton').addEventListener('click', clearSearchResults);
 
+// 搜索书签
 function searchBookmarks(query) {
     fetchBookmarks()
         .then(data => {

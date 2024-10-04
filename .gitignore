@@ -129,4 +129,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+# 排除项目中不需要的文件
 *.zip
+css/tailwind.css
