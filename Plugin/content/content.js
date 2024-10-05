@@ -1,4 +1,4 @@
-import { fetchFaviconAsBase64 } from "./utils.js"
+import { fetchFaviconAsBase64, debounce } from "./utils.js"
 
 let DelCardList = [];//记录被删除的书签节点
 
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //设置关闭右键菜单
     CloseContextMenu();
 
+    name();
     // fetchFaviconAsBase64("https://registry.hub.docker.com/")
 });
 
@@ -531,7 +532,7 @@ document.getElementById('open-sidebar-button')?.addEventListener('click', functi
     document.getElementById('sidebar-2').appendChild(navigation);
 });
 
-// modal
+// 设置modal
 document.addEventListener('DOMContentLoaded', (event) => {
     const modal = document.getElementById('modal');
     const openButton = document.getElementById('open');
@@ -636,6 +637,7 @@ function ContextMenu(e, link) {
 
     //菜单事件
     {
+        //删除书签
         document.getElementById("del").onclick = () => {
             if (id == "" || id == "0") {
                 return;
@@ -649,8 +651,27 @@ function ContextMenu(e, link) {
                 }
             });
         }
+        //复制书签链接
         document.getElementById("copy").onclick = () => {
             copyToClipboard(url);
+        }
+        //编辑书签
+        document.getElementById("openEditBookmark").onclick = () => {
+            if (id == "" || id == "0") {
+                return;
+            }
+            const editBookmark = document.getElementById('editBookmark');
+            const editCancel = document.getElementById('editCancel');
+            editBookmark.classList.remove('hidden');
+
+            editBookmark.onclick = (e) => {
+                if (e.target === editBookmark) {
+                    editBookmark.classList.add('hidden');
+                }
+            };
+            editCancel.onclick = () => {
+                editBookmark.classList.add('hidden');
+            };
         }
     }
 
@@ -668,6 +689,7 @@ function ContextMenu(e, link) {
         window.onresize = closeMenu; // 窗口大小改变时关闭菜单
     }
 }
+
 //关闭右键菜单
 function closeMenu(event) {
     const contextMenu = document.getElementById('context-menu');
@@ -682,6 +704,7 @@ function closeMenu(event) {
     }
 }
 
+//拷贝到剪贴板
 async function copyToClipboard(text) {
     if (navigator.clipboard) {
         try {
@@ -692,4 +715,76 @@ async function copyToClipboard(text) {
     } else {
         console.log('浏览器不支持复制到剪贴板');
     }
+}
+
+//书签编辑
+function name() {
+    const websiteLink = document.getElementById('websiteLink');
+    const websiteName = document.getElementById('websiteName');
+    const iconName = document.getElementById('iconName');
+    const iconName2 = document.getElementById('iconName2');
+    const icons = [...document.getElementsByClassName('icon')];
+    const imageInput = document.getElementById('imageInput');
+    const localPreviewImage = document.getElementById('localPreviewImage');
+    const localPreviewSvg = document.getElementById('localPreviewSvg');
+    const PreviewImage = document.getElementById('PreviewImage');
+    const PreviewSvg = document.getElementById('PreviewSvg');
+
+    //同步icon
+    iconName.oninput = (event) => {
+        iconName2.textContent = event.target.value;
+    }
+
+    //同步网站icon
+    const debouncedSearch = debounce(async (event) => {
+        let data = await fetchFaviconAsBase64(event.target.value);
+        if (data != null) {
+            PreviewImage.src = data;
+            PreviewSvg.classList.add('hidden');
+            PreviewImage.classList.remove('hidden');
+        } else {
+            PreviewSvg.classList.remove('hidden');
+            PreviewImage.classList.add('hidden');
+        }
+    }, 1000);
+    websiteLink.oninput = debouncedSearch;
+
+    //选项卡切换
+    icons.forEach((item) => {
+        item.onclick = () => {
+            icons.forEach((icon) => {
+                icon.classList.remove('border-blue-400');
+            });
+            item.classList.add('border-blue-400');
+
+            if (item.classList.contains('image')) {
+                imageInput.click();
+            }
+        }
+    });
+
+    //上传图片
+    // 为文件选择器添加change事件监听器
+    imageInput.addEventListener('change', function (event) {
+        // 获取选中的文件
+        const file = event.target.files[0];
+
+        // 确保文件存在
+        if (file) {
+            // 创建一个FileReader来读取文件
+            const reader = new FileReader();
+
+            // 读取文件成功后的回调函数
+            reader.onload = function (e) {
+                // 将读取到的文件内容设置为图片的src属性，以预览图片
+                localPreviewImage.src = e.target.result;
+                localPreviewImage.classList.remove('hidden');
+                localPreviewSvg.classList.add('hidden');
+
+            };
+
+            // 读取文件
+            reader.readAsDataURL(file);
+        }
+    });
 }

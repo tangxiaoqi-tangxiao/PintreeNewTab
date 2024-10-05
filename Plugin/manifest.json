@@ -2,12 +2,11 @@
   "manifest_version": 3,
   "name": "__MSG_appName__",
   "version": "1.0.1",
-  "description": " __MSG_appDesc__",
+  "description": "__MSG_appDesc__",
   "default_locale": "en",
   "permissions": [
     "bookmarks",
-    "storage",
-    "tabs"
+    "storage"
   ],
   "host_permissions": [
     "<all_urls>"

@@ -18,14 +18,14 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)的
 
 ## 安装和运行
 
-### Edge浏览器(目前只能和Chrome浏览器一样安装，扩展还在审核中)
+### Edge/Chrome浏览器(目前Edge浏览器还在审核)
 
-1. 安装 [PintreeNewTab](https://github.com/tangxiaoqi-tangxiao/PintreeNewTab) 插件。
+1. 安装 Edge([PintreeNewTab](https://chromewebstore.google.com/detail/ekfkalhnkifkoijcioheanlegfgcgnee)) Chrome([PintreeNewTab](https://chromewebstore.google.com/detail/ekfkalhnkifkoijcioheanlegfgcgnee)) 插件。
 2. 点击插件图标，就会打开新标签页。
 
 ![图片](.github/imgs/屏幕截图-2024-09-24-142600.png)
 
-### chrome浏览器
+### 手动安装和更新
 
 1. 下载dist.zip文件后解压
 ![图片](.github/imgs/屏幕截图-2024-09-24-145943.png)

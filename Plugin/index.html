@@ -11,10 +11,6 @@
   <meta name="author" content="Pintree">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab">
-
-  <!-- css -->
-  <link rel="stylesheet" href="css/index.css">
-
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
@@ -215,6 +211,89 @@
     </div>
   </div>
 
+  <!-- 编辑书签 -->
+  <div id="editBookmark" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg ">
+      <div class="grid grid-cols-2 gap-4 p-5">
+        <!-- 左侧信息编辑 -->
+        <div>
+          <h2 class="text-xl font-bold mb-4">信息编辑</h2>
+          <p class="text-gray-600 mb-2">输入网站链接后会自动获取首页图标，个别网站或国外网站可能会获取不成功</p>
+          <label class="block mb-1">网站链接</label>
+          <input id="websiteLink" type="text" placeholder="请输入网站链接" value=""
+            class="border border-gray-300 rounded-md p-2 w-full mb-4" />
+
+          <label class="block mb-1">网站名称</label>
+          <input id="websiteName" type="text" placeholder="请输入网站名称"
+            class="border border-gray-300 rounded-md p-2 w-full" />
+        </div>
+
+        <!-- 右侧图标编辑 -->
+        <div>
+          <h2 class="text-xl font-bold mb-4">图标编辑</h2>
+          <label class="block mb-1">图标选择</label>
+          <div class="flex mb-4">
+            <div class="flex flex-col justify-center items-center mr-2">
+              <div
+                class="icon cursor-pointer hover:border-blue-400 bg-green-500 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                <span id="iconName2"
+                  class="text-white border-inherit w-11 h-5 overflow-hidden text-sm text-center"></span>
+              </div>
+              <span>文字</span>
+            </div>
+            <div class="flex flex-col justify-center items-center mr-2">
+              <div
+                class="icon cursor-pointer hover:border-blue-400 bg-white w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                <img id="PreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
+                <svg id="PreviewSvg" class="w-10 h-10" viewBox="0 0 172 216" fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0_39_3460)">
+                    <path d="M65 164H107V216L86 195.806L65 216V164Z" fill="#FCB11E" />
+                    <path d="M155 103L86 0L17 103H40.3539L0 164H172L131.646 103H155Z" fill="#0BA665" />
+                  </g>
+                </svg>
+              </div>
+              <span>官方</span>
+            </div>
+            <div class="flex flex-col justify-center items-center mr-2">
+              <div
+                class="icon image cursor-pointer hover:border-blue-400 bg-white w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                <img id="localPreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
+                <svg id="localPreviewSvg" class="w-10 h-10 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24"
+                  height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-image-up">
+                  <path
+                    d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21" />
+                  <path d="m14 19.5 3-3 3 3" />
+                  <path d="M17 22v-5.5" />
+                  <circle cx="9" cy="9" r="2" />
+                </svg>
+              </div>
+              <span>上传</span>
+            </div>
+          </div>
+
+          <label class="block mb-1">图标颜色</label>
+          <div class="flex mb-4">
+            <span class="bg-blue-500 w-8 h-8 rounded-full mr-2 cursor-pointer"></span>
+            <span class="bg-purple-500 w-8 h-8 rounded-full mr-2 cursor-pointer"></span>
+            <span class="bg-orange-500 w-8 h-8 rounded-full mr-2 cursor-pointer"></span>
+            <span class="bg-green-500 w-8 h-8 rounded-full cursor-pointer"></span>
+          </div>
+
+          <label class="block mb-1">图标名称</label>
+          <input id="iconName" type="text" placeholder="请输入图标文字" class="border border-gray-300 rounded-md p-2 w-full" />
+        </div>
+      </div>
+      <!-- 按钮居中 -->
+      <div class="flex justify-center mt-4 mb-2">
+        <button class="bg-blue-500 text-white rounded-md px-4 py-2 mr-2">保存</button>
+        <button id="editCancel" class="bg-gray-300 rounded-md px-4 py-2">取消</button>
+      </div>
+    </div>
+    <input type="file" id="imageInput" accept="image/*" style="display: none;" />
+  </div>
+
   <!-- 鼠标右键 -->
   <div id="context-menu">
     <ul>
@@ -228,6 +307,19 @@
           </svg>
         </div>
         <span>复制地址</span>
+      </li>
+      <li id="openEditBookmark">
+        <div>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-file-pen-line">
+            <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
+            <path
+              d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+            <path d="M8 18h1" />
+          </svg>
+        </div>
+        <span>编辑书签</span>
       </li>
       <li id="del">
         <div>
