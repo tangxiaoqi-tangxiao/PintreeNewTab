@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "书签"
     },
-    "setNewTab": {
-        "message": "设置新标签页"
+    "setContextMenu": {
+        "message": "关闭右键菜单"
     },
     "search": {
         "message": "搜索..."

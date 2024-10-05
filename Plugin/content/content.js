@@ -5,12 +5,11 @@ let DelCardList = [];//记录被删除的书签节点
 document.addEventListener('DOMContentLoaded', () => {
     //国际化
     i18n();
-    //设置默认打开方式为新标签页
-    openLinkInNewTab();
+    //设置关闭右键菜单
+    CloseContextMenu();
 
     // fetchFaviconAsBase64("https://registry.hub.docker.com/")
 });
-
 
 //将浏览器书签节点转换为结构化数据格式
 function bookmarkToStructuredData(bookmarkNode) {
@@ -45,7 +44,6 @@ async function fetchBookmarks() {
         //     });
     });
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
     // Variables for sidebar elements
@@ -142,7 +140,7 @@ function createCard(link) {
     const card = document.createElement('div');
     card.className = 'card_bookmarks cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
     card.onclick = () => window.open(url, '_blank'); // Make the whole card clickable
-    card.oncontextmenu = (e) => ContextMenu(e, link);
+    card.oncontextmenu = (e) => ContextMenuSet(e, link);
 
     const cardIcon = document.createElement('img');
     cardIcon.src = icon || 'assets/default-icon.svg'; // Use provided icon or default icon
@@ -550,10 +548,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 });
 
 //设置新标签页
-function openLinkInNewTab() {
-    const checkbox = document.getElementById('NewTabCheckbox');
-    chrome.storage.sync.get('openInNewTab', (data) => {
-        if (data.openInNewTab) {
+function CloseContextMenu() {
+    const checkbox = document.getElementById('ContextMenuCheckbox');
+    chrome.storage.sync.get('ContextMenu', (data) => {
+        if (data.ContextMenu) {
             checkbox.checked = true;
         } else {
             checkbox.checked = false;
@@ -561,9 +559,9 @@ function openLinkInNewTab() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            chrome.storage.sync.set({ 'openInNewTab': true });
+            chrome.storage.sync.set({ 'ContextMenu': true });
         } else {
-            chrome.storage.sync.set({ 'openInNewTab': false });
+            chrome.storage.sync.set({ 'ContextMenu': false });
         }
     }
 }
@@ -577,7 +575,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // i18n 多语言国际化
 function i18n() {
-    document.getElementById("setNewTab_i18n").textContent = chrome.i18n.getMessage("setNewTab");
+    document.getElementById("setContextMenu_i18n").textContent = chrome.i18n.getMessage("setContextMenu");
     let appName_i18ns = [...document.getElementsByClassName("appName_i18n")];
     appName_i18ns.forEach((item) => {
         item.textContent = chrome.i18n.getMessage("appName");
@@ -587,6 +585,16 @@ function i18n() {
     document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
 }
 
+//读取配置判断是否显示右键菜单
+function ContextMenuSet(e, link) {
+    e.preventDefault();//阻止默认菜单显示
+    chrome.storage.sync.get('ContextMenu', (data) => {
+        if (!data.ContextMenu) {
+            ContextMenu(e, link);
+        }
+    });
+}
+
 //右键菜单
 function ContextMenu(e, link) {
     let { id, url } = link;
@@ -594,8 +602,6 @@ function ContextMenu(e, link) {
 
     // 右键菜单逻辑
     {
-        e.preventDefault();
-
         let IsScrollY = window.innerHeight < document.documentElement.scrollHeight;
         let IsScrollX = window.innerWidth < document.documentElement.scrollWidth;
 

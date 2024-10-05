@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "Закладки"
     },
-    "setNewTab": {
-        "message": "Настроить новую вкладку"
+    "setContextMenu": {
+        "message": "Закрыть контекстное меню"
     },
     "search": {
         "message": "Поиск..."

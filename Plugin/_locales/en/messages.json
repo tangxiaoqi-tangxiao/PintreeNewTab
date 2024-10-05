@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "Bookmarks"
     },
-    "setNewTab": {
-        "message": "Set New Tab"
+    "setContextMenu": {
+        "message": "Close context menu"
     },
     "search": {
         "message": "Search..."

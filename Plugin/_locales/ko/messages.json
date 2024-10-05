@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "북마크"
     },
-    "setNewTab": {
-        "message": "새 탭 설정"
+    "setContextMenu": {
+        "message": "우클릭 메뉴 닫기"
     },
     "search": {
         "message": "검색..."

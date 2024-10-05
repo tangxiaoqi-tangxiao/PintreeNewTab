@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "書籤"
     },
-    "setNewTab": {
-        "message": "設定新標籤頁"
+    "setContextMenu": {
+        "message": "關閉右鍵選單"
     },
     "search": {
         "message": "搜尋..."

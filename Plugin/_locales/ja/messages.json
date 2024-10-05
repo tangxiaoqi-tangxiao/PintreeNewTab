@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "ブックマーク"
     },
-    "setNewTab": {
-        "message": "新しいタブを設定"
+    "setContextMenu": {
+        "message": "右クリックメニューを閉じる"
     },
     "search": {
         "message": "検索..."

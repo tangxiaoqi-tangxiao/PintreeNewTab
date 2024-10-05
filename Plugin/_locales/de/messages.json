@@ -8,8 +8,8 @@
     "appTitle": {
         "message": "Lesezeichen"
     },
-    "setNewTab": {
-        "message": "Neuen Tab festlegen"
+    "setContextMenu": {
+        "message": "Kontextmenü schließen"
     },
     "search": {
         "message": "Suche..."

@@ -23,21 +23,21 @@ PintreeNewTab is an open-source project based on [Pintree](https://github.com/Pi
 1. Install the [PintreeNewTab](https://github.com/tangxiaoqi-tangxiao/PintreeNewTab) extension.
 2. Click the extension icon to open a new tab.
 
-![](.github/imgs/屏幕截图-2024-09-24-142600.png)
+![image](.github/imgs/屏幕截图-2024-09-24-142600.png)
 
 ### Chrome Browser
 
 1. Download the dist.zip file and unzip it.
-![](.github/imgs/屏幕截图-2024-09-24-145943.png)
+![image](.github/imgs/屏幕截图-2024-09-24-145943.png)
 
 2. Open Chrome, go to the chrome://extensions/ page, enable Developer mode, and click "Load unpacked" to select the unzipped folder.
-![](.github/imgs/屏幕截图-2024-09-24-150336.png)
+![image](.github/imgs/屏幕截图-2024-09-24-150336.png)
 
 3. Click the extension icon to open a new tab.
 
-![](.github/imgs/屏幕截图-2024-09-24-143305.png)
+![image](.github/imgs/屏幕截图-2024-09-24-143305.png)
 
-![](.github/imgs/屏幕截图-2024-09-24-142600.png)
+![image](.github/imgs/屏幕截图-2024-09-24-142600.png)
 
 ## Technologies Used
 
