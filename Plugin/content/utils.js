@@ -3,7 +3,7 @@ async function fetchFaviconAsBase64(url) {
         try {
             if (!isValidUrl(url)) return null;
             // 获取网站的 HTML 源代码
-            fetchWithTimeout(url, {}, 3000)
+            fetchWithTimeout(url, {}, 5000)
                 .then(response => response.text())
                 .then(async text => {
                     // 使用 DOMParser 来解析 HTML
@@ -35,16 +35,10 @@ async function fetchFaviconAsBase64(url) {
 
                     if (isImageBlob(blob)) {//判断是否是图片
                         // 读取 Blob 数据并转换为 Base64
-                        const base64 = await new Promise((resolve, reject) => {
-                            const reader = new FileReader();
-                            reader.onloadend = () => resolve(reader.result);
-                            reader.onerror = reject;
-                            reader.readAsDataURL(blob); // 将 Blob 转换为 Base64
-                        });
-
-                        resolve(base64);
+                        const base64 = await convertBlobToBase64(blob);
+                        resolve({ base64, title: doc.title });
                     } else {
-                        resolve(null);
+                        resolve({ base64: null, title: doc.title });
                     }
                 }).catch(error => {
                     // console.error('Error fetching favicon:', error);
@@ -135,6 +129,122 @@ function fetchWithTimeout(url, options, timeout = 3000) {
 }
 
 /**
+ * 在树结构中查找满足条件的节点
+ * @param {Object} node - 树中的节点
+ * @param {function} predicate - 用于测试节点是否满足条件的函数
+ * @returns {Object|null} - 找到的第一个满足条件的节点，如果未找到则返回 null
+ */
+function findInTree(node, predicate) {
+    // 如果 node 是数组，遍历数组中的每个元素
+    if (Array.isArray(node)) {
+        for (let item of node) {
+            const result = findInTree(item, predicate);
+            if (result) {
+                return result;
+            }
+        }
+    } else {
+        // 检查当前节点是否满足条件函数
+        if (predicate(node)) {
+            return node;
+        }
+
+        // 如果当前节点有子节点，递归查找子节点
+        if (node.children && node.children.length > 0) {
+            for (let child of node.children) {
+                const result = findInTree(child, predicate);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+    }
+
+    // 如果未找到，返回 null
+    return null;
+}
+
+/**
+ * 从树结构中删除满足条件的节点
+ * @param {Object} node - 树中的节点
+ * @param {function} predicate - 用于测试节点是否满足条件的函数
+ * @returns {boolean} - 如果找到并删除了节点，返回 true；否则返回 false
+ */
+function deleteFromTree(node, predicate) {
+    // 如果 node 是数组，遍历数组中的每个元素
+    if (Array.isArray(node)) {
+        for (let i = 0; i < node.length; i++) {
+            if (predicate(node[i])) {
+                // 如果找到匹配的节点，从数组中删除
+                node.splice(i, 1);
+                return true; // 删除成功，返回 true
+            } else {
+                // 递归处理子节点
+                deleteFromTree(node[i], predicate);
+            }
+        }
+    } else {
+        // 如果 node 是单个对象
+        if (node.children && node.children.length > 0) {
+            for (let i = 0; i < node.children.length; i++) {
+                if (predicate(node.children[i])) {
+                    // 如果找到匹配的节点，从 children 中删除
+                    node.children.splice(i, 1);
+                    return true; // 删除成功，返回 true
+                } else {
+                    // 递归处理子节点
+                    deleteFromTree(node.children[i], predicate);
+                }
+            }
+        }
+    }
+
+    // 如果未找到匹配项，返回 false
+    return false;
+}
+
+/**
+ * 在树结构中添加一个新节点
+ * @param {Object} node - 树中的节点
+ * @param {function} predicate - 用于测试节点是否满足条件的函数
+ * @param {Object} newNode - 要添加的新节点
+ * @returns {boolean} - 如果成功添加了新节点，返回 true；否则返回 false
+ */
+function addToTree(node, predicate, newNode) {
+    // 如果 node 是数组，遍历数组中的每个元素
+    if (Array.isArray(node)) {
+        for (let item of node) {
+            // 递归检查每个子节点
+            if (addToTree(item, predicate, newNode)) {
+                return true; // 添加成功，停止递归
+            }
+        }
+    } else {
+        // 如果当前节点满足 predicate 条件，添加新节点到当前节点的 children
+        if (predicate(node)) {
+            // 确保 node 有 children 属性
+            if (!node.children) {
+                node.children = [];
+            }
+            node.children.push(newNode);
+            return true; // 添加成功，返回 true
+        }
+
+        // 如果当前节点有子节点，继续递归查找
+        if (node.children && node.children.length > 0) {
+            for (let child of node.children) {
+                if (addToTree(child, predicate, newNode)) {
+                    return true; // 添加成功，停止递归
+                }
+            }
+        }
+    }
+
+    // 如果没有找到符合条件的节点，返回 false
+    return false;
+}
+
+/**
  * 压缩图像到指定大小
  * @param {File} file - 要压缩的图像文件
  * @param {number} targetSize - 目标大小，单位为KB
@@ -199,4 +309,27 @@ function isImageBlob(blob) {
     return /^image\//.test(type);
 }
 
-export { fetchFaviconAsBase64, debounce };
+/**
+ * 将 Blob 对象转换为 Base64 编码字符串
+ * @param {Blob} blob - 要转换的 Blob 对象
+ * @returns {Promise<string>} - 解析为 Base64 编码字符串的 Promise
+ * @throws {Error} - 如果在转换过程中发生错误，则抛出错误
+ */
+function convertBlobToBase64(blob) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        // 读取Blob并转换为Data URL
+        reader.onloadend = () => {
+            resolve(reader.result);
+        };
+
+        reader.onerror = (error) => {
+            reject('Error converting Blob to Base64: ' + error);
+        };
+
+        reader.readAsDataURL(blob);
+    });
+}
+
+export { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree ,convertBlobToBase64,compressImageToTargetSize};

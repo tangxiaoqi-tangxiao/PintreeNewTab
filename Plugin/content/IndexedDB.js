@@ -1,59 +1,142 @@
 class IndexedDBHelper {
-    constructor(dbName, version) {
+    constructor(dbName, version = 1) {
         this.dbName = dbName;
         this.version = version;
         this.db = null;
-        this.request = indexedDB.open(dbName, version);
     }
 
-    // 处理数据库打开成功事件
-    onsuccess = (event) => {
-        this.db = event.target.result;
-        console.log('Database opened successfully');
-    }
+    // 打开数据库
+    openDB(storeName) {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(this.dbName, this.version);
 
-    // 处理数据库升级事件
-    onupgradeneeded = (event) => {
-        const db = event.target.result;
-        db.createObjectStore('storeName', { keyPath: 'id', autoIncrement: true });
-        console.log('Database upgraded successfully');
-    }
+            request.onupgradeneeded = (event) => {
+                this.db = event.target.result;
+                if (!this.db.objectStoreNames.contains(storeName)) {
+                    this.db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+                }
+            };
 
-    // 处理错误事件
-    onerror = (event) => {
-        console.error('Database error:', event.target.errorCode);
+            request.onsuccess = (event) => {
+                this.db = event.target.result;
+                resolve(this.db);
+            };
+
+            request.onerror = (event) => {
+                reject(`打开数据库失败: ${event.target.error}`);
+            };
+        });
     }
 
     // 添加数据
-    addData = (data, storeName, key) => {
-        const transaction = this.db.transaction([storeName], 'readwrite');
-        const store = transaction.objectStore(storeName);
-        const request = store.add(data, key);
-        request.onsuccess = () => console.log('Data added successfully');
-        request.onerror = (event) => console.error('Error adding data:', event.target.errorCode);
+    addData(storeName, data) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], "readwrite");
+            const store = transaction.objectStore(storeName);
+            const request = store.add(data);
+
+            request.onsuccess = () => {
+                resolve("数据添加成功");
+            };
+
+            request.onerror = (event) => {
+                reject(`添加数据失败: ${event.target.error}`);
+            };
+        });
     }
 
     // 获取数据
-    getData = (key, storeName) => {
-        const transaction = this.db.transaction([storeName], 'readonly');
-        const store = transaction.objectStore(storeName);
-        const request = store.get(key);
-        request.onsuccess = (event) => {
-            if (event.target.result) {
-                console.log('Data retrieved successfully', event.target.result);
-            } else {
-                console.log('Data not found');
-            }
-        };
-        request.onerror = (event) => console.error('Error retrieving data:', event.target.errorCode);
+    getData(storeName, id) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName]);
+            const store = transaction.objectStore(storeName);
+            const request = store.get(id);
+
+            request.onsuccess = (event) => {
+                resolve(event.target.result);
+            };
+
+            request.onerror = (event) => {
+                reject(`获取数据失败: ${event.target.error}`);
+            };
+        });
+    }
+
+    // 获取所有数据
+    getAllData(storeName) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName]);
+            const store = transaction.objectStore(storeName);
+            const request = store.getAll();
+
+            request.onsuccess = (event) => {
+                resolve(event.target.result);
+            };
+
+            request.onerror = (event) => {
+                reject(`获取所有数据失败: ${event.target.error}`);
+            };
+        });
+    }
+
+    // 更新数据
+    updateData(storeName, data) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], "readwrite");
+            const store = transaction.objectStore(storeName);
+            const request = store.put(data);
+
+            request.onsuccess = () => {
+                resolve("数据更新成功");
+            };
+
+            request.onerror = (event) => {
+                reject(`更新数据失败: ${event.target.error}`);
+            };
+        });
     }
 
     // 删除数据
-    deleteData = (key, storeName) => {
-        const transaction = this.db.transaction([storeName], 'readwrite');
-        const store = transaction.objectStore(storeName);
-        const request = store.delete(key);
-        request.onsuccess = () => console.log('Data deleted successfully');
-        request.onerror = (event) => console.error('Error deleting data:', event.target.errorCode);
+    deleteData(storeName, id) {
+        return new Promise((resolve, reject) => {
+            const transaction = this.db.transaction([storeName], "readwrite");
+            const store = transaction.objectStore(storeName);
+            const request = store.delete(id);
+
+            request.onsuccess = () => {
+                resolve("数据删除成功");
+            };
+
+            request.onerror = (event) => {
+                reject(`删除数据失败: ${event.target.error}`);
+            };
+        });
+    }
+
+    // 关闭数据库
+    closeDB() {
+        if (this.db) {
+            this.db.close();
+            this.db = null;
+        }
+    }
+
+    // 删除数据库
+    deleteDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.deleteDatabase(this.dbName);
+
+            request.onsuccess = () => {
+                resolve("数据库删除成功");
+            };
+
+            request.onerror = (event) => {
+                reject(`删除数据库失败: ${event.target.error}`);
+            };
+        });
     }
 }
+
+const dbHelper = new IndexedDBHelper('Database', 1);
+dbHelper.openDB('Icons');
+export default dbHelper;
