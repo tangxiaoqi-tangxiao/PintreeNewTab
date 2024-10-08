@@ -679,15 +679,32 @@ function ContextMenu(e, link) {
             const editCancel = document.getElementById('editCancel');
             const editSave = document.getElementById('editSave');
             const localPreviewImage = document.getElementById('localPreviewImage');
-            const icon = document.getElementsByClassName('icon');
+            const icon = [...document.getElementsByClassName('icon')];
             const PreviewImage = document.getElementById('PreviewImage');
             const refreshIcon = document.getElementById("refreshIcon");
+            const defaultIcon = document.getElementById("defaultIcon");
+            const defaultImage = document.getElementById("defaultImage");
 
             // 显示编辑书签模态框
             editBookmark.classList.remove('hidden');
-            //默认官方图标选中
-            icon[0].classList.add("border-blue-400");
-            icon[1].classList.remove("border-blue-400");
+            //
+            db.getData("Icons", id).then((data) => {
+                if (data) {
+                    defaultImage.src = data.base64;
+                    defaultIcon.classList.remove("hidden");
+                    icon.forEach((item) => {
+                        item.classList.remove("border-blue-400");
+                    });
+                    icon[0].classList.add("border-blue-400");
+                } else {
+                    defaultIcon.classList.add("hidden");
+                    //默认官方图标选中
+                    icon.forEach((item) => {
+                        item.classList.remove("border-blue-400");
+                    });
+                    icon[1].classList.add("border-blue-400");
+                }
+            });
             //删除本地上传图片
             localPreviewImage.src = "";
             //删除网络图片
@@ -709,8 +726,8 @@ function ContextMenu(e, link) {
                 const targetElement = e.target.closest('.card_bookmarks');
                 SaveBookmark(id, targetElement);
             }
-            //刷新网络图标点击事件
-            refreshIcon.onclick = () => {
+            //刷新网络图标双击事件
+            refreshIcon.ondblclick = () => {
                 fetchFaviconAsBase64(url)
                     .then((data) => {
                         if (data && data.base64) {
@@ -923,11 +940,16 @@ function SaveBookmark(id, element) {
             if (node.id === id) {
                 node.title = websiteName.value;
                 node.url = websiteLink.value;
+                //覆盖之前打开新页面的事件
+                element.onclick = () => {
+                    window.open(websiteLink.value, '_blank');
+                }
 
                 //更新当前元素
                 linkText.textContent = websiteLink.value;
                 name.textContent = websiteName.value;
-                if (icon.classList.contains('image')) {
+
+                if (icon.classList.contains('image')) {//本地图片
                     img.src = localPreviewImage.src;
                     if (localPreviewImage.src != location.href) {
                         db.getData("Icons", id).then((data) => {
@@ -938,7 +960,7 @@ function SaveBookmark(id, element) {
                             }
                         });
                     }
-                } else {
+                } else if (!icon.classList.contains('default')) {//网络图片
                     img.src = PreviewImage.src;
                     if (PreviewImage.src != location.href) {
                         db.getData("Icons", id).then((data) => {
@@ -948,6 +970,8 @@ function SaveBookmark(id, element) {
                                 db.addData("Icons", { base64: PreviewImage.src, id });
                             }
                         });
+                    } else {
+                        db.deleteData("Icons", id);
                     }
                 }
                 return true;

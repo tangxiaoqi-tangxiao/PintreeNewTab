@@ -212,7 +212,8 @@
   </div>
 
   <!-- 编辑书签 -->
-  <div id="editBookmark" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div id="editBookmark"
+    class="hidden unselectable fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white dark:pintree-bg-gray-900 rounded-lg w-1/2">
       <div class="grid grid-cols-2 gap-4 p-5">
         <!-- 左侧信息编辑 -->
@@ -234,9 +235,15 @@
           <h2 class="text-xl font-bold mb-4 dark:text-gray-400">图标编辑</h2>
           <label class="block mb-1 dark:text-gray-400">图标选择</label>
           <div class="flex">
-            <div class="flex flex-col justify-center items-center mr-2">
+            <div id="defaultIcon" class="hidden flex flex-col justify-center items-center mr-2">
               <div
-                id="refreshIcon"
+                class="icon default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                <img id="defaultImage" class="w-full h-full rounded-lg" src="" alt="" srcset="">
+              </div>
+              <span class="dark:text-gray-400">默认</span>
+            </div>
+            <div class="flex flex-col justify-center items-center mr-2">
+              <div id="refreshIcon"
                 class="icon cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                 <img id="PreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
                 <svg id="PreviewSvg" class="w-10 h-10" viewBox="0 0 172 216" fill="none"
@@ -283,7 +290,7 @@
   <!-- 鼠标右键 -->
   <div id="context-menu">
     <ul>
-      <li id="copy">
+      <li id="copy" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -294,7 +301,7 @@
         </div>
         <span>复制地址</span>
       </li>
-      <li id="openEditBookmark">
+      <li id="openEditBookmark" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -307,7 +314,7 @@
         </div>
         <span>编辑书签</span>
       </li>
-      <li id="del">
+      <li id="del" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
         <div>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
