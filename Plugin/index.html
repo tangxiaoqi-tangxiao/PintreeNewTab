@@ -237,14 +237,14 @@
           <div class="flex">
             <div id="defaultIcon" class="hidden flex flex-col justify-center items-center mr-2">
               <div
-                class="icon default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                 <img id="defaultImage" class="w-full h-full rounded-lg" src="" alt="" srcset="">
               </div>
               <span class="dark:text-gray-400">默认</span>
             </div>
             <div class="flex flex-col justify-center items-center mr-2">
               <div id="refreshIcon"
-                class="icon cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                class="iconBorder cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                 <img id="PreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
                 <svg id="PreviewSvg" class="w-10 h-10" viewBox="0 0 172 216" fill="none"
                   xmlns="http://www.w3.org/2000/svg">
@@ -258,7 +258,7 @@
             </div>
             <div class="flex flex-col justify-center items-center mr-2">
               <div
-                class="icon image cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                class="iconBorder image cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                 <img id="localPreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
                 <svg id="localPreviewSvg" class="w-10 h-10 text-gray-400 dark:text-gray-500"
                   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -279,9 +279,10 @@
       </div>
       <!-- 按钮居中 -->
       <div class="flex justify-center mt-4 mb-2">
-        <button id="editSave" class="bg-blue-500 hover:bg-blue-400 text-white rounded-md px-4 py-2 mr-2">保存</button>
+        <button id="editSave"
+          class="bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-500 text-white dark:text-gray-300 rounded-md px-4 py-2 mr-2">保存</button>
         <button id="editCancel"
-          class="bg-gray-300 dark:hover:bg-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-white rounded-md px-4 py-2">取消</button>
+          class="bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 dark:text-gray-300 rounded-md px-4 py-2">取消</button>
       </div>
     </div>
     <input type="file" id="imageInput" accept="image/*" style="display: none;" />

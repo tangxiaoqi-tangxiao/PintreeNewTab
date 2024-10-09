@@ -147,6 +147,7 @@ function createCard(link) {
 
     const cardIcon = document.createElement('img');
 
+    cardIcon.src = 'assets/empty.svg';
     db.getData("Icons", id).then((data) => {
         if (data) {
             cardIcon.src = data.base64;
@@ -679,7 +680,7 @@ function ContextMenu(e, link) {
             const editCancel = document.getElementById('editCancel');
             const editSave = document.getElementById('editSave');
             const localPreviewImage = document.getElementById('localPreviewImage');
-            const icon = [...document.getElementsByClassName('icon')];
+            const iconBorder = [...document.getElementsByClassName('iconBorder')];
             const PreviewImage = document.getElementById('PreviewImage');
             const refreshIcon = document.getElementById("refreshIcon");
             const defaultIcon = document.getElementById("defaultIcon");
@@ -692,17 +693,17 @@ function ContextMenu(e, link) {
                 if (data) {
                     defaultImage.src = data.base64;
                     defaultIcon.classList.remove("hidden");
-                    icon.forEach((item) => {
+                    iconBorder.forEach((item) => {
                         item.classList.remove("border-blue-400");
                     });
-                    icon[0].classList.add("border-blue-400");
+                    iconBorder[0].classList.add("border-blue-400");
                 } else {
                     defaultIcon.classList.add("hidden");
                     //默认官方图标选中
-                    icon.forEach((item) => {
+                    iconBorder.forEach((item) => {
                         item.classList.remove("border-blue-400");
                     });
-                    icon[1].classList.add("border-blue-400");
+                    iconBorder[1].classList.add("border-blue-400");
                 }
             });
             //删除本地上传图片
@@ -806,7 +807,7 @@ function BookmarkEditInitialize() {
     const websiteName = document.getElementById('websiteName');
     // const iconName = document.getElementById('iconName');
     // const iconName2 = document.getElementById('iconName2');
-    const icons = [...document.getElementsByClassName('icon')];
+    const iconBorders = [...document.getElementsByClassName('iconBorder')];
     const imageInput = document.getElementById('imageInput');
     const localPreviewImage = document.getElementById('localPreviewImage');
     const localPreviewSvg = document.getElementById('localPreviewSvg');
@@ -838,10 +839,10 @@ function BookmarkEditInitialize() {
     websiteLink.oninput = debouncedSearch;
 
     //选项卡切换
-    icons.forEach((item) => {
+    iconBorders.forEach((item) => {
         item.onclick = () => {
-            icons.forEach((icon) => {
-                icon.classList.remove('border-blue-400');
+            iconBorders.forEach((Border) => {
+                Border.classList.remove('border-blue-400');
             });
             item.classList.add('border-blue-400');
 
@@ -905,7 +906,7 @@ function SaveBookmark(id, element) {
     const PreviewImageError = document.getElementById('PreviewImageError');
     const localPreviewImage = document.getElementById('localPreviewImage');
 
-    const icon = document.querySelector('.icon.border-blue-400');
+    const iconBorder = document.querySelector('.iconBorder.border-blue-400');
 
     const img = element.querySelector('img');
     const name = element.querySelector('h2');
@@ -925,7 +926,7 @@ function SaveBookmark(id, element) {
         websiteNameError.classList.add('hidden');
     }
 
-    if (localPreviewImage.src === location.href && icon.classList.contains('image')) {
+    if (localPreviewImage.src === location.href && iconBorder.classList.contains('image')) {
         PreviewImageError.classList.remove('hidden');
         return;
     } else {
@@ -949,7 +950,7 @@ function SaveBookmark(id, element) {
                 linkText.textContent = websiteLink.value;
                 name.textContent = websiteName.value;
 
-                if (icon.classList.contains('image')) {//本地图片
+                if (iconBorder.classList.contains('image')) {//本地图片
                     img.src = localPreviewImage.src;
                     if (localPreviewImage.src != location.href) {
                         db.getData("Icons", id).then((data) => {
@@ -960,7 +961,7 @@ function SaveBookmark(id, element) {
                             }
                         });
                     }
-                } else if (!icon.classList.contains('default')) {//网络图片
+                } else if (!iconBorder.classList.contains('default')) {//网络图片
                     img.src = PreviewImage.src;
                     if (PreviewImage.src != location.href) {
                         db.getData("Icons", id).then((data) => {
