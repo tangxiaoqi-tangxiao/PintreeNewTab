@@ -2,14 +2,20 @@ import { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlob
 import db from "./IndexedDB.js"
 
 let firstLayer = null;
-
 document.addEventListener('DOMContentLoaded', () => {
     //国际化
     i18n();
+    //初始化书签
+    BookmarkInitialize();
     //设置关闭右键菜单
     CloseContextMenu();
     //编辑书签的初始化
     BookmarkEditInitialize();
+    //数据库初始化
+    db.openDB('Icons').then(async () => {
+        //删除已经删除书签的缓存图标
+        DelIconsCache();
+    });
     // fetchFaviconAsBase64("https://registry.hub.docker.com/")
 });
 
@@ -487,7 +493,8 @@ function toggleTheme() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+// 初始化书签
+function BookmarkInitialize() {
     // 获取和渲染数据
     fetchBookmarks()
         .then(data => {
@@ -512,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // 隐藏加载状态
             document.getElementById('loading-spinner').style.display = 'none';
         });
-});
+}
 
 // Event listener for theme toggle button
 themeToggleButton.addEventListener('click', toggleTheme);
@@ -989,4 +996,36 @@ function BookmarkEditErrorHide() {
     websiteLinkError.classList.add('hidden');
     websiteNameError.classList.add('hidden');
     PreviewImageError.classList.add('hidden');
+}
+
+async function DelIconsCache() {
+    let datas = await fetchBookmarks();
+    let ArrId = [];
+    let DelArrId = [];
+    const GetArrId = (node) => {
+        // 如果 node 是数组，遍历数组中的每个元素
+        if (Array.isArray(node)) {
+            for (let item of node) {
+                GetArrId(item);
+            }
+        } else {
+            ArrId.push(node.id);
+            // 如果当前节点有子节点，递归查找子节点
+            if (node.children && node.children.length > 0) {
+                for (let child of node.children) {
+                    GetArrId(child);
+                }
+            }
+        }
+    }
+    GetArrId(datas);
+    db.GetCursor("Icons", (data) => {
+        if (!ArrId.includes(data.id)) {
+            DelArrId.push(data.id);
+        }
+    }, () => {
+        db.deleteMultipleData("Icons", DelArrId).then(() => {
+            console.log("删除成功");
+        });
+    });
 }

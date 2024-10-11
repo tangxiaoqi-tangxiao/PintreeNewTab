@@ -79,6 +79,30 @@ class IndexedDBHelper {
         });
     }
 
+    //游标
+    GetCursor(storeName, f, f2) {
+        const transaction = this.db.transaction([storeName]);
+        const store = transaction.objectStore(storeName);
+        const request = store.openCursor();
+
+        request.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+                // 处理数据
+                f(cursor.value);
+                // 继续遍历
+                cursor.continue();
+            } else {
+                //结束
+                f2();
+            }
+        };
+
+        request.onerror = (event) => {
+            f(null);
+        };
+    }
+
     // 更新数据
     updateData(storeName, data) {
         return new Promise((resolve, reject) => {
@@ -113,6 +137,26 @@ class IndexedDBHelper {
         });
     }
 
+    //批量删除
+    deleteMultipleData(storeName, ids) {
+        // 创建一个空数组来存储每个删除操作的Promise
+        const deletePromises = ids.map(id => {
+            // 返回一个新的Promise，它将执行单个删除操作
+            return this.deleteData(storeName, id);
+        });
+
+        // 使用Promise.all来处理所有的删除操作
+        return Promise.all(deletePromises)
+            .then(results => {
+                // 如果所有删除操作都成功，返回成功消息
+                return `所有数据删除成功，共删除了${results.length}条数据。`;
+            })
+            .catch(error => {
+                // 如果任何一个删除操作失败，返回错误消息
+                return `删除数据时发生错误: ${error}`;
+            });
+    }
+
     // 关闭数据库
     closeDB() {
         if (this.db) {
@@ -138,5 +182,5 @@ class IndexedDBHelper {
 }
 
 const dbHelper = new IndexedDBHelper('Database', 1);
-dbHelper.openDB('Icons');
+
 export default dbHelper;
