@@ -2,9 +2,9 @@
 
 [中文](README.md) | [English](README_en.md)
 
-PintreeNewTab is an open-source project based on [Pintree](https://github.com/Pintree-io/pintree), designed to turn browser bookmarks into a tab page. By installing the extension, inconveniently managed bookmarks are transformed into a beautiful and user-friendly navigation page.
+PintreeNewTab is an open-source project based on [Pintree](https://github.com/Pintree-io/pintree), designed to transform browser bookmarks into a new tab page. By installing the plugin, it converts inconvenient bookmark management into a visually appealing and user-friendly navigation page.
 
-![cover](.github/imgs/og.png)
+![Cover](.github/imgs/og.png)
 
 ## Supported Languages
 
@@ -18,29 +18,29 @@ PintreeNewTab is an open-source project based on [Pintree](https://github.com/Pi
 
 ## Installation and Running
 
-### Edge Browser (Currently can only be installed like Chrome, the extension is under review)
+### Edge/Chrome Browser
 
-1. Install the [PintreeNewTab](https://github.com/tangxiaoqi-tangxiao/PintreeNewTab) extension.
-2. Click the extension icon to open a new tab.
+1. Install the Edge ([PintreeNewTab](https://microsoftedge.microsoft.com/addons/detail/pintreenewtab/mjiogedjmkbihhahaljlefekjbcgplog)) or Chrome ([PintreeNewTab](https://chromewebstore.google.com/detail/ekfkalhnkifkoijcioheanlegfgcgnee)) plugin.
+2. Click the plugin icon to open a new tab.
 
-![image](.github/imgs/屏幕截图-2024-09-24-142600.png)
+![Screenshot](.github/imgs/屏幕截图-2024-09-24-142600.png)
 
-### Chrome Browser
+### Manual Installation and Update
 
-1. Download the dist.zip file and unzip it.
-![image](.github/imgs/屏幕截图-2024-09-24-145943.png)
+1. Download the `dist.zip` file and extract it.
+![Screenshot](.github/imgs/屏幕截图-2024-09-24-145943.png)
 
-2. Open Chrome, go to the chrome://extensions/ page, enable Developer mode, and click "Load unpacked" to select the unzipped folder.
-![image](.github/imgs/屏幕截图-2024-09-24-150336.png)
+2. Open Chrome browser, navigate to chrome://extensions/, enable Developer mode, click "Load unpacked extension", and select the extracted folder.
+![Screenshot](.github/imgs/屏幕截图-2024-09-24-150336.png)
 
-3. Click the extension icon to open a new tab.
+3. Click the plugin icon to open a new tab.
 
-![image](.github/imgs/屏幕截图-2024-09-24-143305.png)
+![Screenshot](.github/imgs/屏幕截图-2024-09-24-143305.png)
 
-![image](.github/imgs/屏幕截图-2024-09-24-142600.png)
+![Screenshot](.github/imgs/屏幕截图-2024-09-24-142600.png)
 
 ## Technologies Used
 
 - HTML/CSS/JavaScript
-- JSON format handling
-- Browser extension
+- JSON processing
+- Browser extensions
