@@ -451,21 +451,19 @@ function renderBookmarks(data, path) {
 //     })
 //     .catch(error => console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error));
 
-// Search functionality on pressing Enter
+// 按Enter时的搜索功能
 document.getElementById('searchInput').addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
-        const query = event.target.value;
-        searchBookmarks(query);
+        Search();
     }
 });
 
-// Search functionality on button click
+// 按钮点击的搜索功能
 document.getElementById('searchButton').addEventListener('click', function () {
-    const query = document.getElementById('searchInput').value;
-    searchBookmarks(query);
+    Search();
 });
 
-// Theme toggle functionality
+// 主题切换功能
 const themeToggleButton = document.getElementById('themeToggleButton');
 const sunIcon = document.getElementById('sunIcon');
 const moonIcon = document.getElementById('moonIcon');
@@ -998,6 +996,7 @@ function BookmarkEditErrorHide() {
     PreviewImageError.classList.add('hidden');
 }
 
+//删除书签缓存的图标
 async function DelIconsCache() {
     let datas = await fetchBookmarks();
     let ArrId = [];
@@ -1028,4 +1027,31 @@ async function DelIconsCache() {
             console.log("删除成功");
         });
     });
+}
+
+function Search() {
+    const query = document.getElementById('searchInput').value;
+    const selectElement = document.getElementById('currency');
+    switch (selectElement.value) {
+        case "0":
+            if (query == "") {
+                return;
+            }
+            searchBookmarks(query);
+            break;
+        case "1":
+            var encodedStr = encodeURIComponent(query);
+            window.open(`https://www.baidu.com/s?wd=${encodedStr}&ie=utf-8`, '_blank');
+            break;
+        case "2":
+            var encodedStr = encodeURIComponent(query);
+            window.open(`https://www.google.com/search?q=${encodedStr}`, '_blank');
+            break;
+        case "3":
+            var encodedStr = encodeURIComponent(query);
+            window.open(`https://www.bing.com/search?q=${encodedStr}`, '_blank');
+            break;
+        default:
+            break;
+    }
 }

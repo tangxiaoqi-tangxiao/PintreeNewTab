@@ -68,8 +68,8 @@
         </div>
         <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
           <div id="sidebar" class="flex flex-1 flex-col">
-            <ul id="navigation" class="space-y-1">
-              <!-- Navigation items will be inserted here -->
+            <ul id="navigation" class="space-y-1 select-none">
+              <!-- 导航项目将在此处插入 -->
             </ul>
           </div>
         </div>
@@ -82,7 +82,7 @@
         class="items-center justify-between sticky top-0 z-40 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
         <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
           <div class="flex gap-x-4 justify-between">
-            <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
+            <!-- <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
             <div class="hidden lg:block relative w-72 h-full items-center justify-between">
               <button id="searchButton" class="absolute h-full text-gray-400 rounded">
                 <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400" viewBox="0 0 20 20"
@@ -97,7 +97,38 @@
                 placeholder="">
               <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden"><span
                   id="clear_i18n"></span></button>
+            </div> -->
+            <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
+            <div class="w-[35rem] hidden lg:flex">
+              <div class="relative inline-block w-[29rem]">
+                <div class="absolute inset-y-0 left-0 flex items-center text-gray-500">
+                  <select id="currency"
+                    class="h-full rounded-md border-transparent bg-transparent py-0 pl-3 pr-6 dark:text-color focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                    <option value="0" class="dark:bg-gray-800">书签</option>
+                    <option value="1" class="dark:bg-gray-800">百度</option>
+                    <option value="2" class="dark:bg-gray-800">谷歌</option>
+                    <option value="3" class="dark:bg-gray-800">必应</option>
+                  </select>
+                </div>
+
+                <div id="searchButton" class="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                    <path fill-rule="evenodd"
+                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </div>
+
+                <input type="text" id="searchInput"
+                  class="text-sm h-12 dark:border-gray-500 dark:pintree-bg-gray-900 dark:text-color dark: block w-full rounded-md border-gray-300 pl-[4rem] pr-10 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                  placeholder="" />
+              </div>
+
+              <button type="button" id="clearSearchButton"
+                class="hidden ml-auto dark:pintree-bg-gray-900 dark:text-color rounded-lg border border-gray-300 dark:border-gray-500 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"><span
+                  id="clear_i18n"></span></button>
             </div>
+
           </div>
           <a href="" class="lg:hidden ml-4 font-extrabold text-2xl dark:text-white"><span
               class="appName_i18n"></span></a>

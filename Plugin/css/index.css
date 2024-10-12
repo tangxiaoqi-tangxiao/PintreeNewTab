@@ -110,3 +110,7 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+.dark\:text-color:is(.dark *) {
+  color: rgb(156, 163, 175);
+}

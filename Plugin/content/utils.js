@@ -1,11 +1,16 @@
+/**
+ * 异步获取网站的favicon图标，并将其转换为base64编码字符串
+ * @param {string} url - 要获取图标的网站的URL
+ * @returns {Promise} - 解析为包含base64编码图标的对象的Promise，如果获取失败则返回null
+ */
 async function fetchFaviconAsBase64(url) {
     return new Promise(async (resolve, reject) => {
         try {
             if (!isValidUrl(url)) return null;
             // 获取网站的 HTML 源代码
             fetchWithTimeout(url, {}, 5000)
-                .then(response => response.text())
-                .then(async text => {
+               .then(response => response.text())
+               .then(async text => {
                     // 使用 DOMParser 来解析 HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(text, 'text/html');
