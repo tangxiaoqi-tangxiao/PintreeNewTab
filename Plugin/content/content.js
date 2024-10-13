@@ -3,6 +3,7 @@ import db from "./IndexedDB.js"
 
 let firstLayer = null;
 document.addEventListener('DOMContentLoaded', () => {
+    Initialize();
     //国际化
     i18n();
     //初始化书签
@@ -112,32 +113,28 @@ function searchInData(data, query) {
     return results;
 }
 
-document.getElementById('searchButton').addEventListener('click', () => {
-    const query = document.getElementById('searchInput').value;
-    searchBookmarks(query);
-});
-
 // 清除搜索结果并重置UI
 function clearSearchResults() {
     fetchBookmarks()
         .then(data => {
             const secondLayer = data;
-            renderNavigation(secondLayer, document.getElementById('navigation'));
-            renderBookmarks(secondLayer, [{ title: 'Bookmark', children: secondLayer }]);
+            if (secondLayer.length > 0) {
+                const item = secondLayer[0];
+                renderNavigation(secondLayer, document.getElementById('navigation'));
+                renderBookmarks(secondLayer, [{ id: item.id, title: item.title, children: secondLayer }]);
+            }
             document.getElementById('searchInput').value = '';
             document.getElementById('clearSearchButton').classList.add('hidden');
         })
         .catch(error => console.error(`${chrome.i18n.getMessage("errorSearch")}:`, error));
 }
 
-document.getElementById('clearSearchButton').addEventListener('click', clearSearchResults);
-
 // 搜索书签
 function searchBookmarks(query) {
     fetchBookmarks()
         .then(data => {
             const results = searchInData(data, query.toLowerCase());
-            renderBookmarks(results, [{ title: chrome.i18n.getMessage("searchResults"), children: results }]);
+            renderBookmarks(results, [{ id: "0", title: chrome.i18n.getMessage("searchResults"), children: results }]);
             document.getElementById('clearSearchButton').classList.remove('hidden');
         })
         .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
@@ -194,11 +191,11 @@ function createCard(link) {
 }
 
 // 创建文件夹卡片元素
-function createFolderCard(title, children, path) {
+function createFolderCard(title, id, children, path) {
     const card = document.createElement('div');
     card.className = 'folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
     card.onclick = () => {
-        const newPath = path.concat({ title, children });
+        const newPath = path.concat({ id, title, children });
         renderBookmarks(children, newPath);
         updateSidebarActiveState(newPath); // Update sidebar active state
     };
@@ -242,6 +239,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
             const navLink = document.createElement('a');
             navLink.className = 'flex text-sm leading-6 font-semibold dark:text-gray-400';
             navLink.innerText = folder.title;
+            navLink.dataset.id = folder.id;
 
             navLinkContainer.appendChild(folderIcon);
             navLinkContainer.appendChild(navLink);
@@ -259,7 +257,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
             if (folder.children && folder.children.length > 0) {
                 const subList = document.createElement('ul');
                 subList.className = 'ml-4 space-y-2 hidden';
-                renderNavigation(folder.children, subList, false, path.concat({ title: folder.title, children: folder.children }));
+                renderNavigation(folder.children, subList, false, path.concat({ id: folder.id, title: folder.title, children: folder.children }));
                 container.appendChild(subList);
 
                 if (isFirstRender && index === 0) {
@@ -280,14 +278,14 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                         subList.classList.toggle('hidden');
                         toggleIcon.classList.toggle('rotate-90');
                     }
-                    renderBookmarks(folder.children, path.concat({ title: folder.title, children: folder.children }));
+                    renderBookmarks(folder.children, path.concat({ id: folder.id, title: folder.title, children: folder.children }));
                 };
             } else {
                 navItem.onclick = (e) => {
                     e.stopPropagation();
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
                     navItem.classList.add('sidebar-active');
-                    renderBookmarks(folder.children, path.concat({ title: folder.title, children: folder.children }));
+                    renderBookmarks(folder.children, path.concat({ id: folder.id, title: folder.title, children: folder.children }));
                 };
             }
         }
@@ -331,7 +329,7 @@ function updateSidebarActiveState(path) {
         const items = currentNav.querySelectorAll('li');
         items.forEach(navItem => {
             const navLink = navItem.querySelector('a');
-            if (navLink && navLink.innerText === item.title) {
+            if (navLink && navLink.dataset.id === item.id) {
                 if (index === path.length - 1) {
                     navItem.classList.add('sidebar-active');
                 }
@@ -404,7 +402,7 @@ function renderBookmarks(data, path) {
         const folderSection = document.createElement('div');
         folderSection.className = 'grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-12 gap-6';
         folders.forEach(folder => {
-            const card = createFolderCard(folder.title, folder.children, path);
+            const card = createFolderCard(folder.title, folder.id, folder.children, path);
             folderSection.appendChild(card);
         });
         container.appendChild(folderSection);
@@ -500,16 +498,17 @@ function BookmarkInitialize() {
             document.getElementById('loading-spinner').style.display = 'none';
             // 直接使用第一层数据
             firstLayer = data;
-            // 使用第一层数据渲染导航
-            renderNavigation(firstLayer, document.getElementById('navigation'), true);
-            // 使用第一层数据渲染书签，从书签开始
-            renderBookmarks(firstLayer, [{ title: 'Bookmark', children: firstLayer }]);
-
             // 自动选择并显示第一项
             if (firstLayer.length > 0) {
                 const firstItem = firstLayer[0];
-                updateSidebarActiveState([{ title: firstItem.title, children: firstItem.children }]);
-                renderBookmarks(firstItem.children, [{ title: 'Bookmark', children: firstLayer }, { title: firstItem.title, children: firstItem.children }]);
+                // 使用第一层数据渲染导航
+                renderNavigation(firstLayer, document.getElementById('navigation'), true);
+                // 使用第一层数据渲染书签，从书签开始
+                renderBookmarks(firstLayer, [{ id: firstItem.id, title: firstItem.title, children: firstLayer }]);
+                //更新侧边栏项的活动状态
+                updateSidebarActiveState([{ id: firstItem.id, title: firstItem.title, children: firstItem.children }]);
+                //渲染书签
+                renderBookmarks(firstItem.children, [{ id: firstItem.id, title: firstItem.title, children: firstLayer }]);
             }
         })
         .catch(error => {
@@ -996,6 +995,17 @@ function BookmarkEditErrorHide() {
     PreviewImageError.classList.add('hidden');
 }
 
+function Initialize() {
+    document.getElementById('clearSearchButton').addEventListener('click', clearSearchResults);
+    document.getElementById('searchButton').onclick = () => {
+        const query = document.getElementById('searchInput').value;
+        if (query.trim() === '') {
+            return;
+        }
+        searchBookmarks(query);
+    }
+}
+
 //删除书签缓存的图标
 async function DelIconsCache() {
     let datas = await fetchBookmarks();
@@ -1034,7 +1044,7 @@ function Search() {
     const selectElement = document.getElementById('currency');
     switch (selectElement.value) {
         case "0":
-            if (query == "") {
+            if (query.trim() === '') {
                 return;
             }
             searchBookmarks(query);
