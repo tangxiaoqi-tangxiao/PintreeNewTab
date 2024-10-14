@@ -55,37 +55,37 @@ async function fetchBookmarks() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Variables for sidebar elements
-    const openSidebarButton = document.getElementById('open-sidebar-button');
-    const closeSidebarButton = document.getElementById('close-sidebar-button');
-    const offCanvasMenu = document.getElementById('off-canvas-menu');
-    const offCanvasBackdrop = document.getElementById('off-canvas-backdrop');
-    const offCanvasContent = document.getElementById('off-canvas-content');
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Variables for sidebar elements
+//     const openSidebarButton = document.getElementById('open-sidebar-button');
+//     const closeSidebarButton = document.getElementById('close-sidebar-button');
+//     const offCanvasMenu = document.getElementById('off-canvas-menu');
+//     const offCanvasBackdrop = document.getElementById('off-canvas-backdrop');
+//     const offCanvasContent = document.getElementById('off-canvas-content');
 
-    // Function to open the sidebar
-    const openSidebar = () => {
-        offCanvasMenu.classList.remove('hidden');
-        setTimeout(() => {
-            offCanvasBackdrop.classList.add('opacity-100');
-            offCanvasContent.classList.add('translate-x-0');
-        }, 10);
-    };
+//     // Function to open the sidebar
+//     const openSidebar = () => {
+//         offCanvasMenu.classList.remove('hidden');
+//         setTimeout(() => {
+//             offCanvasBackdrop.classList.add('opacity-100');
+//             offCanvasContent.classList.add('translate-x-0');
+//         }, 10);
+//     };
 
-    // Function to close the sidebar
-    const closeSidebar = () => {
-        offCanvasBackdrop.classList.remove('opacity-100');
-        offCanvasContent.classList.remove('translate-x-0');
-        setTimeout(() => {
-            offCanvasMenu.classList.add('hidden');
-        }, 300); // Match the duration of the transition
-    };
+//     // Function to close the sidebar
+//     const closeSidebar = () => {
+//         offCanvasBackdrop.classList.remove('opacity-100');
+//         offCanvasContent.classList.remove('translate-x-0');
+//         setTimeout(() => {
+//             offCanvasMenu.classList.add('hidden');
+//         }, 300); // Match the duration of the transition
+//     };
 
-    // Event listeners for open and close buttons
-    openSidebarButton?.addEventListener('click', openSidebar);
-    closeSidebarButton.addEventListener('click', closeSidebar);
-    offCanvasBackdrop.addEventListener('click', closeSidebar); // Close sidebar when clicking on the backdrop
-});
+//     // Event listeners for open and close buttons
+//     openSidebarButton?.addEventListener('click', openSidebar);
+//     closeSidebarButton.addEventListener('click', closeSidebar);
+//     offCanvasBackdrop.addEventListener('click', closeSidebar); // Close sidebar when clicking on the backdrop
+// });
 
 // Search functionality
 // function searchBookmarks(query) {
@@ -449,18 +449,6 @@ function renderBookmarks(data, path) {
 //     })
 //     .catch(error => console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error));
 
-// 按Enter时的搜索功能
-document.getElementById('searchInput').addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-        Search();
-    }
-});
-
-// 按钮点击的搜索功能
-document.getElementById('searchButton').addEventListener('click', function () {
-    Search();
-});
-
 // 主题切换功能
 const themeToggleButton = document.getElementById('themeToggleButton');
 const sunIcon = document.getElementById('sunIcon');
@@ -468,14 +456,18 @@ const moonIcon = document.getElementById('moonIcon');
 
 // Apply dark theme
 function applyDarkTheme() {
-    document.documentElement.classList.add('dark');
+    const root = document.documentElement;
+    root.classList.add('dark');
+    root.dataset.theme = 'dark';
     sunIcon.classList.add('hidden');
     moonIcon.classList.remove('hidden');
 }
 
 // Apply light theme
 function applyLightTheme() {
-    document.documentElement.classList.remove('dark');
+    const root = document.documentElement;
+    root.classList.remove('dark');
+    root.dataset.theme = 'light';
     sunIcon.classList.remove('hidden');
     moonIcon.classList.add('hidden');
 }
@@ -518,49 +510,6 @@ function BookmarkInitialize() {
         });
 }
 
-// Event listener for theme toggle button
-themeToggleButton.addEventListener('click', toggleTheme);
-
-// Automatically apply theme according to system theme settings
-function applyColorTheme(theme) {
-    if (theme === 'dark') {
-        applyDarkTheme();
-    } else {
-        applyLightTheme();
-    }
-}
-
-// Detect initial color theme
-const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-applyColorTheme(prefersDarkTheme ? 'dark' : 'light');
-
-// Listen for changes in the color theme
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-    applyColorTheme(event.matches ? 'dark' : 'light');
-});
-
-// Open mobile menu
-document.getElementById('open-sidebar-button')?.addEventListener('click', function () {
-    var navigation = document.getElementById('navigation').cloneNode(true);
-    document.getElementById('sidebar-2').appendChild(navigation);
-});
-
-// 设置modal
-document.addEventListener('DOMContentLoaded', (event) => {
-    const modal = document.getElementById('modal');
-    const openButton = document.getElementById('open');
-
-    openButton.onclick = () => {
-        modal.classList.remove('hidden');
-    };
-
-    modal.onclick = (e) => {
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-        }
-    };
-});
-
 //设置右键菜单
 function CloseContextMenu() {
     const checkbox = document.getElementById('ContextMenuCheckbox');
@@ -596,7 +545,7 @@ function i18n() {
     });
     document.getElementById("searchInput").setAttribute("placeholder", chrome.i18n.getMessage("search"));
     document.getElementById("clear_i18n").textContent = chrome.i18n.getMessage("clear");
-    document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
+    // document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
 }
 
 //读取配置判断是否显示右键菜单
@@ -996,6 +945,19 @@ function BookmarkEditErrorHide() {
 }
 
 function Initialize() {
+    // 按Enter时的搜索功能
+    document.getElementById('searchInput').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            Search();
+        }
+    });
+
+    // 按钮点击的搜索功能
+    document.getElementById('searchButton').addEventListener('click', function () {
+        Search();
+    });
+
+    // 清除搜索结果的按钮
     document.getElementById('clearSearchButton').addEventListener('click', clearSearchResults);
     document.getElementById('searchButton').onclick = () => {
         const query = document.getElementById('searchInput').value;
@@ -1004,6 +966,50 @@ function Initialize() {
         }
         searchBookmarks(query);
     }
+
+    // Event listener for theme toggle button
+    themeToggleButton.addEventListener('click', toggleTheme);
+
+    // Automatically apply theme according to system theme settings
+    function applyColorTheme(theme) {
+        if (theme === 'dark') {
+            applyDarkTheme();
+        } else {
+            applyLightTheme();
+        }
+    }
+
+    // Detect initial color theme
+    const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyColorTheme(prefersDarkTheme ? 'dark' : 'light');
+
+    // Listen for changes in the color theme
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+        applyColorTheme(event.matches ? 'dark' : 'light');
+    });
+
+    // Open mobile menu
+    // document.getElementById('open-sidebar-button')?.addEventListener('click', function () {
+    //     var navigation = document.getElementById('navigation').cloneNode(true);
+    //     document.getElementById('sidebar-2').appendChild(navigation);
+    // });
+
+    // 设置modal
+    const modalInitialize = () => {
+        const modal = document.getElementById('modal');
+        const openButton = document.getElementById('open');
+
+        openButton.onclick = () => {
+            modal.classList.remove('hidden');
+        };
+
+        modal.onclick = (e) => {
+            if (e.target === modal) {
+                modal.classList.add('hidden');
+            }
+        };
+    }
+    modalInitialize();
 }
 
 //删除书签缓存的图标
@@ -1034,7 +1040,7 @@ async function DelIconsCache() {
         }
     }, () => {
         db.deleteMultipleData("Icons", DelArrId).then(() => {
-            console.log("删除成功");
+            console.log("删除缓存成功");
         });
     });
 }

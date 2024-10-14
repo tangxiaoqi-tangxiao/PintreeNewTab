@@ -11,7 +11,7 @@
   <meta name="author" content="Pintree">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab">
-  
+
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
@@ -24,41 +24,9 @@
 
 <body class="h-full dark:pintree-bg-gray-900 bg-white">
 
+  <!-- 页面主要功能 -->
   <div>
-    <!-- Mobile Off-Canvas Menu -->
-    <div id="off-canvas-menu" class="relative z-10 lg:hidden hidden" role="dialog" aria-modal="true">
-      <div id="off-canvas-backdrop"
-        class="fixed inset-0 bg-gray-900/80 opacity-0 transition-opacity ease-linear duration-300"></div>
-      <div class="fixed inset-0 flex">
-        <div id="off-canvas-content"
-          class="relative mr-16 flex w-full max-w-xs flex-1 -translate-x-full transition ease-in-out duration-300 transform">
-          <!-- Close button for the off-canvas menu -->
-          <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
-            <button id="close-sidebar-button" type="button" class="-m-2.5 p-2.5">
-              <span class="sr-only" id="closeSidebar_i18n"></span>
-              <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-
-          <!-- Off-canvas Sidebar content -->
-          <div class="flex grow flex-col gap-y-5 overflow-y-auto bg-white dark:pintree-bg-gray-900 px-6 pb-4">
-            <div class="flex h-16 shrink-0 items-center">
-              <img class="pl-2 h-8 w-auto" src="assets/logo.svg" alt="Pintree">
-              <a href="" class="ml-4 font-extrabold text-2xl dark:text-white"><span
-                  class="appName_i18n">PintreeNewTab</span></a>
-            </div>
-            <div id="sidebar-2" class="flex flex-1 flex-col">
-              <!-- Sidebar content will be injected here -->
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Static Sidebar for Desktop -->
+    <!-- 桌面侧边栏 -->
     <div class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-60 lg:flex-col">
       <div
         class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
@@ -77,12 +45,12 @@
       </div>
     </div>
 
-    <!-- Main Content Area -->
+    <!-- 主要内容领域 -->
     <div class="lg:pl-60 dark:pintree-bg-gray-900 flex flex-col min-h-screen">
       <div
         class="items-center justify-between sticky top-0 z-40 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
         <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
-          <div class="flex gap-x-4 justify-between">
+          <div class="flex gap-x-4 justify-between lg:w-8/12">
             <!-- <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
             <div class="hidden lg:block relative w-72 h-full items-center justify-between">
               <button id="searchButton" class="absolute h-full text-gray-400 rounded">
@@ -99,8 +67,8 @@
               <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden"><span
                   id="clear_i18n"></span></button>
             </div> -->
-            <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
-            <div class="w-[35rem] hidden lg:flex">
+
+            <!-- <div class="w-[35rem] hidden lg:flex">
               <div class="relative inline-block w-[29rem]">
                 <div class="absolute inset-y-0 left-0 flex items-center text-gray-500">
                   <select id="currency"
@@ -128,6 +96,32 @@
               <button type="button" id="clearSearchButton"
                 class="hidden ml-auto dark:pintree-bg-gray-900 dark:text-color rounded-lg border border-gray-300 dark:border-gray-500 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"><span
                   id="clear_i18n"></span></button>
+            </div> -->
+            <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
+            <div class="hidden lg:flex lg:w-full">
+              <div class="flex w-10/12">
+                <div class="join w-full">
+                  <select id="currency" class="select select-bordered w-24 select-md join-item">
+                    <option value="0" selected>书签</option>
+                    <option value="1">百度</option>
+                    <option value="2">谷歌</option>
+                    <option value="3">必应</option>
+                  </select>
+
+                  <input id="searchInput" class="w-full input input-bordered input-md join-item" placeholder="" />
+
+                  <button id="searchButton" class="btn rounded-r-full join-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                      class="h-4 w-4 opacity-70">
+                      <path fill-rule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+
+              </div>
+              <button id="clearSearchButton" class="btn hidden ml-4"><span id="clear_i18n"></span></button>
             </div>
 
           </div>
@@ -138,7 +132,7 @@
               class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
               <svg id="sunIcon" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
                 aria-hidden="true"
-                class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden [@media(prefers-color-scheme:dark)]:fill-teal-50 [@media(prefers-color-scheme:dark)]:stroke-teal-500 [@media(prefers-color-scheme:dark)]:group-hover:fill-teal-50 [@media(prefers-color-scheme:dark)]:group-hover:stroke-teal-600">
+                class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden">
                 <path
                   d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z">
                 </path>
@@ -147,7 +141,7 @@
                   fill="none"></path>
               </svg>
               <svg id="moonIcon" viewBox="0 0 24 24" aria-hidden="true"
-                class="hidden h-6 w-6 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400 [@media_not_(prefers-color-scheme:dark)]:fill-teal-400/10 [@media_not_(prefers-color-scheme:dark)]:stroke-teal-500">
+                class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400">
                 <path
                   d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -156,14 +150,14 @@
             <button id="open" aria-label="Switch theme"
               class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
               <svg
-                class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden [@media(prefers-color-scheme:dark)]:fill-teal-50 [@media(prefers-color-scheme:dark)]:stroke-teal-500 [@media(prefers-color-scheme:dark)]:group-hover:fill-teal-50 [@media(prefers-color-scheme:dark)]:group-hover:stroke-teal-600"
+                class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
                   d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
               </svg>
               <svg
-                class="hidden h-6 w-6 fill-zinc-700 stroke-zinc-500 transition dark:block [@media(prefers-color-scheme:dark)]:group-hover:stroke-zinc-400 [@media_not_(prefers-color-scheme:dark)]:fill-teal-400/10 [@media_not_(prefers-color-scheme:dark)]:stroke-teal-500"
+                class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
                 xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round"
