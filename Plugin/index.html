@@ -97,6 +97,7 @@
                 class="hidden ml-auto dark:pintree-bg-gray-900 dark:text-color rounded-lg border border-gray-300 dark:border-gray-500 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"><span
                   id="clear_i18n"></span></button>
             </div> -->
+
             <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
             <div class="hidden lg:flex lg:w-full">
               <div class="flex w-10/12">
@@ -147,7 +148,7 @@
                   stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
               </svg>
             </button>
-            <button id="open" aria-label="Switch theme"
+            <button id="SetUp_modal_but" aria-label="Switch theme"
               class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
               <svg
                 class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
@@ -226,20 +227,23 @@
   </div>
 
   <!-- 设置 -->
-  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
-    <div class="bg-white p-5 rounded shadow-md">
-      <div>
-        <div>
+  <dialog id="SetUp_modal" class="modal">
+    <div class="modal-box">
+      <h3 class="text-lg font-bold">设置</h3>
+      <div class="mt-4">
+        <div class="flex justify-start items-center text-sm">
           <label for="ContextMenuCheckbox"><span id="setContextMenu_i18n"></span></label>
-          <input type="checkbox" class="form-checkbox" id="ContextMenuCheckbox">
+          <input type="checkbox" class="toggle toggle-success ml-auto" id="ContextMenuCheckbox" checked="checked" />
         </div>
       </div>
     </div>
-  </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
 
   <!-- 编辑书签 -->
-  <div id="editBookmark"
-    class="hidden unselectable fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <dialog id="editBookmark_modal" class="modal">
     <div class="bg-white dark:pintree-bg-gray-900 rounded-lg max-w-screen-md">
       <div class="grid grid-cols-2 gap-4 p-5">
         <!-- 左侧信息编辑 -->
@@ -247,12 +251,10 @@
           <h2 class="text-xl font-bold mb-4 dark:text-gray-400">信息编辑</h2>
           <p class="text-gray-500 mb-2">输入网站链接后会自动获取首页图标，个别网站或国外网站可能会获取不成功</p>
           <label class="block mb-1 text-gray-950 dark:text-gray-400">网站链接</label>
-          <input id="websiteLink" type="text" placeholder="请输入网站链接" value=""
-            class="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-md p-2 w-full" />
+          <input type="text" placeholder="请输入网站链接" id="websiteLink" class="input input-bordered w-full input-sm" />
           <p id="websiteLinkError" class="hidden text-red-400">网站链接不能为空</p>
           <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4">网站名称</label>
-          <input id="websiteName" type="text" placeholder="请输入网站名称"
-            class="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 rounded-md p-2 w-full" />
+          <input type="text" placeholder="请输入网站名称" id="websiteName" class="input input-bordered w-full input-sm" />
           <p id="websiteNameError" class="hidden text-red-400">网站名称不能为空</p>
         </div>
 
@@ -305,14 +307,14 @@
       </div>
       <!-- 按钮居中 -->
       <div class="flex justify-center mt-4 mb-2">
-        <button id="editSave"
-          class="bg-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-500 text-white dark:text-gray-300 rounded-md px-4 py-2 mr-2">保存</button>
-        <button id="editCancel"
-          class="bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 hover:bg-gray-200 dark:text-gray-300 rounded-md px-4 py-2">取消</button>
+        <form method="dialog">
+          <button id="editSave" class="btn btn-neutral">保存</button>
+          <button id="editCancel" class="btn ml-3">取消</button>
+        </form>
       </div>
     </div>
     <input type="file" id="imageInput" accept="image/*" style="display: none;" />
-  </div>
+  </dialog>
 
   <!-- 鼠标右键 -->
   <div id="context-menu">

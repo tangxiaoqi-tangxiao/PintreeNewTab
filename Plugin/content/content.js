@@ -629,8 +629,7 @@ function ContextMenu(e, link) {
             }
             const websiteLink = document.getElementById('websiteLink');
             const websiteName = document.getElementById('websiteName');
-            const editBookmark = document.getElementById('editBookmark');
-            const editCancel = document.getElementById('editCancel');
+            const editBookmark_modal = document.getElementById('editBookmark_modal');
             const editSave = document.getElementById('editSave');
             const localPreviewImage = document.getElementById('localPreviewImage');
             const iconBorder = [...document.getElementsByClassName('iconBorder')];
@@ -640,8 +639,8 @@ function ContextMenu(e, link) {
             const defaultImage = document.getElementById("defaultImage");
 
             // 显示编辑书签模态框
-            editBookmark.classList.remove('hidden');
-            //
+            editBookmark_modal.showModal();
+
             db.getData("Icons", id).then((data) => {
                 if (data) {
                     defaultImage.src = data.base64;
@@ -665,16 +664,6 @@ function ContextMenu(e, link) {
             PreviewImage.src = "";
             //隐藏所有错误信息
             BookmarkEditErrorHide();
-            // 点击模态框外部区域关闭
-            editBookmark.onclick = (e) => {
-                if (e.target === editBookmark) {
-                    editBookmark.classList.add('hidden');
-                }
-            };
-            //取消按钮点击事件
-            editCancel.onclick = () => {
-                editBookmark.classList.add('hidden');
-            };
             //保存按钮点击事件
             editSave.onclick = () => {
                 const targetElement = e.target.closest('.card_bookmarks');
@@ -850,7 +839,6 @@ function ToggleSvgOrImage(bool, local) {
 }
 
 function SaveBookmark(id, element) {
-    const editBookmark = document.getElementById('editBookmark');
     const websiteLink = document.getElementById('websiteLink');
     const websiteLinkError = document.getElementById('websiteLinkError');
     const websiteName = document.getElementById('websiteName');
@@ -931,7 +919,6 @@ function SaveBookmark(id, element) {
                 return true;
             }
         });
-        editBookmark.classList.add('hidden');
     });
 }
 
@@ -996,17 +983,11 @@ function Initialize() {
 
     // 设置modal
     const modalInitialize = () => {
-        const modal = document.getElementById('modal');
-        const openButton = document.getElementById('open');
+        const SetUp_modal = document.getElementById('SetUp_modal');
+        const SetUp_modalButton = document.getElementById('SetUp_modal_but');
 
-        openButton.onclick = () => {
-            modal.classList.remove('hidden');
-        };
-
-        modal.onclick = (e) => {
-            if (e.target === modal) {
-                modal.classList.add('hidden');
-            }
+        SetUp_modalButton.onclick = () => {
+            SetUp_modal.showModal();
         };
     }
     modalInitialize();
