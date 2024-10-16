@@ -15,6 +15,10 @@
   --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
+html {
+  scrollbar-gutter: auto !important;
+}
+
 #open {
   margin-left: 10px;
 }
