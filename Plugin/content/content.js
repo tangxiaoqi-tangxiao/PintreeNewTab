@@ -538,13 +538,43 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // i18n 多语言国际化
 function i18n() {
-    document.getElementById("setContextMenu_i18n").textContent = chrome.i18n.getMessage("setContextMenu");
     let appName_i18ns = [...document.getElementsByClassName("appName_i18n")];
     appName_i18ns.forEach((item) => {
         item.textContent = chrome.i18n.getMessage("appName");
     });
-    document.getElementById("searchInput").setAttribute("placeholder", chrome.i18n.getMessage("search"));
-    document.getElementById("clear_i18n").textContent = chrome.i18n.getMessage("clear");
+    //搜索
+    searchInput.setAttribute("placeholder", chrome.i18n.getMessage("search"));
+    clear_i18n.textContent = chrome.i18n.getMessage("clear");
+    //设置
+    set_i18n.textContent = chrome.i18n.getMessage("set");
+    setContextMenu_i18n.textContent = chrome.i18n.getMessage("setContextMenu");
+    //书签
+    bookmark_i18n.textContent = chrome.i18n.getMessage("bookmark");
+    baidu_i18n.textContent = chrome.i18n.getMessage("baidu");
+    google_i18n.textContent = chrome.i18n.getMessage("google");
+    bing_i18n.textContent = chrome.i18n.getMessage("bing");
+    //右键菜单
+    copyUrl_i18n.textContent = chrome.i18n.getMessage("copyUrl");
+    editBookmark_i18n.textContent = chrome.i18n.getMessage("editBookmark");
+    del_i18n.textContent = chrome.i18n.getMessage("del");
+    //书签编辑
+    infoEdit_i18n.textContent = chrome.i18n.getMessage("infoEdit");
+    IconDescribe_i18n.textContent = chrome.i18n.getMessage("IconDescribe");
+    websiteLink_i18n.textContent = chrome.i18n.getMessage("websiteLink");
+    websiteLink.setAttribute("placeholder", chrome.i18n.getMessage("websiteLinkPlaceholder"));
+    websiteLinkError_i18n.textContent = chrome.i18n.getMessage("websiteLinkError");
+    websiteName_i18n.textContent = chrome.i18n.getMessage("websiteName");
+    websiteName.setAttribute("placeholder", chrome.i18n.getMessage("websiteNamePlaceholder"));
+    websiteNameError_i18n.textContent = chrome.i18n.getMessage("websiteNameError");
+    iconEdit_i18n.textContent = chrome.i18n.getMessage("iconEdit");
+    iconChoose_i18n.textContent = chrome.i18n.getMessage("iconChoose");
+    default_i18n.textContent = chrome.i18n.getMessage("default");
+    official_i18n.textContent = chrome.i18n.getMessage("official");
+    upload_i18n.textContent = chrome.i18n.getMessage("upload");
+    uploadImage_i18n.textContent = chrome.i18n.getMessage("uploadImage");
+    save_i18n.textContent = chrome.i18n.getMessage("save");
+    cancel_i18n.textContent = chrome.i18n.getMessage("cancel");
+
     // document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
 }
 
@@ -920,6 +950,8 @@ function SaveBookmark(id, element) {
             }
         });
     });
+    // 关闭模态框
+    editBookmark_modal.close();
 }
 
 function BookmarkEditErrorHide() {

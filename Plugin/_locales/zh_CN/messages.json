@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "加载书签时出错"
+    },
+    "set": {
+        "message": "设置"
+    },
+    "bookmark": {
+        "message": "书签"
+    },
+    "baidu": {
+        "message": "百度"
+    },
+    "google": {
+        "message": "谷歌"
+    },
+    "bing": {
+        "message": "必应"
+    },
+    "copyUrl": {
+        "message": "复制地址"
+    },
+    "editBookmark": {
+        "message": "编辑书签"
+    },
+    "del": {
+        "message": "删除"
+    },
+    "infoEdit": {
+        "message": "信息编辑"
+    },
+    "IconDescribe": {
+        "message": "输入网站链接后会自动获取首页图标，个别网站或国外网站可能会获取不成功"
+    },
+    "websiteLink": {
+        "message": "网站链接"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "请输入网站链接"
+    },
+    "websiteLinkError": {
+        "message": "网站链接不能为空"
+    },
+    "websiteName": {
+        "message": "网站名称"
+    },
+    "websiteNameError": {
+        "message": "网站名称不能为空"
+    },
+    "websiteNamePlaceholder": {
+        "message": "请输入网站名称"
+    },
+    "iconEdit":{
+        "message": "图标编辑"
+    },
+    "iconChoose":{
+        "message": "图标选择"
+    },
+    "default":{
+        "message": "默认"
+    },
+    "official":{
+        "message": "官方"
+    },
+    "upload":{
+        "message": "上传"
+    },
+    "uploadImage":{
+        "message": "上传图片"
+    },
+    "save":{
+        "message": "保存"
+    },
+    "cancel":{
+        "message": "取消"
     }
 }

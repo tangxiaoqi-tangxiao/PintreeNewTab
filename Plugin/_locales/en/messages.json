@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "Error loading bookmarks"
+    },
+    "set": {
+        "message": "Settings"
+    },
+    "bookmark": {
+        "message": "Bookmark"
+    },
+    "baidu": {
+        "message": "Baidu"
+    },
+    "google": {
+        "message": "Google"
+    },
+    "bing": {
+        "message": "Bing"
+    },
+    "copyUrl": {
+        "message": "Copy URL"
+    },
+    "editBookmark": {
+        "message": "Edit Bookmark"
+    },
+    "del": {
+        "message": "Delete"
+    },
+    "infoEdit": {
+        "message": "Info Edit"
+    },
+    "IconDescribe": {
+        "message": "The homepage icon will be automatically fetched after entering the website link. Some websites or foreign sites may not succeed."
+    },
+    "websiteLink": {
+        "message": "Website Link"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "Please enter the website link"
+    },
+    "websiteLinkError": {
+        "message": "Website link cannot be empty"
+    },
+    "websiteName": {
+        "message": "Website Name"
+    },
+    "websiteNameError": {
+        "message": "Website name cannot be empty"
+    },
+    "websiteNamePlaceholder": {
+        "message": "Please enter the website name"
+    },
+    "iconEdit": {
+        "message": "Icon Edit"
+    },
+    "iconChoose": {
+        "message": "Icon Choose"
+    },
+    "default": {
+        "message": "Default"
+    },
+    "official": {
+        "message": "Official"
+    },
+    "upload": {
+        "message": "Upload"
+    },
+    "uploadImage": {
+        "message": "Upload Image"
+    },
+    "save": {
+        "message": "Save"
+    },
+    "cancel": {
+        "message": "Cancel"
     }
 }

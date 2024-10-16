@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "Ошибка при загрузке закладок"
+    },
+    "set": {
+        "message": "Настройки"
+    },
+    "bookmark": {
+        "message": "Закладка"
+    },
+    "baidu": {
+        "message": "Baidu"
+    },
+    "google": {
+        "message": "Google"
+    },
+    "bing": {
+        "message": "Bing"
+    },
+    "copyUrl": {
+        "message": "Скопировать URL"
+    },
+    "editBookmark": {
+        "message": "Редактировать закладку"
+    },
+    "del": {
+        "message": "Удалить"
+    },
+    "infoEdit": {
+        "message": "Редактирование информации"
+    },
+    "IconDescribe": {
+        "message": "После ввода ссылки на сайт значок главной страницы будет автоматически получен. У некоторых сайтов или иностранных сайтов это может не сработать."
+    },
+    "websiteLink": {
+        "message": "Ссылка на сайт"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "Пожалуйста, введите ссылку на сайт"
+    },
+    "websiteLinkError": {
+        "message": "Ссылка на сайт не может быть пустой"
+    },
+    "websiteName": {
+        "message": "Название сайта"
+    },
+    "websiteNameError": {
+        "message": "Название сайта не может быть пустым"
+    },
+    "websiteNamePlaceholder": {
+        "message": "Пожалуйста, введите название сайта"
+    },
+    "iconEdit": {
+        "message": "Редактирование значка"
+    },
+    "iconChoose": {
+        "message": "Выбор значка"
+    },
+    "default": {
+        "message": "По умолчанию"
+    },
+    "official": {
+        "message": "Официальный"
+    },
+    "upload": {
+        "message": "Загрузить"
+    },
+    "uploadImage": {
+        "message": "Загрузить изображение"
+    },
+    "save": {
+        "message": "Сохранить"
+    },
+    "cancel": {
+        "message": "Отмена"
     }
 }

@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "載入書籤時出錯"
+    },
+    "set": {
+        "message": "設定"
+    },
+    "bookmark": {
+        "message": "書籤"
+    },
+    "baidu": {
+        "message": "百度"
+    },
+    "google": {
+        "message": "谷歌"
+    },
+    "bing": {
+        "message": "必應"
+    },
+    "copyUrl": {
+        "message": "複製地址"
+    },
+    "editBookmark": {
+        "message": "編輯書籤"
+    },
+    "del": {
+        "message": "刪除"
+    },
+    "infoEdit": {
+        "message": "資訊編輯"
+    },
+    "IconDescribe": {
+        "message": "輸入網站鏈接後會自動獲取首頁圖標，個別網站或國外網站可能會獲取不成功"
+    },
+    "websiteLink": {
+        "message": "網站鏈接"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "請輸入網站鏈接"
+    },
+    "websiteLinkError": {
+        "message": "網站鏈接不能為空"
+    },
+    "websiteName": {
+        "message": "網站名稱"
+    },
+    "websiteNameError": {
+        "message": "網站名稱不能為空"
+    },
+    "websiteNamePlaceholder": {
+        "message": "請輸入網站名稱"
+    },
+    "iconEdit": {
+        "message": "圖標編輯"
+    },
+    "iconChoose": {
+        "message": "圖標選擇"
+    },
+    "default": {
+        "message": "默認"
+    },
+    "official": {
+        "message": "官方"
+    },
+    "upload": {
+        "message": "上傳"
+    },
+    "uploadImage": {
+        "message": "上傳圖片"
+    },
+    "save": {
+        "message": "保存"
+    },
+    "cancel": {
+        "message": "取消"
     }
 }

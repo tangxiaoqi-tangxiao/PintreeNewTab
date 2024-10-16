@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "북마크를 로드하는 중 오류가 발생했습니다"
+    },
+    "set": {
+        "message": "설정"
+    },
+    "bookmark": {
+        "message": "북마크"
+    },
+    "baidu": {
+        "message": "바이두"
+    },
+    "google": {
+        "message": "구글"
+    },
+    "bing": {
+        "message": "빙"
+    },
+    "copyUrl": {
+        "message": "URL 복사"
+    },
+    "editBookmark": {
+        "message": "북마크 편집"
+    },
+    "del": {
+        "message": "삭제"
+    },
+    "infoEdit": {
+        "message": "정보 편집"
+    },
+    "IconDescribe": {
+        "message": "웹사이트 링크를 입력하면 홈페이지 아이콘이 자동으로 가져와집니다. 일부 웹사이트나 해외 사이트는 성공하지 않을 수 있습니다."
+    },
+    "websiteLink": {
+        "message": "웹사이트 링크"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "웹사이트 링크를 입력하세요"
+    },
+    "websiteLinkError": {
+        "message": "웹사이트 링크는 비어 있을 수 없습니다"
+    },
+    "websiteName": {
+        "message": "웹사이트 이름"
+    },
+    "websiteNameError": {
+        "message": "웹사이트 이름은 비어 있을 수 없습니다"
+    },
+    "websiteNamePlaceholder": {
+        "message": "웹사이트 이름을 입력하세요"
+    },
+    "iconEdit": {
+        "message": "아이콘 편집"
+    },
+    "iconChoose": {
+        "message": "아이콘 선택"
+    },
+    "default": {
+        "message": "기본"
+    },
+    "official": {
+        "message": "공식"
+    },
+    "upload": {
+        "message": "업로드"
+    },
+    "uploadImage": {
+        "message": "이미지 업로드"
+    },
+    "save": {
+        "message": "저장"
+    },
+    "cancel": {
+        "message": "취소"
     }
 }

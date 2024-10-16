@@ -103,10 +103,10 @@
               <div class="flex w-10/12">
                 <div class="join w-full">
                   <select id="currency" class="select select-bordered w-24 select-md join-item">
-                    <option value="0" selected>书签</option>
-                    <option value="1">百度</option>
-                    <option value="2">谷歌</option>
-                    <option value="3">必应</option>
+                    <option value="0" selected id="bookmark_i18n"></option>
+                    <option value="1" id="baidu_i18n"></option>
+                    <option value="2" id="google_i18n"></option>
+                    <option value="3" id="bing_i18n"></option>
                   </select>
 
                   <input id="searchInput" class="w-full input input-bordered input-md join-item" placeholder="" />
@@ -229,7 +229,7 @@
   <!-- 设置 -->
   <dialog id="SetUp_modal" class="modal">
     <div class="modal-box">
-      <h3 class="text-lg font-bold">设置</h3>
+      <h3 class="text-lg font-bold"><span id="set_i18n"></span></h3>
       <div class="mt-4">
         <div class="flex justify-start items-center text-sm">
           <label for="ContextMenuCheckbox"><span id="setContextMenu_i18n"></span></label>
@@ -248,27 +248,27 @@
       <div class="grid grid-cols-2 gap-4 p-5">
         <!-- 左侧信息编辑 -->
         <div>
-          <h2 class="text-xl font-bold mb-4 dark:text-gray-400">信息编辑</h2>
-          <p class="text-gray-500 mb-2">输入网站链接后会自动获取首页图标，个别网站或国外网站可能会获取不成功</p>
-          <label class="block mb-1 text-gray-950 dark:text-gray-400">网站链接</label>
-          <input type="text" placeholder="请输入网站链接" id="websiteLink" class="input input-bordered w-full input-sm" />
-          <p id="websiteLinkError" class="hidden text-red-400">网站链接不能为空</p>
-          <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4">网站名称</label>
-          <input type="text" placeholder="请输入网站名称" id="websiteName" class="input input-bordered w-full input-sm" />
-          <p id="websiteNameError" class="hidden text-red-400">网站名称不能为空</p>
+          <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="infoEdit_i18n"></span></h2>
+          <p class="text-gray-500 mb-2"><span id="IconDescribe_i18n"></span></p>
+          <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="websiteLink_i18n"></span></label>
+          <input type="text" placeholder="" id="websiteLink" class="input input-bordered w-full input-sm" />
+          <p id="websiteLinkError" class="hidden text-red-400"><span id="websiteLinkError_i18n"></span></p>
+          <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4"><span id="websiteName_i18n"></span></label>
+          <input type="text" placeholder="" id="websiteName" class="input input-bordered w-full input-sm" />
+          <p id="websiteNameError" class="hidden text-red-400"><span id="websiteNameError_i18n"></span></p>
         </div>
 
         <!-- 右侧图标编辑 -->
         <div>
-          <h2 class="text-xl font-bold mb-4 dark:text-gray-400">图标编辑</h2>
-          <label class="block mb-1 text-gray-950 dark:text-gray-400">图标选择</label>
+          <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="iconEdit_i18n"></span></h2>
+          <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="iconChoose_i18n"></span></label>
           <div class="flex">
             <div id="defaultIcon" class="hidden flex flex-col justify-center items-center mr-2">
               <div
                 class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                 <img id="defaultImage" class="w-full h-full rounded-lg" src="" alt="" srcset="">
               </div>
-              <span class="dark:text-gray-400">默认</span>
+              <span class="dark:text-gray-400"><span id="default_i18n"></span></span>
             </div>
             <div class="flex flex-col justify-center items-center mr-2">
               <div id="refreshIcon"
@@ -282,7 +282,7 @@
                   </g>
                 </svg>
               </div>
-              <span class="dark:text-gray-400">官方</span>
+              <span class="dark:text-gray-400"><span id="official_i18n"></span></span>
             </div>
             <div class="flex flex-col justify-center items-center mr-2">
               <div
@@ -299,17 +299,17 @@
                   <circle cx="9" cy="9" r="2" />
                 </svg>
               </div>
-              <span class="dark:text-gray-400">上传</span>
+              <span class="dark:text-gray-400"><span id="upload_i18n"></span></span>
             </div>
           </div>
-          <p id="PreviewImageError" class="hidden text-red-400">请上传图片</p>
+          <p id="PreviewImageError" class="hidden text-red-400"><span id="uploadImage_i18n"></span></p>
         </div>
       </div>
       <!-- 按钮居中 -->
       <div class="flex justify-center mt-4 mb-2">
+        <button id="editSave" class="btn btn-neutral"><span id="save_i18n"></span></button>
         <form method="dialog">
-          <button id="editSave" class="btn btn-neutral">保存</button>
-          <button id="editCancel" class="btn ml-3">取消</button>
+          <button id="editCancel" class="btn ml-3"><span id="cancel_i18n"></span></button>
         </form>
       </div>
     </div>
@@ -328,7 +328,7 @@
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
           </svg>
         </div>
-        <span>复制地址</span>
+        <span id="copyUrl_i18n"></span>
       </li>
       <li id="openEditBookmark" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
         <div>
@@ -341,7 +341,7 @@
             <path d="M8 18h1" />
           </svg>
         </div>
-        <span>编辑书签</span>
+        <span id="editBookmark_i18n"></span>
       </li>
       <li id="del" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
         <div>
@@ -353,7 +353,7 @@
             <line x1="12" y1="9" x2="18" y2="15"></line>
           </svg>
         </div>
-        <span>删除</span>
+        <span id="del_i18n"></span>
       </li>
     </ul>
   </div>

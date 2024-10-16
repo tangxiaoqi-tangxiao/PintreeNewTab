@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "ブックマークの読み込み中にエラーが発生しました"
+    },
+    "set": {
+        "message": "設定"
+    },
+    "bookmark": {
+        "message": "ブックマーク"
+    },
+    "baidu": {
+        "message": "バイドゥ"
+    },
+    "google": {
+        "message": "グーグル"
+    },
+    "bing": {
+        "message": "ビング"
+    },
+    "copyUrl": {
+        "message": "URLをコピー"
+    },
+    "editBookmark": {
+        "message": "ブックマークを編集"
+    },
+    "del": {
+        "message": "削除"
+    },
+    "infoEdit": {
+        "message": "情報編集"
+    },
+    "IconDescribe": {
+        "message": "ウェブサイトリンクを入力すると、ホームページのアイコンが自動的に取得されます。一部のウェブサイトや外国のサイトでは成功しないことがあります。"
+    },
+    "websiteLink": {
+        "message": "ウェブサイトリンク"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "ウェブサイトリンクを入力してください"
+    },
+    "websiteLinkError": {
+        "message": "ウェブサイトリンクは空にできません"
+    },
+    "websiteName": {
+        "message": "ウェブサイト名"
+    },
+    "websiteNameError": {
+        "message": "ウェブサイト名は空にできません"
+    },
+    "websiteNamePlaceholder": {
+        "message": "ウェブサイト名を入力してください"
+    },
+    "iconEdit": {
+        "message": "アイコン編集"
+    },
+    "iconChoose": {
+        "message": "アイコン選択"
+    },
+    "default": {
+        "message": "デフォルト"
+    },
+    "official": {
+        "message": "公式"
+    },
+    "upload": {
+        "message": "アップロード"
+    },
+    "uploadImage": {
+        "message": "画像をアップロード"
+    },
+    "save": {
+        "message": "保存"
+    },
+    "cancel": {
+        "message": "キャンセル"
     }
 }

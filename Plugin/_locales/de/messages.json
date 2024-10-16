@@ -37,5 +37,77 @@
     },
     "errorLoadingBookmarks": {
         "message": "Fehler beim Laden der Lesezeichen"
+    },
+    "set": {
+        "message": "Einstellungen"
+    },
+    "bookmark": {
+        "message": "Lesezeichen"
+    },
+    "baidu": {
+        "message": "Baidu"
+    },
+    "google": {
+        "message": "Google"
+    },
+    "bing": {
+        "message": "Bing"
+    },
+    "copyUrl": {
+        "message": "URL kopieren"
+    },
+    "editBookmark": {
+        "message": "Lesezeichen bearbeiten"
+    },
+    "del": {
+        "message": "Löschen"
+    },
+    "infoEdit": {
+        "message": "Information bearbeiten"
+    },
+    "IconDescribe": {
+        "message": "Nach Eingabe des Website-Links wird das Startseiten-Icon automatisch abgerufen. Bei einigen Websites oder ausländischen Websites kann dies fehlschlagen."
+    },
+    "websiteLink": {
+        "message": "Website-Link"
+    },
+    "websiteLinkPlaceholder": {
+        "message": "Bitte Website-Link eingeben"
+    },
+    "websiteLinkError": {
+        "message": "Website-Link darf nicht leer sein"
+    },
+    "websiteName": {
+        "message": "Website-Name"
+    },
+    "websiteNameError": {
+        "message": "Website-Name darf nicht leer sein"
+    },
+    "websiteNamePlaceholder": {
+        "message": "Bitte Website-Name eingeben"
+    },
+    "iconEdit": {
+        "message": "Icon bearbeiten"
+    },
+    "iconChoose": {
+        "message": "Icon auswählen"
+    },
+    "default": {
+        "message": "Standard"
+    },
+    "official": {
+        "message": "Offiziell"
+    },
+    "upload": {
+        "message": "Hochladen"
+    },
+    "uploadImage": {
+        "message": "Bild hochladen"
+    },
+    "save": {
+        "message": "Speichern"
+    },
+    "cancel": {
+        "message": "Abbrechen"
     }
 }
