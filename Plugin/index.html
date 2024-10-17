@@ -317,7 +317,7 @@
   </dialog>
 
   <!-- 鼠标右键 -->
-  <div id="context-menu">
+  <!-- <div id="context-menu">
     <ul>
       <li id="copy" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
         <div>
@@ -356,7 +356,52 @@
         <span id="del_i18n"></span>
       </li>
     </ul>
-  </div>
+  </div> -->
+
+  <ul id="context-menu" class="menu menu-md hidden absolute z-50 bg-base-200 rounded-box w-56">
+    <li id="copy">
+      <a>
+        <div>
+          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-copy">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </div>
+        <span id="copyUrl_i18n" class="ml-4"></span>
+      </a>
+    </li>
+    <li id="openEditBookmark">
+      <a>
+        <div>
+          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="lucide lucide-file-pen-line">
+            <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
+            <path
+              d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+            <path d="M8 18h1" />
+          </svg>
+        </div>
+        <span id="editBookmark_i18n" class="ml-4"></span>
+      </a>
+    </li>
+    <li id="del">
+      <a>
+        <div>
+          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="feather feather-delete">
+            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+            <line x1="18" y1="9" x2="12" y2="15"></line>
+            <line x1="12" y1="9" x2="18" y2="15"></line>
+          </svg>
+        </div>
+        <span id="del_i18n" class="ml-4"></span>
+      </a>
+    </li>
+  </ul>
 
   <script type="module" src="content/content.js"></script>
 </body>
