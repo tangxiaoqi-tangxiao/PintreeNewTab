@@ -9,36 +9,50 @@ async function fetchFaviconAsBase64(url) {
             if (!isValidUrl(url)) return null;
             // 获取网站的 HTML 源代码
             fetchWithTimeout(url, {}, 5000)
-               .then(response => response.text())
-               .then(async text => {
+                .then(response => response.text())
+                .then(async text => {
                     // 使用 DOMParser 来解析 HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(text, 'text/html');
 
                     // 查找 <link rel="icon"> 或 <link rel="shortcut icon">
-                    let iconLink = doc.querySelector('link[rel="icon"]') || doc.querySelector('link[rel="shortcut icon"]');
+                    let iconLinkArr = doc.querySelectorAll('link[rel="icon"]') || doc.querySelectorAll('link[rel="shortcut icon"]');
 
                     // 如果没有找到图标链接，尝试使用默认路径 /favicon.ico
                     let faviconUrl;
-                    if (iconLink) {
-                        let href = iconLink.getAttribute('href');
-                        // 判断 href 是否为相对路径
-                        if (href.startsWith('http') && href.startsWith('//')) {
-                            faviconUrl = href;
-                        } else {
-                            // 将相对路径转换为绝对路径
-                            faviconUrl = new URL(href, url).href;
+                    let blob = null;
+                    if (iconLinkArr.length > 0) {
+                        for (let i = 0; i < iconLinkArr.length; i++) {
+                            let iconLink = iconLinkArr[i];
+                            let href = iconLink.getAttribute('href');
+                            // 判断 href 是否为相对路径
+                            if (href.startsWith('http') && href.startsWith('//')) {
+                                faviconUrl = href;
+                            } else {
+                                // 将相对路径转换为绝对路径
+                                faviconUrl = new URL(href, url).href;
+                            }
+                            // 获取图标的二进制数据
+                            const iconResponse = await fetch(faviconUrl);
+                            if (iconResponse.status != 200) {
+                                continue;
+                            } else {
+                                blob = await iconResponse.blob();
+                                break;
+                            }
                         }
+
                     } else {
                         // 如果没有找到 <link> 标签，使用默认的 /favicon.ico
                         faviconUrl = new URL('/favicon.ico', url).href;
+                        // 获取图标的二进制数据
+                        const iconResponse = await fetch(faviconUrl);
+                        if (iconResponse.status == 200) {
+                            blob = await iconResponse.blob();
+                        }
                     }
 
-                    // 获取图标的二进制数据
-                    const iconResponse = await fetch(faviconUrl);
-                    const blob = await iconResponse.blob();
-
-                    if (isImageBlob(blob)) {//判断是否是图片
+                    if (blob != null && (isImageBlob(blob, faviconUrl, ["ico"]))) {//判断是否是图片
                         // 读取 Blob 数据并转换为 Base64
                         const base64 = await convertBlobToBase64(blob);
                         resolve({ base64, title: doc.title });
@@ -305,11 +319,20 @@ function compressImageToTargetSize(file, targetSize, callback) {
 /**
  * 检查给定的Blob对象是否是一个图像文件
  * @param {Blob} blob - 需要验证的Blob对象
+ * @param {string} url - Blob对象的URL
+ * @param {Array<string>} arrtype - 允许的文件扩展名列表
  * @returns {boolean} - 如果Blob对象是一个图像文件，返回true，否则返回false
  */
-function isImageBlob(blob) {
+function isImageBlob(blob, url, arrtype) {
     // 获取Blob的MIME类型
     const type = blob.type;
+    if (type == "application/octet-stream" && url && arrtype) {
+        if (arrtype.some((item) => url.endsWith(`.${item}`))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     // 检查MIME类型是否以'image/'开头
     return /^image\//.test(type);
 }
@@ -337,4 +360,4 @@ function convertBlobToBase64(blob) {
     });
 }
 
-export { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree ,convertBlobToBase64,compressImageToTargetSize};
+export { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlobToBase64, compressImageToTargetSize };
