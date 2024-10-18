@@ -703,7 +703,11 @@ function ContextMenu(e, link) {
             refreshIcon.ondblclick = () => {
                 fetchFaviconAsBase64(url)
                     .then((data) => {
-                        if (data && data.base64) {
+                        if (websiteName.value.trim() == "" && data.title) {
+                            websiteName.value = data.title;
+                        }
+
+                        if (data.base64) {
                             PreviewImage.src = data.base64;
                             ToggleSvgOrImage(false);
                         } else {
@@ -801,7 +805,7 @@ function BookmarkEditInitialize() {
             } else {
                 ToggleSvgOrImage(true);
             }
-            if (websiteName.value == "") {
+            if (websiteName.value.trim() == "" && data.title) {
                 websiteName.value = data.title;
             }
         } else {
