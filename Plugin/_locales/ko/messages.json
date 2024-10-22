@@ -109,5 +109,8 @@
     },
     "cancel": {
         "message": "취소"
+    },
+    "setOpenNewTab": {
+        "message": "새 탭 열기"
     }
 }

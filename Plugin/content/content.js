@@ -603,6 +603,7 @@ function i18n() {
     //设置
     set_i18n.textContent = chrome.i18n.getMessage("set");
     setContextMenu_i18n.textContent = chrome.i18n.getMessage("setContextMenu");
+    setOpenNewTab_i18n.textContent = chrome.i18n.getMessage("setOpenNewTab");
     //书签
     bookmark_i18n.textContent = chrome.i18n.getMessage("bookmark");
     baidu_i18n.textContent = chrome.i18n.getMessage("baidu");

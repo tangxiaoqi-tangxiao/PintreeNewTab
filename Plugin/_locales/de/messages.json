@@ -109,5 +109,8 @@
     },
     "cancel": {
         "message": "Abbrechen"
+    },
+    "setOpenNewTab": {
+        "message": "Neuen Tab öffnen"
     }
 }

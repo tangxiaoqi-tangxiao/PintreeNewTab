@@ -109,5 +109,8 @@
     },
     "cancel": {
         "message": "Отмена"
+    },
+    "setOpenNewTab": {
+        "message": "Открыть новую вкладку"
     }
 }

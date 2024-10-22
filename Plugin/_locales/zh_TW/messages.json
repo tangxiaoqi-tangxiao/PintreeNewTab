@@ -109,5 +109,8 @@
     },
     "cancel": {
         "message": "取消"
+    },
+    "setOpenNewTab": {
+        "message": "打開新標籤頁"
     }
 }

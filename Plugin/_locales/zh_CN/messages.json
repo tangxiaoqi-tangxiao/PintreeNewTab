@@ -86,28 +86,31 @@
     "websiteNamePlaceholder": {
         "message": "请输入网站名称"
     },
-    "iconEdit":{
+    "iconEdit": {
         "message": "图标编辑"
     },
-    "iconChoose":{
+    "iconChoose": {
         "message": "图标选择"
     },
-    "default":{
+    "default": {
         "message": "默认"
     },
-    "official":{
+    "official": {
         "message": "官方"
     },
-    "upload":{
+    "upload": {
         "message": "上传"
     },
-    "uploadImage":{
+    "uploadImage": {
         "message": "上传图片"
     },
-    "save":{
+    "save": {
         "message": "保存"
     },
-    "cancel":{
+    "cancel": {
         "message": "取消"
+    },
+    "setOpenNewTab": {
+        "message": "打开新标签页"
     }
 }

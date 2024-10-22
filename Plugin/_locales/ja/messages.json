@@ -109,5 +109,8 @@
     },
     "cancel": {
         "message": "キャンセル"
+    },
+    "setOpenNewTab": {
+        "message": "新しいタブを開く"
     }
 }
