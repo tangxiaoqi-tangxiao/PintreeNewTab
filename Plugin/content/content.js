@@ -167,7 +167,7 @@ function createCard(link) {
     };
 
     const card = document.createElement('div');
-    card.className = 'card_bookmarks cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
+    card.className = 'cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
     // card.onclick = () => window.open(url, '_blank'); // Make the whole card clickable
     card.oncontextmenu = (e) => ContextMenuSet(e, link);
 
@@ -698,7 +698,7 @@ function ContextMenu(e, link) {
                     }
                 });
                 //删除书签后移除元素
-                const targetElement = e.target.closest('.card_bookmarks');
+                const targetElement = e.target.closest(`.${bookmark_link}`);
                 if (targetElement) {
                     targetElement.remove();
                 }
@@ -811,7 +811,7 @@ function ContextMenu(e, link) {
 function closeMenu(event) {
     const contextMenu = document.getElementById('context-menu');
     if (event && event.type == "contextmenu") {
-        const targetElement = event.target.closest('.card_bookmarks');
+        const targetElement = event.target.closest(`.${bookmark_link}`);
         // 判断点击的目标是否为指定元素
         if (!targetElement) {
             contextMenu.style.display = 'none'; // 关闭自定义菜单
