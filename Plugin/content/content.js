@@ -1,7 +1,12 @@
 import { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlobToBase64, compressImageToTargetSize } from "./utils.js";
 import db from "./IndexedDB.js"
 
+//全局变量
 let firstLayer = null;
+
+//常量
+const bookmark_link = "bookmark-link";
+
 document.addEventListener('DOMContentLoaded', () => {
     Initialize();
     //国际化
@@ -10,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     BookmarkInitialize();
     //设置关闭右键菜单
     CloseContextMenu();
+    //设置打开新标签页
+    SetBookmarkNewTab();
     //编辑书签的初始化
     BookmarkEditInitialize();
     //数据库初始化
@@ -143,9 +150,25 @@ function searchBookmarks(query) {
 // 创建书签卡元素
 function createCard(link) {
     const { id, title, url, icon } = link;
+
+    const a_element = document.createElement('a');
+    a_element.className = bookmark_link;
+    a_element.href = url;
+    a_element.onclick = function (event) {
+        // 阻止a标签默认行为
+        event.preventDefault();
+        chrome.storage.sync.get('BookmarkNewTab', (data) => {
+            if (data.BookmarkNewTab) {
+                window.open(this.href, '_blank');
+            } else {
+                window.open(this.href, '_self');
+            }
+        });
+    };
+
     const card = document.createElement('div');
     card.className = 'card_bookmarks cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
-    card.onclick = () => window.open(url, '_blank'); // Make the whole card clickable
+    // card.onclick = () => window.open(url, '_blank'); // Make the whole card clickable
     card.oncontextmenu = (e) => ContextMenuSet(e, link);
 
     const cardIcon = document.createElement('img');
@@ -187,7 +210,9 @@ function createCard(link) {
     card.appendChild(cardIcon);
     card.appendChild(cardContent);
 
-    return card;
+    a_element.appendChild(card);
+
+    return a_element;
 }
 
 // 创建文件夹卡片元素
@@ -540,6 +565,25 @@ function CloseContextMenu() {
     }
 }
 
+//设置打开新标签页
+function SetBookmarkNewTab() {
+    const checkbox = document.getElementById('bookmarkNewTab');
+    chrome.storage.sync.get('BookmarkNewTab', (data) => {
+        if (data.BookmarkNewTab) {
+            checkbox.checked = true;
+        } else {
+            checkbox.checked = false;
+        }
+    });
+    checkbox.onclick = () => {
+        if (checkbox.checked) {
+            chrome.storage.sync.set({ 'BookmarkNewTab': true });
+        } else {
+            chrome.storage.sync.set({ 'BookmarkNewTab': false });
+        }
+    }
+}
+
 //更新日期
 document.addEventListener('DOMContentLoaded', (event) => {
     const yearElement = document.getElementById('currentYear');
@@ -681,6 +725,7 @@ function ContextMenu(e, link) {
 
             // 显示编辑书签模态框
             editBookmark_modal.showModal();
+            editBookmark_modal.focus();//设置为焦点，用于阻止UI库模态窗口将第一个可交互元素设置为焦点
 
             db.getData("Icons", id).then((data) => {
                 if (data) {
@@ -707,7 +752,7 @@ function ContextMenu(e, link) {
             BookmarkEditErrorHide();
             //保存按钮点击事件
             editSave.onclick = () => {
-                const targetElement = e.target.closest('.card_bookmarks');
+                const targetElement = e.target.closest(`.${bookmark_link}`);
                 SaveBookmark(id, targetElement);
             }
             //刷新网络图标双击事件
@@ -927,10 +972,8 @@ function SaveBookmark(id, element) {
             if (node.id === id) {
                 node.title = websiteName.value;
                 node.url = websiteLink.value;
-                //覆盖之前打开新页面的事件
-                element.onclick = () => {
-                    window.open(websiteLink.value, '_blank');
-                }
+                //更新打开链接
+                element.href = websiteLink.value;
 
                 //更新当前元素
                 linkText.textContent = websiteLink.value;
