@@ -16,7 +16,8 @@ async function fetchFaviconAsBase64(url) {
                     const doc = parser.parseFromString(text, 'text/html');
 
                     // 查找 <link rel="icon"> 或 <link rel="shortcut icon">
-                    let iconLinkArr = doc.querySelectorAll('link[rel="icon"]') || doc.querySelectorAll('link[rel="shortcut icon"]');
+                    let icons = doc.querySelectorAll('link[rel="icon"]');
+                    let iconLinkArr = icons.length > 0 ? icons : doc.querySelectorAll('link[rel="shortcut icon"]');
 
                     // 如果没有找到图标链接，尝试使用默认路径 /favicon.ico
                     let faviconUrl;
