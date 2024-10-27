@@ -1,5 +1,6 @@
 import { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlobToBase64, compressImageToTargetSize } from "./utils.js";
 import db from "./IndexedDB.js"
+import "../lib/Sortable.min.js"
 
 //全局变量
 let firstLayer = null;
@@ -149,10 +150,12 @@ function searchBookmarks(query) {
 
 // 创建书签卡元素
 function createCard(link) {
-    const { id, title, url, icon } = link;
+    const { id, title, url, icon, parentId } = link;
 
     const a_element = document.createElement('a');
     a_element.className = bookmark_link;
+    a_element.dataset.id = id;
+    a_element.dataset.parentId = parentId;
     a_element.href = url;
     a_element.onclick = function (event) {
         // 阻止a标签默认行为
@@ -455,11 +458,14 @@ function renderBookmarks(data, path) {
     if (links.length > 0) {
         const linkSection = document.createElement('div');
         linkSection.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 gap-6';
+        linkSection.id = "grid";
         links.forEach(link => {
             const card = createCard(link);
             linkSection.appendChild(card);
         });
         container.appendChild(linkSection);
+        //书签拖拽
+        BookmarkDrag(linkSection.id);
     }
 
     // 更新侧边栏活动状态
@@ -1073,15 +1079,14 @@ function Initialize() {
     // });
 
     // 设置modal
-    const modalInitialize = () => {
+    (() => {
         const SetUp_modal = document.getElementById('SetUp_modal');
         const SetUp_modalButton = document.getElementById('SetUp_modal_but');
 
         SetUp_modalButton.onclick = () => {
             SetUp_modal.showModal();
         };
-    }
-    modalInitialize();
+    })();
 }
 
 //删除书签缓存的图标
@@ -1117,6 +1122,7 @@ async function DelIconsCache() {
     });
 }
 
+//搜索
 function Search() {
     const query = document.getElementById('searchInput').value;
     const selectElement = document.getElementById('currency');
@@ -1142,4 +1148,23 @@ function Search() {
         default:
             break;
     }
+}
+
+//书签拖拽
+function BookmarkDrag(id) {
+    new Sortable(document.getElementById(id), {
+        animation: 150,
+        // ghostClass: 'sortable-ghost', // Class name for the drop placeholder
+        // chosenClass: 'sortable-chosen', // Class name for the chosen item
+        onEnd: function (evt) {
+            // 当拖拽结束时，可以在这里获取新顺序
+            // console.log(`从索引 ${evt.oldIndex} 移动到索引 ${evt.newIndex}`);
+            let newIndex = evt.newIndex;
+            if (evt.oldIndex < evt.newIndex) {
+                newIndex++;
+            }
+            //更新书签位置
+            chrome.bookmarks.move(evt.item.dataset.id, { index: newIndex, parentId: evt.item.dataset.parentId });
+        }
+    });
 }
