@@ -132,3 +132,6 @@ dist
 # 排除项目中不需要的文件
 *.zip
 **/css/tailwind.css
+
+# 排除IDEA
+.idea

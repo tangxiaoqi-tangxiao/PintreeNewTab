@@ -2,417 +2,424 @@
 <html lang="zh" class="h-full dark:pintree-bg-gray-900 bg-white">
 
 <head>
-  <title class="appName_i18n"></title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="keywords" content="Pintree, Bookmarks, Link Management, Export Bookmarks, Website Bookmarks">
-  <meta name="description"
-    content="Pintree is a powerful tool that helps you manage and export your browser bookmarks, converting them into an aesthetically pleasing website that is easy to share and access.">
-  <meta name="author" content="Pintree">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab">
+    <title class="appName_i18n"></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="Pintree, Bookmarks, Link Management, Export Bookmarks, Website Bookmarks">
+    <meta name="description"
+          content="Pintree is a powerful tool that helps you manage and export your browser bookmarks, converting them into an aesthetically pleasing website that is easy to share and access.">
+    <meta name="author" content="Pintree">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab">
 
-  <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
-  <link rel="mask-icon" href="assets/favicon/favicon-32x32.png" color="#0b0b0f">
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="mask-icon" href="assets/favicon/favicon-32x32.png" color="#0b0b0f">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/tailwind.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/tailwind.css">
 </head>
 
 <body class="h-full dark:pintree-bg-gray-900 bg-white">
 
-  <!-- 页面主要功能 -->
-  <div>
+<!-- 页面主要功能 -->
+<div>
     <!-- 桌面侧边栏 -->
     <div class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-60 lg:flex-col">
-      <div
-        class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
-        <div class="flex p-0 h-16 shrink-0 items-center">
-          <img class="pl-2 h-8 w-auto" src="assets/logo.svg" alt="Pintree">
-          <a href="" class="ml-4 font-extrabold text-lg dark:text-white"><span
-              class="appName_i18n">PintreeNewTab</span></a>
+        <div
+                class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
+            <div class="flex p-0 h-16 shrink-0 items-center">
+                <img class="pl-2 h-8 w-auto" src="assets/logo.svg" alt="Pintree">
+                <a href="" class="ml-4 font-extrabold text-lg dark:text-white"><span
+                        class="appName_i18n">PintreeNewTab</span></a>
+            </div>
+            <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
+                <div id="sidebar" class="flex flex-1 flex-col">
+                    <ul id="navigation" class="space-y-1 select-none">
+                        <!-- 导航项目将在此处插入 -->
+                    </ul>
+                </div>
+            </div>
         </div>
-        <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
-          <div id="sidebar" class="flex flex-1 flex-col">
-            <ul id="navigation" class="space-y-1 select-none">
-              <!-- 导航项目将在此处插入 -->
-            </ul>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- 主要内容领域 -->
     <div class="lg:pl-60 dark:pintree-bg-gray-900 flex flex-col min-h-screen">
-      <div
-        class="items-center justify-between sticky top-0 z-40 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-        <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
-          <div class="flex gap-x-4 justify-between lg:w-8/12">
-            <!-- <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
-            <div class="hidden lg:block relative w-72 h-full items-center justify-between">
-              <button id="searchButton" class="absolute h-full text-gray-400 rounded">
-                <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400" viewBox="0 0 20 20"
-                  fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd"
-                    d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                    clip-rule="evenodd"></path>
-                </svg>
-              </button>
-              <input id="searchInput" type="search"
-                class="text-sm text-gray-900 dark:text-gray-400 pl-8 h-full border-0 focus:outline-none focus:ring-0 dark:pintree-bg-gray-900"
-                placeholder="">
-              <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden"><span
-                  id="clear_i18n"></span></button>
-            </div> -->
+        <div
+                class="items-center justify-between sticky top-0 z-40 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+            <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
+                <div class="flex gap-x-4 justify-between lg:w-8/12">
+                    <!-- <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
+                    <div class="hidden lg:block relative w-72 h-full items-center justify-between">
+                      <button id="searchButton" class="absolute h-full text-gray-400 rounded">
+                        <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400" viewBox="0 0 20 20"
+                          fill="currentColor" aria-hidden="true">
+                          <path fill-rule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                            clip-rule="evenodd"></path>
+                        </svg>
+                      </button>
+                      <input id="searchInput" type="search"
+                        class="text-sm text-gray-900 dark:text-gray-400 pl-8 h-full border-0 focus:outline-none focus:ring-0 dark:pintree-bg-gray-900"
+                        placeholder="">
+                      <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden"><span
+                          id="clear_i18n"></span></button>
+                    </div> -->
 
-            <!-- <div class="w-[35rem] hidden lg:flex">
-              <div class="relative inline-block w-[29rem]">
-                <div class="absolute inset-y-0 left-0 flex items-center text-gray-500">
-                  <select id="currency"
-                    class="h-full rounded-md border-transparent bg-transparent py-0 pl-3 pr-6 dark:text-color focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-                    <option value="0" class="dark:bg-gray-800">书签</option>
-                    <option value="1" class="dark:bg-gray-800">百度</option>
-                    <option value="2" class="dark:bg-gray-800">谷歌</option>
-                    <option value="3" class="dark:bg-gray-800">必应</option>
-                  </select>
+                    <!-- <div class="w-[35rem] hidden lg:flex">
+                      <div class="relative inline-block w-[29rem]">
+                        <div class="absolute inset-y-0 left-0 flex items-center text-gray-500">
+                          <select id="currency"
+                            class="h-full rounded-md border-transparent bg-transparent py-0 pl-3 pr-6 dark:text-color focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                            <option value="0" class="dark:bg-gray-800">书签</option>
+                            <option value="1" class="dark:bg-gray-800">百度</option>
+                            <option value="2" class="dark:bg-gray-800">谷歌</option>
+                            <option value="3" class="dark:bg-gray-800">必应</option>
+                          </select>
+                        </div>
+
+                        <div id="searchButton" class="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
+                            <path fill-rule="evenodd"
+                              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                              clip-rule="evenodd" />
+                          </svg>
+                        </div>
+
+                        <input type="text" id="searchInput"
+                          class="text-sm h-12 dark:border-gray-500 dark:pintree-bg-gray-900 dark:text-color dark: block w-full rounded-md border-gray-300 pl-[4rem] pr-10 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
+                          placeholder="" />
+                      </div>
+
+                      <button type="button" id="clearSearchButton"
+                        class="hidden ml-auto dark:pintree-bg-gray-900 dark:text-color rounded-lg border border-gray-300 dark:border-gray-500 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"><span
+                          id="clear_i18n"></span></button>
+                    </div> -->
+
+                    <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
+                    <div class="hidden lg:flex lg:w-full">
+                        <div class="flex w-10/12">
+                            <div class="join w-full">
+                                <select id="currency" class="select select-bordered w-24 select-md join-item">
+                                    <option value="0" selected id="bookmark_i18n"></option>
+                                    <option value="1" id="baidu_i18n"></option>
+                                    <option value="2" id="google_i18n"></option>
+                                    <option value="3" id="bing_i18n"></option>
+                                </select>
+
+                                <input id="searchInput" class="w-full input input-bordered input-md join-item"
+                                       placeholder=""/>
+
+                                <button id="searchButton" class="btn rounded-r-full join-item">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
+                                         class="h-4 w-4 opacity-70">
+                                        <path fill-rule="evenodd"
+                                              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+
+                        </div>
+                        <button id="clearSearchButton" class="btn hidden ml-4"><span id="clear_i18n"></span></button>
+                    </div>
+
                 </div>
-
-                <div id="searchButton" class="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
-                    <path fill-rule="evenodd"
-                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                      clip-rule="evenodd" />
-                  </svg>
+                <a href="" class="lg:hidden ml-4 font-extrabold text-2xl dark:text-white"><span
+                        class="appName_i18n"></span></a>
+                <div class="relative">
+                    <button id="themeToggleButton" type="button" aria-label="Switch theme"
+                            class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
+                        <svg id="sunIcon" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true"
+                             class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden">
+                            <path
+                                    d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z">
+                            </path>
+                            <path
+                                    d="M12.25 3v1.5M21.5 12.25H20M18.791 18.791l-1.06-1.06M18.791 5.709l-1.06 1.06M12.25 20v1.5M4.5 12.25H3M6.77 6.77 5.709 5.709M6.77 17.73l-1.061 1.061"
+                                    fill="none"></path>
+                        </svg>
+                        <svg id="moonIcon" viewBox="0 0 24 24" aria-hidden="true"
+                             class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400">
+                            <path
+                                    d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <button id="SetUp_modal_but" aria-label="Switch theme"
+                            class="ml-2 group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
+                        <svg
+                                class="size-6 h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"/>
+                        </svg>
+                        <svg
+                                class="size-6 hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"/>
+                        </svg>
+                    </button>
                 </div>
-
-                <input type="text" id="searchInput"
-                  class="text-sm h-12 dark:border-gray-500 dark:pintree-bg-gray-900 dark:text-color dark: block w-full rounded-md border-gray-300 pl-[4rem] pr-10 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
-                  placeholder="" />
-              </div>
-
-              <button type="button" id="clearSearchButton"
-                class="hidden ml-auto dark:pintree-bg-gray-900 dark:text-color rounded-lg border border-gray-300 dark:border-gray-500 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"><span
-                  id="clear_i18n"></span></button>
-            </div> -->
-
-            <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
-            <div class="hidden lg:flex lg:w-full">
-              <div class="flex w-10/12">
-                <div class="join w-full">
-                  <select id="currency" class="select select-bordered w-24 select-md join-item">
-                    <option value="0" selected id="bookmark_i18n"></option>
-                    <option value="1" id="baidu_i18n"></option>
-                    <option value="2" id="google_i18n"></option>
-                    <option value="3" id="bing_i18n"></option>
-                  </select>
-
-                  <input id="searchInput" class="w-full input input-bordered input-md join-item" placeholder="" />
-
-                  <button id="searchButton" class="btn rounded-r-full join-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
-                      class="h-4 w-4 opacity-70">
-                      <path fill-rule="evenodd"
-                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  </button>
-                </div>
-
-              </div>
-              <button id="clearSearchButton" class="btn hidden ml-4"><span id="clear_i18n"></span></button>
             </div>
+        </div>
 
-          </div>
-          <a href="" class="lg:hidden ml-4 font-extrabold text-2xl dark:text-white"><span
-              class="appName_i18n"></span></a>
-          <div class="relative">
-            <button id="themeToggleButton" type="button" aria-label="Switch theme"
-              class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
-              <svg id="sunIcon" viewBox="0 0 24 24" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                aria-hidden="true"
-                class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden">
-                <path
-                  d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z">
-                </path>
-                <path
-                  d="M12.25 3v1.5M21.5 12.25H20M18.791 18.791l-1.06-1.06M18.791 5.709l-1.06 1.06M12.25 20v1.5M4.5 12.25H3M6.77 6.77 5.709 5.709M6.77 17.73l-1.061 1.061"
-                  fill="none"></path>
-              </svg>
-              <svg id="moonIcon" viewBox="0 0 24 24" aria-hidden="true"
-                class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400">
-                <path
-                  d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
-                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </button>
-            <button id="SetUp_modal_but" aria-label="Switch theme"
-              class="ml-2 group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20">
-              <svg
-                class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-              </svg>
-              <svg
-                class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
-                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
+        <!-- 主要内容 -->
+        <main class="mt-4 dark:pintree-bg-gray-900 flex-grow">
+            <div id="loading-spinner" class="flex justify-center items-center h-full">
+                <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
+            </div>
+            <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
+                <div class="breadcrumbs text-sm">
+                    <ul id="breadcrumbs-path">
+                        <!-- 面包屑将被插入这里 -->
+                    </ul>
+                </div>
+            </div>
+            <div id="bookmarks" class="grid gap-6 p-6">
+                <!-- 书签卡将在此处插入 -->
+            </div>
+        </main>
 
-      <!-- 主要内容 -->
-      <main class="mt-4 dark:pintree-bg-gray-900 flex-grow">
-        <div id="loading-spinner" class="flex justify-center items-center h-full">
-          <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
-        </div>
-        <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
-          <div class="breadcrumbs text-sm">
-            <ul id="breadcrumbs-path">
-              <!-- 面包屑将被插入这里 -->
-            </ul>
-          </div>
-        </div>
-        <div id="bookmarks" class="grid gap-6 p-6">
-          <!-- 书签卡将在此处插入 -->
-        </div>
-      </main>
-
-      <!-- 页脚 -->
-      <footer class="bg-white w-full dark:pintree-bg-gray-900">
-        <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
-          <div class="flex justify-center space-x-6 md:order-2">
-            <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab" target="_blank"
-              class="text-gray-400 hover:text-gray-500">
-              <span class="sr-only">GitHub</span>
-              <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path fill-rule="evenodd"
-                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                  clip-rule="evenodd" />
-              </svg>
-            </a>
-          </div>
-          <div class="mt-8 md:order-1 md:mt-0">
-            <p class="text-center text-xs leading-5 text-gray-500 dark:text-gray-400 flex justify-center items-center">
-              &copy; <span id="currentYear"></span>&nbsp;Built with
-              <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
-                class="text-green-600 hover:text-green-500 flex items-center ml-1" target="_blank">
-                <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg"
-                  class="inline-block mr-1">
-                  <g clip-path="url(#clip0_421_47774)">
-                    <path d="M4.27777 9.11133H6.6111V12.0002L5.44444 10.8783L4.27777 12.0002V9.11133Z" fill="#FCB11E" />
-                    <path
-                      d="M9.05557 5.72222L5.22223 0L1.3889 5.72222H2.68634L0.444458 9.11111H10L7.75813 5.72222H9.05557Z"
-                      fill="#2D9C6C" />
-                  </g>
-                  <defs>
-                    <clipPath id="clip0_421_47774">
-                      <rect width="9.55556" height="12" fill="white" transform="translate(0.444458)" />
-                    </clipPath>
-                  </defs>
-                </svg>
-                <span class="appName_i18n"></span>
-              </a>
-            </p>
-          </div>
-        </div>
-      </footer>
+        <!-- 页脚 -->
+        <footer class="bg-white w-full dark:pintree-bg-gray-900">
+            <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
+                <div class="flex justify-center space-x-6 md:order-2">
+                    <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab" target="_blank"
+                       class="text-gray-400 hover:text-gray-500">
+                        <span class="sr-only">GitHub</span>
+                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                  clip-rule="evenodd"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="mt-8 md:order-1 md:mt-0">
+                    <p class="text-center text-xs leading-5 text-gray-500 dark:text-gray-400 flex justify-center items-center">
+                        &copy; <span id="currentYear"></span>&nbsp;Built with
+                        <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
+                           class="text-green-600 hover:text-green-500 flex items-center ml-1" target="_blank">
+                            <svg width="10" height="12" viewBox="0 0 10 12" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg"
+                                 class="inline-block mr-1">
+                                <g clip-path="url(#clip0_421_47774)">
+                                    <path d="M4.27777 9.11133H6.6111V12.0002L5.44444 10.8783L4.27777 12.0002V9.11133Z"
+                                          fill="#FCB11E"/>
+                                    <path
+                                            d="M9.05557 5.72222L5.22223 0L1.3889 5.72222H2.68634L0.444458 9.11111H10L7.75813 5.72222H9.05557Z"
+                                            fill="#2D9C6C"/>
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_421_47774">
+                                        <rect width="9.55556" height="12" fill="white" transform="translate(0.444458)"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                            <span class="appName_i18n"></span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </footer>
     </div>
-  </div>
+</div>
 
-  <!-- 设置 -->
-  <dialog id="SetUp_modal" class="modal">
+<!-- 设置 -->
+<dialog id="SetUp_modal" class="modal">
     <div class="modal-box">
-      <h3 class="text-lg font-bold"><span id="set_i18n"></span></h3>
-      <div class="mt-4">
-        <div class="flex justify-start items-center text-sm">
-          <label for="ContextMenuCheckbox"><span id="setContextMenu_i18n"></span></label>
-          <input type="checkbox" class="toggle toggle-success ml-auto" id="ContextMenuCheckbox" checked="checked" />
+        <h3 class="text-lg font-bold"><span id="set_i18n"></span></h3>
+        <div class="mt-4">
+            <div class="flex justify-start items-center text-sm">
+                <label for="ContextMenuCheckbox"><span id="setContextMenu_i18n"></span></label>
+                <input type="checkbox" class="toggle toggle-success ml-auto" id="ContextMenuCheckbox"
+                       checked="checked"/>
+            </div>
         </div>
-      </div>
-      <div class="mt-4">
-        <div class="flex justify-start items-center text-sm">
-          <label for="bookmarkNewTab"><span id="setOpenNewTab_i18n"></span></label>
-          <input type="checkbox" class="toggle toggle-success ml-auto" id="bookmarkNewTab" checked="checked" />
+        <div class="mt-4">
+            <div class="flex justify-start items-center text-sm">
+                <label for="bookmarkNewTab"><span id="setOpenNewTab_i18n"></span></label>
+                <input type="checkbox" class="toggle toggle-success ml-auto" id="bookmarkNewTab" checked="checked"/>
+            </div>
         </div>
-      </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>close</button>
+        <button>close</button>
     </form>
-  </dialog>
+</dialog>
 
-  <!-- 编辑书签 -->
-  <dialog id="editBookmark_modal" class="modal">
+<!-- 编辑书签 -->
+<dialog id="editBookmark_modal" class="modal">
     <div class="bg-white dark:pintree-bg-gray-900 rounded-lg max-w-screen-md select-none">
-      <div class="grid grid-cols-2 gap-4 p-5">
-        <!-- 左侧信息编辑 -->
-        <div>
-          <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="infoEdit_i18n"></span></h2>
-          <p class="text-gray-500 mb-2"><span id="IconDescribe_i18n"></span></p>
-          <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="websiteLink_i18n"></span></label>
-          <input type="text" placeholder="" id="websiteLink" class="input input-bordered w-full input-sm" />
-          <p id="websiteLinkError" class="hidden text-red-400"><span id="websiteLinkError_i18n"></span></p>
-          <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4"><span id="websiteName_i18n"></span></label>
-          <input type="text" placeholder="" id="websiteName" class="input input-bordered w-full input-sm" />
-          <p id="websiteNameError" class="hidden text-red-400"><span id="websiteNameError_i18n"></span></p>
-        </div>
+        <div class="grid grid-cols-2 gap-4 p-5">
+            <!-- 左侧信息编辑 -->
+            <div>
+                <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="infoEdit_i18n"></span></h2>
+                <p class="text-gray-500 mb-2"><span id="IconDescribe_i18n"></span></p>
+                <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="websiteLink_i18n"></span></label>
+                <input type="text" placeholder="" id="websiteLink" class="input input-bordered w-full input-sm"/>
+                <p id="websiteLinkError" class="hidden text-red-400"><span id="websiteLinkError_i18n"></span></p>
+                <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4"><span
+                        id="websiteName_i18n"></span></label>
+                <input type="text" placeholder="" id="websiteName" class="input input-bordered w-full input-sm"/>
+                <p id="websiteNameError" class="hidden text-red-400"><span id="websiteNameError_i18n"></span></p>
+            </div>
 
-        <!-- 右侧图标编辑 -->
-        <div>
-          <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="iconEdit_i18n"></span></h2>
-          <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="iconChoose_i18n"></span></label>
-          <div class="flex">
-            <div id="defaultIcon" class="hidden flex flex-col justify-center items-center mr-2">
-              <div
-                class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
-                <img id="defaultImage" class="w-full h-full rounded-lg" src="" alt="" srcset="">
-              </div>
-              <span class="dark:text-gray-400"><span id="default_i18n"></span></span>
+            <!-- 右侧图标编辑 -->
+            <div>
+                <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="iconEdit_i18n"></span></h2>
+                <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="iconChoose_i18n"></span></label>
+                <div class="flex">
+                    <div id="defaultIcon" class="hidden flex flex-col justify-center items-center mr-2">
+                        <div
+                                class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                            <img id="defaultImage" class="w-full h-full rounded-lg" src="" alt="" srcset="">
+                        </div>
+                        <span class="dark:text-gray-400"><span id="default_i18n"></span></span>
+                    </div>
+                    <div class="flex flex-col justify-center items-center mr-2">
+                        <div id="refreshIcon"
+                             class="iconBorder cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                            <img id="PreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
+                            <svg id="PreviewSvg" class="w-10 h-10" viewBox="0 0 172 216" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_39_3460)">
+                                    <path d="M65 164H107V216L86 195.806L65 216V164Z" fill="#FCB11E"/>
+                                    <path d="M155 103L86 0L17 103H40.3539L0 164H172L131.646 103H155Z" fill="#0BA665"/>
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="dark:text-gray-400"><span id="official_i18n"></span></span>
+                    </div>
+                    <div class="flex flex-col justify-center items-center mr-2">
+                        <div
+                                class="iconBorder image cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                            <img id="localPreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
+                            <svg id="localPreviewSvg"
+                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="w-10 h-10 text-gray-400 dark:text-gray-500 lucide lucide-image-up">
+                                <path
+                                        d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21"/>
+                                <path d="m14 19.5 3-3 3 3"/>
+                                <path d="M17 22v-5.5"/>
+                                <circle cx="9" cy="9" r="2"/>
+                            </svg>
+                        </div>
+                        <span class="dark:text-gray-400"><span id="upload_i18n"></span></span>
+                    </div>
+                </div>
+                <p id="PreviewImageError" class="hidden text-red-400"><span id="uploadImage_i18n"></span></p>
             </div>
-            <div class="flex flex-col justify-center items-center mr-2">
-              <div id="refreshIcon"
-                class="iconBorder cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
-                <img id="PreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
-                <svg id="PreviewSvg" class="w-10 h-10" viewBox="0 0 172 216" fill="none"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <g clip-path="url(#clip0_39_3460)">
-                    <path d="M65 164H107V216L86 195.806L65 216V164Z" fill="#FCB11E" />
-                    <path d="M155 103L86 0L17 103H40.3539L0 164H172L131.646 103H155Z" fill="#0BA665" />
-                  </g>
-                </svg>
-              </div>
-              <span class="dark:text-gray-400"><span id="official_i18n"></span></span>
-            </div>
-            <div class="flex flex-col justify-center items-center mr-2">
-              <div
-                class="iconBorder image cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
-                <img id="localPreviewImage" class="hidden w-full h-full rounded-lg" src="" alt="" srcset="">
-                <svg id="localPreviewSvg" class="w-10 h-10 text-gray-400 dark:text-gray-500"
-                  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                  class="lucide lucide-image-up">
-                  <path
-                    d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21" />
-                  <path d="m14 19.5 3-3 3 3" />
-                  <path d="M17 22v-5.5" />
-                  <circle cx="9" cy="9" r="2" />
-                </svg>
-              </div>
-              <span class="dark:text-gray-400"><span id="upload_i18n"></span></span>
-            </div>
-          </div>
-          <p id="PreviewImageError" class="hidden text-red-400"><span id="uploadImage_i18n"></span></p>
         </div>
-      </div>
-      <!-- 按钮居中 -->
-      <div class="flex justify-center mt-4 mb-2">
-        <button id="editSave" class="btn btn-neutral"><span id="save_i18n"></span></button>
-        <form method="dialog">
-          <button id="editCancel" class="btn ml-3"><span id="cancel_i18n"></span></button>
-        </form>
-      </div>
+        <!-- 按钮居中 -->
+        <div class="flex justify-center mt-4 mb-2">
+            <button id="editSave" class="btn btn-neutral"><span id="save_i18n"></span></button>
+            <form method="dialog">
+                <button id="editCancel" class="btn ml-3"><span id="cancel_i18n"></span></button>
+            </form>
+        </div>
     </div>
-    <input type="file" id="imageInput" accept="image/*" style="display: none;" />
-  </dialog>
+    <input type="file" id="imageInput" accept="image/*" style="display: none;"/>
+</dialog>
 
-  <!-- 鼠标右键 -->
-  <!-- <div id="context-menu">
-    <ul>
-      <li id="copy" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="feather feather-copy">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-        </div>
-        <span id="copyUrl_i18n"></span>
-      </li>
-      <li id="openEditBookmark" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-file-pen-line">
-            <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
-            <path
-              d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
-            <path d="M8 18h1" />
-          </svg>
-        </div>
-        <span id="editBookmark_i18n"></span>
-      </li>
-      <li id="del" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
-        <div>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="feather feather-delete">
-            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-            <line x1="18" y1="9" x2="12" y2="15"></line>
-            <line x1="12" y1="9" x2="18" y2="15"></line>
-          </svg>
-        </div>
-        <span id="del_i18n"></span>
-      </li>
-    </ul>
-  </div> -->
-
-  <!-- 鼠标右键 -->
-  <ul id="context-menu" class="menu menu-md hidden absolute z-50 shadow-lg bg-base-200 rounded-box w-56">
-    <li id="copy">
-      <a>
-        <div>
-          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="feather feather-copy">
-            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-          </svg>
-        </div>
-        <span id="copyUrl_i18n" class="ml-4"></span>
-      </a>
+<!-- 鼠标右键 -->
+<!-- <div id="context-menu">
+  <ul>
+    <li id="copy" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="feather feather-copy">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      </div>
+      <span id="copyUrl_i18n"></span>
     </li>
-    <li id="openEditBookmark">
-      <a>
-        <div>
-          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="lucide lucide-file-pen-line">
-            <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
-            <path
-              d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
-            <path d="M8 18h1" />
-          </svg>
-        </div>
-        <span id="editBookmark_i18n" class="ml-4"></span>
-      </a>
+    <li id="openEditBookmark" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="lucide lucide-file-pen-line">
+          <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
+          <path
+            d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
+          <path d="M8 18h1" />
+        </svg>
+      </div>
+      <span id="editBookmark_i18n"></span>
     </li>
-    <li id="del">
-      <a>
-        <div>
-          <svg class="w-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            class="feather feather-delete">
-            <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-            <line x1="18" y1="9" x2="12" y2="15"></line>
-            <line x1="12" y1="9" x2="18" y2="15"></line>
-          </svg>
-        </div>
-        <span id="del_i18n" class="ml-4"></span>
-      </a>
+    <li id="del" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+          class="feather feather-delete">
+          <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+          <line x1="18" y1="9" x2="12" y2="15"></line>
+          <line x1="12" y1="9" x2="18" y2="15"></line>
+        </svg>
+      </div>
+      <span id="del_i18n"></span>
     </li>
   </ul>
+</div> -->
 
-  <script type="module" src="content/content.js"></script>
+<!-- 书签鼠标右键 -->
+<ul id="context-menu" class="menu menu-md hidden absolute z-50 shadow-lg bg-base-200 rounded-box w-56">
+    <li id="copy">
+        <a>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="w-5 feather feather-copy">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+            </div>
+            <span id="copyUrl_i18n" class="ml-4"></span>
+        </a>
+    </li>
+    <li id="openEditBookmark">
+        <a>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="w-5 lucide lucide-file-pen-line">
+                    <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2"/>
+                    <path
+                            d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/>
+                    <path d="M8 18h1"/>
+                </svg>
+            </div>
+            <span id="editBookmark_i18n" class="ml-4"></span>
+        </a>
+    </li>
+    <li id="del">
+        <a>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="w-5 feather feather-delete">
+                    <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+                    <line x1="18" y1="9" x2="12" y2="15"></line>
+                    <line x1="12" y1="9" x2="18" y2="15"></line>
+                </svg>
+            </div>
+            <span id="del_i18n" class="ml-4"></span>
+        </a>
+    </li>
+</ul>
+
+<script type="module" src="content/content.js"></script>
 </body>
 
 </html>
