@@ -91,14 +91,14 @@ async function compressFile(inputFilePath, outputFilePath) {
 // 执行 npm run build:css
 exec('npm run build:css', { cwd: inputDir },async (err, stdout, stderr) => {
     if (err) {
-        console.error(`Error executing npm run watch:css: ${err}`);
+        console.error(`Error executing npm run build:css: ${err}`);
         return;
     }
 
-    console.log(`npm run watch:css output:\n${stdout}`);
+    console.log(`npm run build:css output:\n${stdout}`);
 
     if (stderr) {
-        console.error(`npm run watch:css stderr:\n${stderr}`);
+        console.error(`npm run build:css stderr:\n${stderr}`);
     }
 
     // 命令执行完后开始压缩文件
