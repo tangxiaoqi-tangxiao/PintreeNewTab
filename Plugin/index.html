@@ -47,6 +47,7 @@
 
     <!-- 主要内容领域 -->
     <div class="lg:pl-60 dark:pintree-bg-gray-900 flex flex-col min-h-screen">
+        <!-- 搜索框-->
         <div
                 class="items-center justify-between sticky top-0 z-40 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
@@ -171,64 +172,66 @@
             </div>
         </div>
 
-        <!-- 主要内容 -->
-        <main class="mt-4 dark:pintree-bg-gray-900 flex-grow">
-            <div id="loading-spinner" class="flex justify-center items-center h-full">
-                <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
-            </div>
-            <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
-                <div class="breadcrumbs text-sm">
-                    <ul id="breadcrumbs-path">
-                        <!-- 面包屑将被插入这里 -->
-                    </ul>
+        <div id="main" class="flex-grow flex flex-col">
+            <!-- 主要内容 -->
+            <main class="mt-4 dark:pintree-bg-gray-900">
+                <div id="loading-spinner" class="flex justify-center items-center h-full">
+                    <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
                 </div>
-            </div>
-            <div id="bookmarks" class="grid gap-6 p-6">
-                <!-- 书签卡将在此处插入 -->
-            </div>
-        </main>
-
-        <!-- 页脚 -->
-        <footer class="bg-white w-full dark:pintree-bg-gray-900">
-            <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
-                <div class="flex justify-center space-x-6 md:order-2">
-                    <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab" target="_blank"
-                       class="text-gray-400 hover:text-gray-500">
-                        <span class="sr-only">GitHub</span>
-                        <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd"
-                                  d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </a>
+                <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
+                    <div class="breadcrumbs text-sm">
+                        <ul id="breadcrumbs-path">
+                            <!-- 面包屑将被插入这里 -->
+                        </ul>
+                    </div>
                 </div>
-                <div class="mt-8 md:order-1 md:mt-0">
-                    <p class="text-center text-xs leading-5 text-gray-500 dark:text-gray-400 flex justify-center items-center">
-                        &copy; <span id="currentYear"></span>&nbsp;Built with
-                        <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
-                           class="text-green-600 hover:text-green-500 flex items-center ml-1" target="_blank">
-                            <svg width="10" height="12" viewBox="0 0 10 12" fill="none"
-                                 xmlns="http://www.w3.org/2000/svg"
-                                 class="inline-block mr-1">
-                                <g clip-path="url(#clip0_421_47774)">
-                                    <path d="M4.27777 9.11133H6.6111V12.0002L5.44444 10.8783L4.27777 12.0002V9.11133Z"
-                                          fill="#FCB11E"/>
-                                    <path
-                                            d="M9.05557 5.72222L5.22223 0L1.3889 5.72222H2.68634L0.444458 9.11111H10L7.75813 5.72222H9.05557Z"
-                                            fill="#2D9C6C"/>
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_421_47774">
-                                        <rect width="9.55556" height="12" fill="white" transform="translate(0.444458)"/>
-                                    </clipPath>
-                                </defs>
+                <div id="bookmarks" class="grid gap-6 p-6">
+                    <!-- 书签卡将在此处插入 -->
+                </div>
+            </main>
+            <!-- 页脚 -->
+            <footer class="mt-auto bg-white w-full dark:pintree-bg-gray-900">
+                <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
+                    <div class="flex justify-center space-x-6 md:order-2">
+                        <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab" target="_blank"
+                           class="text-gray-400 hover:text-gray-500">
+                            <span class="sr-only">GitHub</span>
+                            <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path fill-rule="evenodd"
+                                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                      clip-rule="evenodd"/>
                             </svg>
-                            <span class="appName_i18n"></span>
                         </a>
-                    </p>
+                    </div>
+                    <div class="mt-8 md:order-1 md:mt-0">
+                        <p class="text-center text-xs leading-5 text-gray-500 dark:text-gray-400 flex justify-center items-center">
+                            &copy; <span id="currentYear"></span>&nbsp;Built with
+                            <a href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
+                               class="text-green-600 hover:text-green-500 flex items-center ml-1" target="_blank">
+                                <svg width="10" height="12" viewBox="0 0 10 12" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     class="inline-block mr-1">
+                                    <g clip-path="url(#clip0_421_47774)">
+                                        <path d="M4.27777 9.11133H6.6111V12.0002L5.44444 10.8783L4.27777 12.0002V9.11133Z"
+                                              fill="#FCB11E"/>
+                                        <path
+                                                d="M9.05557 5.72222L5.22223 0L1.3889 5.72222H2.68634L0.444458 9.11111H10L7.75813 5.72222H9.05557Z"
+                                                fill="#2D9C6C"/>
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_421_47774">
+                                            <rect width="9.55556" height="12" fill="white"
+                                                  transform="translate(0.444458)"/>
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                                <span class="appName_i18n"></span>
+                            </a>
+                        </p>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </div>
     </div>
 </div>
 
@@ -278,8 +281,7 @@
                 <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="iconChoose_i18n"></span></label>
                 <div class="flex">
                     <div id="defaultIcon" class="hidden flex flex-col justify-center items-center mr-2">
-                        <div
-                                class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
+                        <div class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                             <img id="defaultImage" class="w-full h-full rounded-lg" src="" alt="" srcset="">
                         </div>
                         <span class="dark:text-gray-400"><span id="default_i18n"></span></span>
@@ -415,6 +417,23 @@
                 </svg>
             </div>
             <span id="del_i18n" class="ml-4"></span>
+        </a>
+    </li>
+</ul>
+
+<!--书签空白处创建右键-->
+<ul id="context-menu-blank" class="menu menu-md hidden absolute z-50 shadow-lg bg-base-200 rounded-box w-56">
+    <li id="createBookmark">
+        <a>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="w-5 feather feather-plus">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </div>
+            <span class="ml-4">创建书签</span>
         </a>
     </li>
 </ul>

@@ -13,7 +13,7 @@ class IndexedDBHelper {
             request.onupgradeneeded = (event) => {
                 this.db = event.target.result;
                 if (!this.db.objectStoreNames.contains(storeName)) {
-                    this.db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+                    this.db.createObjectStore(storeName, {keyPath: "id", autoIncrement: true});
                 }
             };
 
