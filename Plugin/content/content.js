@@ -4,7 +4,7 @@ import "../lib/Sortable.min.js"
 
 //全局变量
 let firstLayer = null;//书签集合
-let BookmarkFolderActiveId = null;//当前活跃的文件夹
+let BookmarkFolderActiveId = null;//当前活跃的文件夹id
 
 //常量
 const bookmark_link = "bookmark-link";
@@ -124,18 +124,29 @@ function searchInData(data, query) {
 
 // 清除搜索结果并重置UI
 function clearSearchResults() {
-    fetchBookmarks()
-        .then(data => {
-            const secondLayer = data;
-            if (secondLayer.length > 0) {
-                const item = secondLayer[0];
-                renderNavigation(secondLayer, document.getElementById('navigation'));
-                renderBookmarks(secondLayer, [{id: item.id, title: item.title, children: secondLayer}]);
-            }
-            document.getElementById('searchInput').value = '';
-            document.getElementById('clearSearchButton').classList.add('hidden');
-        })
-        .catch(error => console.error(`${chrome.i18n.getMessage("errorSearch")}:`, error));
+    // fetchBookmarks()
+    //     .then(data => {
+    //         const secondLayer = data;
+    //         if (secondLayer.length > 0) {
+    //             const item = secondLayer[0];
+    //             renderNavigation(secondLayer, document.getElementById('navigation'));
+    //             renderBookmarks(secondLayer, [{id: item.id, title: item.title, children: secondLayer}]);
+    //         }
+    //         document.getElementById('searchInput').value = '';
+    //         document.getElementById('clearSearchButton').classList.add('hidden');
+    //     })
+    //     .catch(error => console.error(`${chrome.i18n.getMessage("errorSearch")}:`, error));
+
+    // 自动选择并显示第一项
+    if (firstLayer.length > 0) {
+        const firstItem = firstLayer[0];
+        // 使用第一层数据渲染导航
+        renderNavigation(firstLayer, document.getElementById('navigation'), true);
+        //渲染书签
+        renderBookmarks(firstItem.children, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
+        document.getElementById('searchInput').value = '';
+        document.getElementById('clearSearchButton').classList.add('hidden');
+    }
 }
 
 // 搜索书签
@@ -568,10 +579,10 @@ function BookmarkInitialize() {
                 const firstItem = firstLayer[0];
                 // 使用第一层数据渲染导航
                 renderNavigation(firstLayer, document.getElementById('navigation'), true);
-                // 使用第一层数据渲染书签，从书签开始
-                renderBookmarks(firstLayer, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
-                //更新侧边栏项的活动状态
-                updateSidebarActiveState([{id: firstItem.id, title: firstItem.title, children: firstItem.children}]);
+                // // 使用第一层数据渲染书签，从书签开始
+                // renderBookmarks(firstLayer, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
+                // //更新侧边栏项的活动状态
+                // updateSidebarActiveState([{id: firstItem.id, title: firstItem.title, children: firstItem.children}]);
                 //渲染书签
                 renderBookmarks(firstItem.children, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
             }
