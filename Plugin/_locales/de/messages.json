@@ -112,5 +112,8 @@
     },
     "setOpenNewTab": {
         "message": "Neuen Tab öffnen"
+    },
+    "bookmarkAdd": {
+        "message": "Lesezeichen hinzufügen"
     }
 }

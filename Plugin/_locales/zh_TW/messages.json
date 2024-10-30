@@ -112,5 +112,8 @@
     },
     "setOpenNewTab": {
         "message": "打開新標籤頁"
+    },
+    "bookmarkAdd": {
+        "message": "添加书签"
     }
 }

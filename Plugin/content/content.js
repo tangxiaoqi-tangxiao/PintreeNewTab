@@ -654,6 +654,7 @@ function i18n() {
     copyUrl_i18n.textContent = chrome.i18n.getMessage("copyUrl");
     editBookmark_i18n.textContent = chrome.i18n.getMessage("editBookmark");
     del_i18n.textContent = chrome.i18n.getMessage("del");
+    bookmarkAdd_i18n.textContent = chrome.i18n.getMessage("bookmarkAdd");
     //书签编辑
     infoEdit_i18n.textContent = chrome.i18n.getMessage("infoEdit");
     IconDescribe_i18n.textContent = chrome.i18n.getMessage("IconDescribe");
