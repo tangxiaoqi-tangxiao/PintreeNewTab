@@ -1,11 +1,4 @@
-import {
-    fetchFaviconAsBase64,
-    debounce,
-    findInTree,
-    deleteFromTree,
-    convertBlobToBase64,
-    compressImageToTargetSize
-} from "./utils.js";
+import {convertBlobToBase64, debounce, deleteFromTree, fetchFaviconAsBase64, findInTree} from "./utils.js";
 import db from "./IndexedDB.js"
 import "../lib/Sortable.min.js"
 
@@ -530,13 +523,10 @@ function renderBookmarks(data, path) {
 //     })
 //     .catch(error => console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error));
 
-// 主题切换功能
-const themeToggleButton = document.getElementById('themeToggleButton');
-const sunIcon = document.getElementById('sunIcon');
-const moonIcon = document.getElementById('moonIcon');
-
-// Apply dark theme
+// 应用深色主题
 function applyDarkTheme() {
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
     const root = document.documentElement;
     root.classList.add('dark');
     root.dataset.theme = 'dark';
@@ -544,8 +534,10 @@ function applyDarkTheme() {
     moonIcon.classList.remove('hidden');
 }
 
-// Apply light theme
+// 应用浅色主题
 function applyLightTheme() {
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
     const root = document.documentElement;
     root.classList.remove('dark');
     root.dataset.theme = 'light';
@@ -628,13 +620,6 @@ function SetBookmarkNewTab() {
         }
     }
 }
-
-//更新日期
-document.addEventListener('DOMContentLoaded', (event) => {
-    const yearElement = document.getElementById('currentYear');
-    const currentYear = new Date().getFullYear();
-    yearElement.textContent = currentYear;
-});
 
 // i18n 多语言国际化
 function i18n() {
@@ -808,11 +793,6 @@ function ContextMenu(e, link) {
 
 //空白处右键菜单
 function ContextMenuBlank(e) {
-    if (!BookmarkFolderActiveId) {
-        return true;
-    }
-    e.preventDefault();
-
     const contextMenu = document.getElementById('context-menu-blank');
 
     // 右键菜单逻辑
@@ -904,14 +884,16 @@ function closeMenu(event) {
     if (event && event.type === "contextmenu") {
         const targetElement = event.target.closest(`.${bookmark_link}`);
         const targetElement2 = event.target.closest(`#main`);
-        // 判断点击的目标是否为指定元素
+        //没有在指定元素触发隐藏右键事件隐藏菜单
         if (!targetElement) {
             contextMenu.classList.add("hidden"); // 关闭自定义菜单
         }
-        if (!targetElement2) {
+        //contextMenu2子元素触发右键事件隐藏菜单
+        if (targetElement) {
             contextMenu2.classList.add("hidden"); // 关闭自定义菜单
         }
-        if (targetElement) {
+        //没有在指定元素触发隐藏右键事件隐藏菜单
+        if (!targetElement2) {
             contextMenu2.classList.add("hidden"); // 关闭自定义菜单
         }
     } else {
@@ -1260,6 +1242,7 @@ function Initialize() {
     }
 
     // Event listener for theme toggle button
+    const themeToggleButton = document.getElementById('themeToggleButton');
     themeToggleButton.addEventListener('click', toggleTheme);
 
     // Automatically apply theme according to system theme settings
@@ -1304,12 +1287,32 @@ function Initialize() {
         document.onkeydown = closeMenu; // 按下任意键关闭菜单
         document.oncontextmenu = closeMenu; // 按下任意键关闭菜单
         window.onresize = closeMenu; // 窗口大小改变时关闭菜单
+        document.ondragstart = closeMenu;//拖拽开始事件
     })();
 
     //书签空白处鼠标右键
     (() => {
         let bookmarks = document.getElementById("main");
-        bookmarks.oncontextmenu = ContextMenuBlank;
+        bookmarks.oncontextmenu = (event) => {
+            event.preventDefault();
+            if (!BookmarkFolderActiveId) {
+                return true;
+            }
+            const targetElement = event.target.closest(`.${bookmark_link}`);
+            if (!targetElement) {
+                chrome.storage.sync.get('ContextMenu', (data) => {
+                    if (!data.ContextMenu) {
+                        ContextMenuBlank(event);
+                    }
+                });
+            }
+        };
+    })();
+
+    //更新日期
+    (() => {
+        const yearElement = document.getElementById('currentYear');
+        yearElement.textContent = new Date().getFullYear();
     })();
 }
 
