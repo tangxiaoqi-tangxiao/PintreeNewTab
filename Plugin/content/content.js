@@ -422,6 +422,9 @@ function updateSidebarActiveState(path) {
 
     //将当前活跃的书签文件夹id保存到全局变量中
     BookmarkFolderActiveId = ActiveId;
+    if (ActiveId) {
+        ExpandActiveFolder();
+    }
 }
 
 // 未找到搜索结果时显示消息
@@ -1427,4 +1430,23 @@ function mainContentIsNull() {
 function bookmarkIsNull() {
     let bookmarkList = document.querySelectorAll("#grid > a").length;
     return !((bookmarkList) > 0);
+}
+
+//展开侧边栏当前活跃的文件夹
+function ExpandActiveFolder() {
+    let active = document.querySelector(".sidebar-active");
+
+    while (active) {
+        let ul = active.parentNode;
+        if (ul) {
+            ul.classList.remove("hidden");
+            if (ul.previousElementSibling) {
+                active = ul.previousElementSibling;
+            } else {
+                active = null;
+            }
+        } else {
+            active = null;
+        }
+    }
 }
