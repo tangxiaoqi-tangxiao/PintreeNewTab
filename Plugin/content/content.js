@@ -1,6 +1,6 @@
-import {convertBlobToBase64, debounce, deleteFromTree, fetchFaviconAsBase64, findInTree} from "./utils.js";
-import db from "./IndexedDB.js"
-import "../lib/Sortable.min.js"
+import {convertBlobToBase64, debounce, deleteFromTree, fetchFaviconAsBase64, findInTree} from "../utils/utils.js";
+import db from "../utils/IndexedDB.js";
+import "../lib/Sortable.min.js";
 
 //全局变量
 let firstLayer = null;//书签集合
