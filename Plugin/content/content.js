@@ -143,7 +143,7 @@ function clearSearchResults() {
         // 使用第一层数据渲染导航
         renderNavigation(firstLayer, document.getElementById('navigation'), true);
         //渲染书签
-        renderBookmarks(firstItem.children, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
+        renderBookmarks(firstItem.children, [{id: firstItem.id, title: firstItem.title, children: firstItem.children}]);
         document.getElementById('searchInput').value = '';
         document.getElementById('clearSearchButton').classList.add('hidden');
     }
@@ -359,7 +359,7 @@ function renderBreadcrumbs(path) {
 
     path.forEach((item, index) => {
         const li_element = document.createElement('li');
-        if (index == path.length - 1) {//当前所在位置不需要单击事件
+        if (index === path.length - 1) {//当前所在位置不需要单击事件
             const span_element = document.createElement('span');
             span_element.className = "inline-flex items-center gap-2";
             span_element.textContent = item.title;
@@ -380,8 +380,9 @@ function renderBreadcrumbs(path) {
             a_element.onclick = () => {
                 // Render bookmarks for the selected breadcrumb
                 const newPath = path.slice(0, index + 1);
+                //渲染书签
                 renderBookmarks(item.children, newPath);
-                updateSidebarActiveState(newPath); //更新侧边栏活动状态
+                // updateSidebarActiveState(newPath); //更新侧边栏活动状态
                 document.getElementById('clearSearchButton').classList.add('hidden'); // Hide clear button when navigating through breadcrumbs
             };
             li_element.appendChild(a_element);
@@ -580,6 +581,7 @@ function BookmarkInitialize() {
             // 自动选择并显示第一项
             if (firstLayer.length > 0) {
                 const firstItem = firstLayer[0];
+                // console.log([{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
                 // 使用第一层数据渲染导航
                 renderNavigation(firstLayer, document.getElementById('navigation'), true);
                 // // 使用第一层数据渲染书签，从书签开始
@@ -587,7 +589,11 @@ function BookmarkInitialize() {
                 // //更新侧边栏项的活动状态
                 // updateSidebarActiveState([{id: firstItem.id, title: firstItem.title, children: firstItem.children}]);
                 //渲染书签
-                renderBookmarks(firstItem.children, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
+                renderBookmarks(firstItem.children, [{
+                    id: firstItem.id,
+                    title: firstItem.title,
+                    children: firstItem.children
+                }]);
             }
         })
         .catch(error => {
