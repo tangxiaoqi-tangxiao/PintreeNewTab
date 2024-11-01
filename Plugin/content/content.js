@@ -234,7 +234,7 @@ function createCard(link) {
 // 创建文件夹卡片元素
 function createFolderCard(title, id, children, path) {
     const card = document.createElement('div');
-    card.className = 'folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
+    card.className = 'select-none folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
     card.onclick = () => {
         const newPath = path.concat({id, title, children});
         renderBookmarks(children, newPath);
@@ -1303,6 +1303,11 @@ function Initialize() {
         document.oncontextmenu = closeMenu; // 按下任意键关闭菜单
         window.onresize = closeMenu; // 窗口大小改变时关闭菜单
         document.ondragstart = closeMenu;//拖拽开始事件
+        document.onmousedown = (event) => {
+            if (event.button === 1) {
+                closeMenu(event);
+            }
+        };//鼠标中键按下事件
     })();
 
     //书签空白处鼠标右键
