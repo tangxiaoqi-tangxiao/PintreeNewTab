@@ -39,6 +39,10 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)的
 
 ![图片](.github/imgs/屏幕截图-2024-09-24-142600.png)
 
+## 项目运行和打包
+
+[详细文档](build.md)
+
 ## 使用技术
 
 - HTML/CSS/JavaScript
