@@ -1,17 +1,23 @@
 {
-  "name": "plugin",
-  "version": "1.0.0",
-  "scripts": {
-    "watch:css": "tailwindcss -i ./css/index.css -o ./css/tailwind.css --watch",
-    "build:css": "tailwindcss -i ./css/index.css -o ./css/tailwind.css --minify"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "devDependencies": {
-    "@tailwindcss/forms": "^0.5.9",
-    "daisyui": "latest",
-    "tailwindcss": "^3.4.13"
-  }
+    "name": "plugin",
+    "version": "1.0.0",
+    "source": "src/manifest.json",
+    "scripts": {
+        "watch:css": "tailwindcss -i src/css/index.css -o src/css/tailwind.css --watch",
+        "build:css": "tailwindcss -i src/css/index.css -o src/css/tailwind.css --minify",
+        "start": "concurrently \"npm run watch:css\" \"parcel watch --host localhost --dist-dir output\"",
+        "build": "npm run build:css && parcel build --no-source-maps"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "devDependencies": {
+        "@parcel/config-webextension": "^2.12.0",
+        "@tailwindcss/forms": "^0.5.9",
+        "concurrently": "^9.0.1",
+        "daisyui": "latest",
+        "parcel": "^2.12.0",
+        "tailwindcss": "^3.4.13"
+    }
 }

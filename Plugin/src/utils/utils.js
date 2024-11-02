@@ -16,8 +16,7 @@ async function fetchFaviconAsBase64(url) {
                     const doc = parser.parseFromString(text, 'text/html');
 
                     // 查找 <link rel="icon"> 或 <link rel="shortcut icon">
-                    let icons = doc.querySelectorAll('link[rel="icon"]');
-                    let iconLinkArr = icons.length > 0 ? icons : doc.querySelectorAll('link[rel="shortcut icon"]');
+                    let iconLinkArr = Array.from(doc.querySelectorAll('link')).filter(link => link.getAttribute('rel').includes('icon'));
 
                     // 如果没有找到图标链接，尝试使用默认路径 /favicon.ico
                     let faviconUrl;
@@ -36,7 +35,7 @@ async function fetchFaviconAsBase64(url) {
                             // 获取图标的二进制数据
                             const iconResponse = await fetch(faviconUrl);
                             if (iconResponse.status != 200) {
-                                continue;
+
                             } else {
                                 blob = await iconResponse.blob();
                                 break;
@@ -56,14 +55,14 @@ async function fetchFaviconAsBase64(url) {
                     if (blob != null && (isImageBlob(blob, faviconUrl, ["ico"]))) {//判断是否是图片
                         // 读取 Blob 数据并转换为 Base64
                         const base64 = await convertBlobToBase64(blob);
-                        resolve({ base64, title: doc.title });
+                        resolve({base64, title: doc.title});
                     } else {
-                        resolve({ base64: null, title: doc.title });
+                        resolve({base64: null, title: doc.title});
                     }
                 }).catch(error => {
-                    // console.error('Error fetching favicon:', error);
-                    resolve(null);
-                });
+                // console.error('Error fetching favicon:', error);
+                resolve(null);
+            });
         } catch (error) {
             // console.error('Error fetching favicon:', error);
             resolve(null);
@@ -296,8 +295,8 @@ function compressImageToTargetSize(file, targetSize, callback) {
                     for (var i = 0; i < byteString.length; i++) {
                         ia[i] = byteString.charCodeAt(i);
                     }
-                    var blob = new Blob([ab], { type: mimeString });
-                    var newFile = new File([blob], "compressed.jpg", { type: mimeString, lastModified: Date.now() });
+                    var blob = new Blob([ab], {type: mimeString});
+                    var newFile = new File([blob], "compressed.jpg", {type: mimeString, lastModified: Date.now()});
                     callback(newFile);
                 } else {
                     // 如果文件太大，降低质量并重试
@@ -361,4 +360,4 @@ function convertBlobToBase64(blob) {
     });
 }
 
-export { fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlobToBase64, compressImageToTargetSize };
+export {fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlobToBase64, compressImageToTargetSize};

@@ -4,9 +4,9 @@
 // ];
 
 chrome.action.onClicked.addListener(() => {
-  chrome.tabs.create({
-    url: "index.html"
-  });
+    chrome.tabs.create({
+        url: new URL('../index.html', import.meta.url).toString(),
+    });
 });
 
 // chrome.tabs.onCreated.addListener(function (tab) {

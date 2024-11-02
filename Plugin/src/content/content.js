@@ -1,6 +1,6 @@
 import {convertBlobToBase64, debounce, deleteFromTree, fetchFaviconAsBase64, findInTree} from "../utils/utils.js";
 import db from "../utils/IndexedDB.js";
-import "../lib/Sortable.min.js";
+import Sortable from "../lib/Sortable.min.js";
 
 //全局变量
 let firstLayer = null;//书签集合
@@ -189,12 +189,15 @@ function createCard(link) {
 
     const cardIcon = document.createElement('img');
 
-    cardIcon.src = 'assets/empty.svg';
+    cardIcon.src = new URL("../assets/empty.svg", import.meta.url).toString();
     db.getData("Icons", id).then((data) => {
         if (data) {
             cardIcon.src = data.base64;
         } else {
-            cardIcon.src = icon || 'assets/default-icon.svg'; // Use provided icon or default icon
+            cardIcon.src = icon || new URL(
+                '../assets/default-icon.svg',
+                import.meta.url
+            ); // Use provided icon or default icon
         }
     });
 
@@ -203,7 +206,10 @@ function createCard(link) {
 
     // Check if the image URL returns 404 and replace it with the default icon if it does
     cardIcon.onerror = () => {
-        cardIcon.src = 'assets/default-icon.svg';
+        cardIcon.src = new URL(
+            '../assets/default-icon.svg',
+            import.meta.url
+        );
     };
 
     const cardContent = document.createElement('div');

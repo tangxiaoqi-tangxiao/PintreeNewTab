@@ -4,18 +4,14 @@ const { minify } = require('terser');
 const { minify: minifyHTML } = require('html-minifier-terser');
 const { exec } = require('child_process');
 
-const inputDir = '../Plugin'; // 替换为你的输入文件夹路径
+const inputDir = '../Plugin/src'; // 替换为你的输入文件夹路径
 const outputDir = './dist'; // 替换为你想要输出的文件夹路径
 
 // 要排除的文件和目录列表
 let excludePaths = [
-    'node_modules',
     'json',
     'css/index.css',
     'css/styles.css',
-    'package.json',
-    'package-lock.json',
-    'tailwind.config.js'
 ];
 excludePaths = excludePaths.map((item) => {
     return path.join(inputDir, item);
