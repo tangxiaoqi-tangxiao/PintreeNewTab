@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { minify } = require('terser');
-const { minify: minifyHTML } = require('html-minifier-terser');
-const { exec } = require('child_process');
+const {minify} = require('terser');
+const {minify: minifyHTML} = require('html-minifier-terser');
+const {exec} = require('child_process');
 
-const inputDir = '../Plugin/src'; // 替换为你的输入文件夹路径
+const inputDir = './src'; // 替换为你的输入文件夹路径
 const outputDir = './dist'; // 替换为你想要输出的文件夹路径
 
 // 要排除的文件和目录列表
@@ -19,7 +19,7 @@ excludePaths = excludePaths.map((item) => {
 
 // 创建输出文件夹
 if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(outputDir, {recursive: true});
 }
 
 // 递归遍历文件夹
@@ -85,7 +85,7 @@ async function compressFile(inputFilePath, outputFilePath) {
 }
 
 // 执行 npm run build:css
-exec('npm run build:css', { cwd: inputDir },async (err, stdout, stderr) => {
+exec('npm run build:css', async (err, stdout, stderr) => {
     if (err) {
         console.error(`Error executing npm run build:css: ${err}`);
         return;
