@@ -34,7 +34,7 @@ async function fetchFaviconAsBase64(url) {
                             }
                             // 获取图标的二进制数据
                             const iconResponse = await fetch(faviconUrl);
-                            if (iconResponse.status != 200) {
+                            if (iconResponse.status !== 200) {
 
                             } else {
                                 blob = await iconResponse.blob();
@@ -47,7 +47,7 @@ async function fetchFaviconAsBase64(url) {
                         faviconUrl = new URL('/favicon.ico', url).href;
                         // 获取图标的二进制数据
                         const iconResponse = await fetch(faviconUrl);
-                        if (iconResponse.status == 200) {
+                        if (iconResponse.status === 200) {
                             blob = await iconResponse.blob();
                         }
                     }

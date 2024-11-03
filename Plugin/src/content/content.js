@@ -964,14 +964,14 @@ function BookmarkEditInitialize() {
     const debouncedSearch = debounce(async (event) => {
         let data = await fetchFaviconAsBase64(event.target.value);
 
-        if (data != null) {
+        if (data) {
             if (data.base64) {
                 PreviewImage.src = data.base64;
                 ToggleSvgOrImage(false);
             } else {
                 ToggleSvgOrImage(true);
             }
-            if (websiteName.value.trim() == "" && data.title) {
+            if (websiteName.value.trim() === "" && data.title) {
                 websiteName.value = data.title;
             }
         } else {
@@ -999,13 +999,17 @@ function BookmarkEditInitialize() {
         const url = websiteLink.value;
         fetchFaviconAsBase64(url)
             .then((data) => {
-                if (websiteName.value.trim() == "" && data.title) {
-                    websiteName.value = data.title;
-                }
+                if (data) {
+                    if (websiteName.value.trim() === "" && data.title) {
+                        websiteName.value = data.title;
+                    }
 
-                if (data.base64) {
-                    PreviewImage.src = data.base64;
-                    ToggleSvgOrImage(false);
+                    if (data.base64) {
+                        PreviewImage.src = data.base64;
+                        ToggleSvgOrImage(false);
+                    } else {
+                        ToggleSvgOrImage(true);
+                    }
                 } else {
                     ToggleSvgOrImage(true);
                 }

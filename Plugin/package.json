@@ -13,7 +13,6 @@
     "description": "",
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.9",
-        "concurrently": "^9.0.1",
         "daisyui": "latest",
         "tailwindcss": "^3.4.13",
         "html-minifier-terser": "^7.2.0",
