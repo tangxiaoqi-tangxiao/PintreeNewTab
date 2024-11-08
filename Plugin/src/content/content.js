@@ -1,10 +1,19 @@
-import {convertBlobToBase64, debounce, deleteFromTree, fetchFaviconAsBase64, findInTree} from "../utils/utils.js";
+import {
+    convertBlobToBase64,
+    debounce,
+    deleteFromTree,
+    fetchFaviconAsBase64,
+    findInTree,
+    findParentFolders,
+    isValidUrl
+} from "../utils/utils.js";
 import db from "../utils/IndexedDB.js";
 import "../lib/Sortable.min.js";
 
 //全局变量
 let firstLayer = null;//书签集合
 let BookmarkFolderActiveId = null;//当前活跃的文件夹id
+let BreadcrumbsList = [];
 
 //常量
 const bookmark_link = "bookmark-link";
@@ -244,7 +253,6 @@ function createFolderCard(title, id, children, path) {
     card.onclick = () => {
         const newPath = path.concat({id, title, children});
         renderBookmarks(children, newPath);
-        updateSidebarActiveState(newPath); // Update sidebar active state
     };
 
     const cardIcon = document.createElement('div');
@@ -274,28 +282,9 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
     container.innerHTML = ''; // Clear previous content
     folders.forEach((folder, index) => {
         if (folder.type === 'folder') {
-            const navItem = document.createElement('li');
-            navItem.className = 'items-center group flex justify-between gap-x-3 rounded-md p-2 text-gray-700 dark:text-gray-400 hover:text-main-500 hover:bg-gray-50 dark:hover:pintree-bg-gray-800 bg-opacity-50';
+            const navItem = CreateSidebarElement(folder.title, folder.id);
+            const toggleIcon = CreateIcon();
 
-            const navLinkContainer = document.createElement('div');
-            navLinkContainer.className = 'flex items-center space-x-2 truncate';
-
-            const folderIcon = document.createElement('span');
-            folderIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h4l2 2h7a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" /></svg>';
-
-            const navLink = document.createElement('a');
-            navLink.className = 'flex text-sm leading-6 font-semibold dark:text-gray-400';
-            navLink.innerText = folder.title;
-            navLink.dataset.id = folder.id;
-
-            navLinkContainer.appendChild(folderIcon);
-            navLinkContainer.appendChild(navLink);
-
-            const toggleIcon = document.createElement('span');
-            toggleIcon.className = 'ml-2 transform transition-transform';
-            toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
-
-            navItem.appendChild(navLinkContainer);
             if (folder.children && folder.children.length > 0) {
                 navItem.appendChild(toggleIcon);
             }
@@ -325,9 +314,6 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
                     navItem.classList.add('sidebar-active');
 
-                    //更新当前活跃书签文件夹id
-                    BookmarkFolderActiveId = folder.id;
-
                     if (subList.children.length > 0) {
                         subList.classList.toggle('hidden');
                         toggleIcon.classList.toggle('rotate-90');
@@ -340,12 +326,10 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                 };
             } else {
                 navItem.onclick = (e) => {
+                    closeMenu();//关闭右键菜单
                     e.stopPropagation();
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
                     navItem.classList.add('sidebar-active');
-
-                    //更新当前活跃书签文件夹id
-                    BookmarkFolderActiveId = folder.id;
 
                     renderBookmarks(folder.children, path.concat({
                         id: folder.id,
@@ -429,6 +413,8 @@ function updateSidebarActiveState(path) {
 
     //将当前活跃的书签文件夹id保存到全局变量中
     BookmarkFolderActiveId = ActiveId;
+    BreadcrumbsList = path;
+    // console.log(BreadcrumbsList, BookmarkFolderActiveId);
     if (ActiveId) {
         ExpandActiveFolder();
     }
@@ -480,6 +466,9 @@ function renderBookmarks(data, path) {
     // const links = data.filter(item => item.type === 'link').sort((a, b) => b.addDate - a.addDate);
     const links = data.filter(item => item.type === 'link');
 
+    // 更新侧边栏活动状态
+    updateSidebarActiveState(path);
+
     // 如果没有文件夹和链接，显示未找到搜索结果的消息
     if (folders.length === 0 && links.length === 0) {
         showNoResultsMessage();
@@ -517,8 +506,7 @@ function renderBookmarks(data, path) {
         });
         container.appendChild(linkSection);
     }
-    // 更新侧边栏活动状态
-    updateSidebarActiveState(path);
+
     //书签拖拽
     if (BookmarkFolderActiveId) {
         BookmarkDrag("grid");
@@ -685,9 +673,14 @@ function i18n() {
     official_i18n.textContent = chrome.i18n.getMessage("official");
     upload_i18n.textContent = chrome.i18n.getMessage("upload");
     uploadImage_i18n.textContent = chrome.i18n.getMessage("uploadImage");
-    save_i18n.textContent = chrome.i18n.getMessage("save");
-    cancel_i18n.textContent = chrome.i18n.getMessage("cancel");
-
+    let save_i18ns = [...document.getElementsByClassName("save_i18n")];
+    save_i18ns.forEach((item) => {
+        item.textContent = chrome.i18n.getMessage("save");
+    });
+    let cancel_i18ns = [...document.getElementsByClassName("cancel_i18n")];
+    cancel_i18ns.forEach((item) => {
+        item.textContent = chrome.i18n.getMessage("cancel");
+    });
     // document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
 }
 
@@ -827,6 +820,7 @@ function ContextMenuBlank(e) {
 
     //菜单事件
     {
+        //创建书签
         document.getElementById("createBookmark").onclick = () => {
             EmptyBookmarkEdit();
             BookmarkEditErrorHide();
@@ -861,6 +855,82 @@ function ContextMenuBlank(e) {
             //保存按钮点击事件
             editSave.onclick = () => {
                 SaveBookmark(0);
+            }
+        }
+
+        //创建文件夹
+        document.getElementById("createFolder").onclick = () => {
+            // 显示编辑书签模态框
+            newFolder_modal.showModal();
+            newFolderNameError.classList.add("hidden");
+            newFolderName.value = "";
+
+            folderSave.onclick = () => {
+                let Name = newFolderName.value;
+                if (Name === "") {
+                    newFolderNameError.classList.remove("hidden");
+                    return;
+                }
+
+                if (!BookmarkFolderActiveId) {
+                    MessageBoxError("无法找到当前活跃文件夹");
+                    return;
+                }
+                // 关闭模态框
+                newFolder_modal.close();
+                chrome.bookmarks.create({
+                    parentId: BookmarkFolderActiveId,
+                    title: Name
+                }, function (newFolder) {
+                    if (ErrorMessageNotification()) {
+                        return;
+                    }
+                    let link = {
+                        id: newFolder.id,
+                        type: "folder",
+                        title: Name,
+                        parentId: newFolder.parentId,
+                        addDate: newFolder.dateAdded,
+                        children: []
+                    };
+                    findInTree(firstLayer, (node) => {
+                        if (node.id === BookmarkFolderActiveId) {
+                            node.children.push(link);
+
+                            // let newNode = BreadcrumbsList.concat(link);
+                            console.log(firstLayer, findParentFolders(firstLayer, link.id), link.id)
+                            let newNode = findParentFolders(firstLayer, link.id).slice(0, -1);
+                            console.log(newNode);
+                            CreateSidebarItem(link, newNode, link.parentId);
+
+                            const container = document.getElementById('bookmarks');
+                            let folderSection = document.getElementById("grid_folders");
+
+                            if (mainContentIsNull()) {
+                                container.innerHTML = "";
+                            }
+                            if (folderIsNull()) {
+                                folderSection = document.createElement('div');
+                                folderSection.className = 'grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-12 gap-6';
+                                folderSection.id = "grid_folders";
+                                // 创建文件夹卡片
+                                folderSection.appendChild(createFolderCard(Name, newFolder.id, [], newNode));
+                                if (bookmarkIsNull()) {
+                                    container.appendChild(folderSection);
+                                } else {
+                                    const dividingLine = document.createElement('hr');
+                                    dividingLine.className = 'my-1 border-t-1 border-gray-200 dark:pintree-border-gray-800';
+                                    dividingLine.id = "dividingLine";
+                                    container.insertBefore(dividingLine, container.firstChild);
+                                    container.insertBefore(folderSection, container.firstChild);
+                                }
+                            } else {
+                                folderSection.appendChild(createFolderCard(Name, newFolder.id, [], newNode));
+                            }
+                            return true;
+                        }
+                    });
+                });
             }
         }
     }
@@ -1070,6 +1140,7 @@ function ToggleSvgOrImage(bool, local) {
 function SaveBookmark(id, element) {
     const websiteLink = document.getElementById('websiteLink');
     const websiteLinkError = document.getElementById('websiteLinkError');
+    const websiteLinkError2 = document.getElementById('websiteLinkError2');
     const websiteName = document.getElementById('websiteName');
     const websiteNameError = document.getElementById('websiteNameError');
     const PreviewImage = document.getElementById('PreviewImage');
@@ -1082,14 +1153,23 @@ function SaveBookmark(id, element) {
     const name = element?.querySelector('h2');
     const linkText = element?.querySelector('p');
 
-    if (websiteLink.value == "") {
+    if (websiteLink.value === "") {
         websiteLinkError.classList.remove('hidden');
+        websiteLinkError2.classList.add('hidden');
         return;
     } else {
         websiteLinkError.classList.add('hidden');
     }
 
-    if (websiteName.value == "") {
+    if (!isValidUrl(websiteLink.value)) {
+        websiteLinkError2.classList.remove('hidden');
+        websiteLinkError.classList.add('hidden');
+        return;
+    } else {
+        websiteLinkError2.classList.add('hidden');
+    }
+
+    if (websiteName.value === "") {
         websiteNameError.classList.remove('hidden');
         return;
     } else {
@@ -1108,6 +1188,9 @@ function SaveBookmark(id, element) {
             title: websiteName.value,
             url: websiteLink.value
         }, (updatedBookmark) => {
+            if (ErrorMessageNotification()) {
+                return;
+            }
             findInTree(firstLayer, (node) => {
                 if (node.id === id) {
                     node.title = websiteName.value;
@@ -1149,11 +1232,18 @@ function SaveBookmark(id, element) {
             });
         });
     } else {
+        if (!BookmarkFolderActiveId) {
+            MessageBoxError("无法找到当前活跃文件夹");
+            return;
+        }
         chrome.bookmarks.create({
             parentId: BookmarkFolderActiveId,
             title: websiteName.value,
             url: websiteLink.value
         }, (newBookmark) => {
+            if (ErrorMessageNotification()) {
+                return;
+            }
             // 处理新书签的逻辑
             let link = {
                 type: "link",
@@ -1162,6 +1252,7 @@ function SaveBookmark(id, element) {
                 title: newBookmark.title,
                 icon: `https://logo.clearbit.com/${new URL(newBookmark.url).hostname}`,
                 parentId: newBookmark.parentId,
+                addDate: newBookmark.dateAdded,
                 children: []
             };
             findInTree(firstLayer, (node) => {
@@ -1190,15 +1281,13 @@ function SaveBookmark(id, element) {
                         grid_element.appendChild(createCard(link));
                     } else {
                         const container = document.getElementById('bookmarks');
-                        const grid_folders = document.getElementById('grid_folders');
-                        const promptMessage = document.getElementById('promptMessage');
 
-                        if (promptMessage) {
+                        if (mainContentIsNull()) {
                             container.innerHTML = '';
                         }
 
                         //添加分割线
-                        if (grid_folders) {
+                        if (!folderIsNull()) {
                             const dividingLine = document.getElementById('dividingLine');
                             if (!dividingLine) {
                                 const separator = document.createElement('hr');
@@ -1453,6 +1542,12 @@ function bookmarkIsNull() {
     return !((bookmarkList) > 0);
 }
 
+//判断文件夹是空
+function folderIsNull() {
+    let folderList = document.querySelectorAll("#grid_folders > div").length;
+    return !(folderList > 0);
+}
+
 //展开侧边栏当前活跃的文件夹
 function ExpandActiveFolder() {
     let active = document.querySelector(".sidebar-active");
@@ -1470,4 +1565,147 @@ function ExpandActiveFolder() {
             active = null;
         }
     }
+}
+
+//消息提示
+function MessageBoxError(value, time = 5000) {
+    if (!value) {
+        return;
+    }
+    message.classList.remove("hidden");
+    messageValue.textContent = value;
+
+    setTimeout(() => {
+        message.classList.add("hidden");
+    }, time);
+}
+
+//创建侧边栏项
+function CreateSidebarItem(folder, path, parentId) {
+    if (folder.type !== 'folder') {
+        return;
+    }
+
+    let navItem_ = GetParentIdElement(parentId);
+    let container = null;
+
+    if (navItem_.nextElementSibling) {
+        container = navItem_.nextElementSibling;
+        if (!navItem_.querySelector("li>span")) {
+            navItem_.appendChild(CreateIcon());
+        }
+    } else {
+        container = document.createElement('ul');
+        let icon = navItem_.querySelector("li>span");
+        container.className = 'ml-4 space-y-2 hidden';
+        navItem_.parentNode.insertBefore(container, navItem_.nextSibling);
+
+        if (!icon) {
+            icon = CreateIcon();
+            navItem_.appendChild(icon);
+        }
+
+        navItem_.onclick = (e) => {
+            closeMenu();//关闭右键菜单
+            e.stopPropagation();
+            document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
+            container.classList.toggle('hidden');
+            icon.classList.toggle('rotate-90');
+            //查找子文件夹的父文件夹
+            let ParentNode = null;
+            findInTree(firstLayer, (node) => {
+                if (node.id === folder.parentId) {
+                    ParentNode = node;
+                    return true;
+                }
+            });
+            renderBookmarks(ParentNode.children, path);
+        }
+    }
+
+    //创建新文件夹
+    const navItem = CreateSidebarElement(folder.title, folder.id);
+    const toggleIcon = CreateIcon();
+    if (folder.children && folder.children.length > 0) {
+        navItem.appendChild(toggleIcon);
+    }
+    container.appendChild(navItem);
+
+    const subList = document.createElement('ul');
+    subList.className = 'ml-4 space-y-2 hidden';
+    container.appendChild(subList);
+
+    navItem.onclick = (e) => {
+        closeMenu();//关闭右键菜单
+        e.stopPropagation();
+        document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
+        navItem.classList.add('sidebar-active');
+
+        if (subList.children.length > 0) {
+            subList.classList.toggle('hidden');
+            toggleIcon.classList.toggle('rotate-90');
+        }
+        renderBookmarks(folder.children, path.concat({
+            id: folder.id,
+            title: folder.title,
+            children: folder.children
+        }));
+    };
+}
+
+//获取指定id的侧导航元素
+function GetParentIdElement(parentId) {
+    let item_ = null;
+    let SidebarItemList = [...document.querySelectorAll("#navigation li div a")];
+    SidebarItemList.forEach(item => {
+        if (item.dataset.id === parentId) {
+            item_ = item.parentNode.parentNode;
+        }
+    });
+    return item_;
+}
+
+function CreateSidebarElement(title, id) {
+    const navItem = document.createElement('li');
+    navItem.className = 'items-center group flex justify-between gap-x-3 rounded-md p-2 text-gray-700 dark:text-gray-400 hover:text-main-500 hover:bg-gray-50 dark:hover:pintree-bg-gray-800 bg-opacity-50';
+
+    const navLinkContainer = document.createElement('div');
+    navLinkContainer.className = 'flex items-center space-x-2 truncate';
+
+    const folderIcon = document.createElement('span');
+    folderIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h4l2 2h7a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" /></svg>';
+
+    const navLink = document.createElement('a');
+    navLink.className = 'flex text-sm leading-6 font-semibold dark:text-gray-400';
+    navLink.innerText = title;
+    navLink.dataset.id = id;
+
+    navLinkContainer.appendChild(folderIcon);
+    navLinkContainer.appendChild(navLink);
+
+    navItem.appendChild(navLinkContainer);
+    return navItem;
+}
+
+function CreateIcon() {
+    const toggleIcon = document.createElement('span');
+    toggleIcon.className = 'ml-2 transform transition-transform';
+    toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
+    return toggleIcon;
+}
+
+function ErrorMessageNotification() {
+    let err = chrome.runtime.lastError?.message;
+    if (err) {
+        switch (err) {
+            case "Can't find parent bookmark for id.":
+                err = "无法找到当前文件夹，可能已经被删除，尝试刷新页面"
+                break;
+            default:
+                break;
+        }
+        MessageBoxError(err);
+        return true;
+    }
+    return false;
 }

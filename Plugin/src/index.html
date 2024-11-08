@@ -26,8 +26,24 @@
 
 <!-- 页面主要功能 -->
 <div>
+    <!-- 错误消息提示-->
+    <div id="message" role="alert" class="hidden alert alert-error w-1/2 absolute top-2 left-1/2 -translate-x-1/2 z-50">
+        <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24">
+            <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span id="messageValue"></span>
+    </div>
+
     <!-- 桌面侧边栏 -->
-    <div class="hidden lg:fixed lg:inset-y-0 lg:z-10 lg:flex lg:w-60 lg:flex-col">
+    <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-60 lg:flex-col">
         <div
                 class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
             <div class="flex p-0 h-16 shrink-0 items-center">
@@ -49,56 +65,9 @@
     <div class="lg:pl-60 dark:pintree-bg-gray-900 flex flex-col min-h-screen">
         <!-- 搜索框-->
         <div
-                class="items-center justify-between sticky top-0 z-40 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+                class="items-center justify-between sticky top-0 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
             <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
                 <div class="flex gap-x-4 justify-between lg:w-8/12">
-                    <!-- <img class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg" alt="Pintree">
-                    <div class="hidden lg:block relative w-72 h-full items-center justify-between">
-                      <button id="searchButton" class="absolute h-full text-gray-400 rounded">
-                        <svg class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400" viewBox="0 0 20 20"
-                          fill="currentColor" aria-hidden="true">
-                          <path fill-rule="evenodd"
-                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                            clip-rule="evenodd"></path>
-                        </svg>
-                      </button>
-                      <input id="searchInput" type="search"
-                        class="text-sm text-gray-900 dark:text-gray-400 pl-8 h-full border-0 focus:outline-none focus:ring-0 dark:pintree-bg-gray-900"
-                        placeholder="">
-                      <button id="clearSearchButton" class="text-sm text-gray-500 mr-4 rounded hidden"><span
-                          id="clear_i18n"></span></button>
-                    </div> -->
-
-                    <!-- <div class="w-[35rem] hidden lg:flex">
-                      <div class="relative inline-block w-[29rem]">
-                        <div class="absolute inset-y-0 left-0 flex items-center text-gray-500">
-                          <select id="currency"
-                            class="h-full rounded-md border-transparent bg-transparent py-0 pl-3 pr-6 dark:text-color focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-                            <option value="0" class="dark:bg-gray-800">书签</option>
-                            <option value="1" class="dark:bg-gray-800">百度</option>
-                            <option value="2" class="dark:bg-gray-800">谷歌</option>
-                            <option value="3" class="dark:bg-gray-800">必应</option>
-                          </select>
-                        </div>
-
-                        <div id="searchButton" class="absolute inset-y-0 right-0 flex items-center px-2.5 text-gray-400">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
-                            <path fill-rule="evenodd"
-                              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                              clip-rule="evenodd" />
-                          </svg>
-                        </div>
-
-                        <input type="text" id="searchInput"
-                          class="text-sm h-12 dark:border-gray-500 dark:pintree-bg-gray-900 dark:text-color dark: block w-full rounded-md border-gray-300 pl-[4rem] pr-10 shadow-sm focus:border-primary-400 focus:ring focus:ring-primary-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500"
-                          placeholder="" />
-                      </div>
-
-                      <button type="button" id="clearSearchButton"
-                        class="hidden ml-auto dark:pintree-bg-gray-900 dark:text-color rounded-lg border border-gray-300 dark:border-gray-500 bg-white px-5 py-2.5 text-center text-sm font-medium text-gray-700 shadow-sm transition-all hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring focus:ring-gray-100 disabled:cursor-not-allowed disabled:border-gray-100 disabled:bg-gray-50 disabled:text-gray-400"><span
-                          id="clear_i18n"></span></button>
-                    </div> -->
-
                     <img alt="Pintree" class="pl-2 h-8 w-auto lg:hidden" src="assets/logo.svg">
                     <div class="hidden lg:flex lg:w-full">
                         <div class="flex w-10/12">
@@ -126,9 +95,8 @@
                         </div>
                         <button class="btn hidden ml-4" id="clearSearchButton"><span id="clear_i18n"></span></button>
                     </div>
-
                 </div>
-                <a class="lg:hidden ml-4 font-extrabold text-2xl dark:text-white" href=""><span
+                <a class="lg:hidden font-extrabold text-2xl dark:text-white" href=""><span
                         class="appName_i18n"></span></a>
                 <div class="relative">
                     <button aria-label="Switch theme"
@@ -158,7 +126,7 @@
                         </svg>
                     </button>
                     <button aria-label="Switch theme"
-                            class="ml-2 group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20"
+                            class="max-md:hidden md:inline-block ml-2 group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20"
                             id="SetUp_modal_but">
                         <svg
                                 class="size-6 h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
@@ -279,6 +247,7 @@
                 <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="websiteLink_i18n"></span></label>
                 <input class="input input-bordered w-full input-sm" id="websiteLink" placeholder="" type="text"/>
                 <p class="hidden text-red-400" id="websiteLinkError"><span id="websiteLinkError_i18n"></span></p>
+                <p class="hidden text-red-400" id="websiteLinkError2"><span>无效链接地址</span></p>
                 <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4"><span
                         id="websiteName_i18n"></span></label>
                 <input class="input input-bordered w-full input-sm" id="websiteName" placeholder="" type="text"/>
@@ -334,56 +303,34 @@
         </div>
         <!-- 按钮居中 -->
         <div class="flex justify-center mt-4 mb-2">
-            <button class="btn btn-neutral" id="editSave"><span id="save_i18n"></span></button>
+            <button class="btn btn-neutral" id="editSave"><span class="save_i18n"></span></button>
             <form method="dialog">
-                <button class="btn ml-3" id="editCancel"><span id="cancel_i18n"></span></button>
+                <button class="btn ml-3" id="editCancel"><span class="cancel_i18n"></span></button>
             </form>
         </div>
     </div>
     <input accept="image/*" id="imageInput" style="display: none;" type="file"/>
 </dialog>
 
-<!-- 鼠标右键 -->
-<!-- <div id="context-menu">
-  <ul>
-    <li id="copy" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="feather feather-copy">
-          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-        </svg>
-      </div>
-      <span id="copyUrl_i18n"></span>
-    </li>
-    <li id="openEditBookmark" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="lucide lucide-file-pen-line">
-          <path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" />
-          <path
-            d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" />
-          <path d="M8 18h1" />
-        </svg>
-      </div>
-      <span id="editBookmark_i18n"></span>
-    </li>
-    <li id="del" class="dark:hover:pintree-bg-gray-800 hover:bg-gray-50">
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-          class="feather feather-delete">
-          <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
-          <line x1="18" y1="9" x2="12" y2="15"></line>
-          <line x1="12" y1="9" x2="18" y2="15"></line>
-        </svg>
-      </div>
-      <span id="del_i18n"></span>
-    </li>
-  </ul>
-</div> -->
+<!--新建文件夹-->
+<dialog class="modal" id="newFolder_modal">
+    <div class="bg-white dark:pintree-bg-gray-900 rounded-lg max-w-screen-md select-none">
+        <div class="w-80 m-8">
+            <label>
+                <input id="newFolderName" type="text" placeholder="新文件夹名称"
+                       class="input input-bordered w-full max-w-xs"/>
+            </label>
+            <p class="hidden text-red-400 mt-2" id="newFolderNameError"><span>文件夹名称不能为空</span></p>
+        </div>
+        <!-- 按钮居中 -->
+        <div class="flex justify-center mt-4 mb-2">
+            <button class="btn btn-neutral" id="folderSave"><span class="save_i18n"></span></button>
+            <form method="dialog">
+                <button class="btn ml-3" id="folderCancel"><span class="cancel_i18n"></span></button>
+            </form>
+        </div>
+    </div>
+</dialog>
 
 <!-- 书签鼠标右键 -->
 <ul class="menu menu-md hidden absolute z-50 shadow-lg bg-base-200 rounded-box w-56" id="context-menu">
@@ -448,6 +395,20 @@
                 </svg>
             </div>
             <span class="ml-4" id="bookmarkAdd_i18n"></span>
+        </a>
+    </li>
+    <li id="createFolder">
+        <a>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="w-5 feather feather-folder-plus">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    <line x1="12" y1="11" x2="12" y2="17"></line>
+                    <line x1="9" y1="14" x2="15" y2="14"></line>
+                </svg>
+            </div>
+            <span class="ml-4" id="_i18n">新建文件夹</span>
         </a>
     </li>
 </ul>

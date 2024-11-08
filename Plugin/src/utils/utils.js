@@ -360,4 +360,45 @@ function convertBlobToBase64(blob) {
     });
 }
 
-export {fetchFaviconAsBase64, debounce, findInTree, deleteFromTree, convertBlobToBase64, compressImageToTargetSize};
+/**
+ * 查找并返回目标文件夹的所有父文件夹
+ * @param {Object[]} folders - 文件夹结构的数组，每个文件夹对象包含 id 和 children 属性
+ * @param {number} targetId - 目标文件夹的 id
+ * @returns {Object[]} - 包含目标文件夹所有父文件夹的数组，从根文件夹开始
+ */
+function findParentFolders(folders, targetId) {
+    let result = [];
+
+    // 定义递归查找父类的函数
+    function findFolder(folders, id) {
+        for (const folder of folders) {
+            if (folder.id === id) {
+                result.push(folder); // 找到目标文件夹，将其加入路径
+                return true; // 找到后返回
+            }
+
+            // 如果当前文件夹有子文件夹，继续在子文件夹中查找
+            if (folder.children && folder.children.length > 0) {
+                if (findFolder(folder.children, id)) {
+                    result.push(folder); // 找到目标文件夹，加入路径
+                    return true;
+                }
+            }
+        }
+        return false; // 没有找到目标文件夹
+    }
+
+    findFolder(folders, targetId);
+    return result.reverse(); // 反转顺序从根到目标文件夹
+}
+
+export {
+    fetchFaviconAsBase64,
+    debounce,
+    findInTree,
+    deleteFromTree,
+    convertBlobToBase64,
+    compressImageToTargetSize,
+    isValidUrl,
+    findParentFolders
+};
