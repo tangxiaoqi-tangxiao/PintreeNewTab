@@ -73,48 +73,6 @@ async function fetchBookmarks() {
     });
 }
 
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Variables for sidebar elements
-//     const openSidebarButton = document.getElementById('open-sidebar-button');
-//     const closeSidebarButton = document.getElementById('close-sidebar-button');
-//     const offCanvasMenu = document.getElementById('off-canvas-menu');
-//     const offCanvasBackdrop = document.getElementById('off-canvas-backdrop');
-//     const offCanvasContent = document.getElementById('off-canvas-content');
-
-//     // Function to open the sidebar
-//     const openSidebar = () => {
-//         offCanvasMenu.classList.remove('hidden');
-//         setTimeout(() => {
-//             offCanvasBackdrop.classList.add('opacity-100');
-//             offCanvasContent.classList.add('translate-x-0');
-//         }, 10);
-//     };
-
-//     // Function to close the sidebar
-//     const closeSidebar = () => {
-//         offCanvasBackdrop.classList.remove('opacity-100');
-//         offCanvasContent.classList.remove('translate-x-0');
-//         setTimeout(() => {
-//             offCanvasMenu.classList.add('hidden');
-//         }, 300); // Match the duration of the transition
-//     };
-
-//     // Event listeners for open and close buttons
-//     openSidebarButton?.addEventListener('click', openSidebar);
-//     closeSidebarButton.addEventListener('click', closeSidebar);
-//     offCanvasBackdrop.addEventListener('click', closeSidebar); // Close sidebar when clicking on the backdrop
-// });
-
-// Search functionality
-// function searchBookmarks(query) {
-//     fetchBookmarks()
-//         .then(data => {
-//             const results = searchInData(data, query.toLowerCase());
-//             renderBookmarks(results, [{ title: chrome.i18n.getMessage("searchResults"), children: results }]);
-//         })
-//         .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
-// }
-
 function searchInData(data, query) {
     let results = [];
     data.forEach(item => {
@@ -512,25 +470,6 @@ function renderBookmarks(data, path) {
         BookmarkDrag("grid");
     }
 }
-
-// 获取和渲染数据
-// fetchBookmarks()
-//     .then(data => {
-//         // 直接使用第一层数据
-//         const firstLayer = data;
-//         // 使用第一层数据渲染导航
-//         renderNavigation(firstLayer, document.getElementById('navigation'), true);
-//         // 使用第一层数据渲染书签，从书签开始
-//         renderBookmarks(firstLayer, [{ title: 'Bookmark', children: firstLayer }]);
-
-//         // 自动选择并显示第一项
-//         if (firstLayer.length > 0) {
-//             const firstItem = firstLayer[0];
-//             updateSidebarActiveState([{ title: firstItem.title, children: firstItem.children }]);
-//             renderBookmarks(firstItem.children, [{ title: 'Bookmark', children: firstLayer }, { title: firstItem.title, children: firstItem.children }]);
-//         }
-//     })
-//     .catch(error => console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error));
 
 // 应用深色主题
 function applyDarkTheme() {
