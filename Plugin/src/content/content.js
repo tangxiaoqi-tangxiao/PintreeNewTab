@@ -1571,19 +1571,19 @@ function CreateSidebarItem(folder, path) {
         navItem.appendChild(toggleIcon);
     }
     container.appendChild(navItem);
-
-    const subList = document.createElement('ul');
-    subList.className = 'ml-4 space-y-2 hidden';
-    container.appendChild(subList);
+    // console.log(1, container)
+    // const subList = document.createElement('ul');
+    // subList.className = 'ml-4 space-y-2 hidden';
+    // container.appendChild(subList);
+    // console.log(2,container);
 
     navItem.onclick = (e) => {
         closeMenu();//关闭右键菜单
         e.stopPropagation();
         document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
         // navItem.classList.add('sidebar-active');
-
-        if (subList.children.length > 0) {
-            subList.classList.toggle('hidden');
+        if (container.children.length > 0) {
+            container.classList.toggle('hidden');
             toggleIcon.classList.toggle('rotate-90');
         }
         renderBookmarks(folder.children, path.concat({
