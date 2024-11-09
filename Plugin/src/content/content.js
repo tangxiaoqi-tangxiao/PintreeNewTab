@@ -236,67 +236,142 @@ function createFolderCard(title, id, children, path) {
 }
 
 // 渲染侧边栏导航
+// function renderNavigation(folders, container, isFirstRender = false, path = []) {
+//     container.innerHTML = ''; // Clear previous content
+//     folders.forEach((folder, index) => {
+//         if (folder.type === 'folder') {
+//             const navItem = CreateSidebarItemElement(folder.title, folder.id);
+//             const toggleIcon = CreateIconElement();
+//
+//             if (folder.children && folder.children.length > 0) {
+//                 navItem.appendChild(toggleIcon);
+//             }
+//             container.appendChild(navItem);
+//
+//             if (folder.children && folder.children.length > 0) {
+//                 const subList = document.createElement('ul');
+//                 subList.className = 'ml-4 space-y-2 hidden';
+//                 renderNavigation(folder.children, subList, false, path.concat({
+//                     id: folder.id,
+//                     title: folder.title,
+//                     children: folder.children
+//                 }));
+//                 container.appendChild(subList);
+//
+//                 if (isFirstRender && index === 0) {
+//                     // 在初始渲染时展开第一个项目
+//                     subList.classList.remove('hidden');
+//                     if (subList.children.length > 0) {
+//                         toggleIcon.classList.toggle('rotate-90');
+//                     }
+//                 }
+//
+//                 navItem.onclick = (e) => {
+//                     closeMenu();//关闭右键菜单
+//                     e.stopPropagation();
+//                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
+//                     // navItem.classList.add('sidebar-active');
+//                     if (subList.children.length > 0) {
+//                         subList.classList.toggle('hidden');
+//                         toggleIcon.classList.toggle('rotate-90');
+//                     }
+//                     renderBookmarks(folder.children, path.concat({
+//                         id: folder.id,
+//                         title: folder.title,
+//                         children: folder.children
+//                     }));
+//                 };
+//             } else {
+//                 navItem.onclick = (e) => {
+//                     closeMenu();//关闭右键菜单
+//                     e.stopPropagation();
+//                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
+//                     // navItem.classList.add('sidebar-active');
+//
+//                     renderBookmarks(folder.children, path.concat({
+//                         id: folder.id,
+//                         title: folder.title,
+//                         children: folder.children
+//                     }));
+//                 };
+//             }
+//         }
+//     });
+// }
 function renderNavigation(folders, container, isFirstRender = false, path = []) {
-    container.innerHTML = ''; // Clear previous content
-    folders.forEach((folder, index) => {
-        if (folder.type === 'folder') {
-            const navItem = CreateSidebarItemElement(folder.title, folder.id);
-            const toggleIcon = CreateIconElement();
+    container.innerHTML = ''; // 清空之前的内容
 
-            if (folder.children && folder.children.length > 0) {
-                navItem.appendChild(toggleIcon);
-            }
-            container.appendChild(navItem);
+    // 使用栈来模拟递归
+    const stack = [];
+    stack.push({ folders, container, path, isFirstRender, parentElement: container });
 
-            if (folder.children && folder.children.length > 0) {
-                const subList = document.createElement('ul');
-                subList.className = 'ml-4 space-y-2 hidden';
-                renderNavigation(folder.children, subList, false, path.concat({
-                    id: folder.id,
-                    title: folder.title,
-                    children: folder.children
-                }));
-                container.appendChild(subList);
+    while (stack.length > 0) {
+        const { folders, container, path, isFirstRender, parentElement } = stack.pop();
 
-                if (isFirstRender && index === 0) {
-                    // 在初始渲染时展开第一个项目
-                    subList.classList.remove('hidden');
-                    if (subList.children.length > 0) {
-                        toggleIcon.classList.toggle('rotate-90');
-                    }
+        folders.forEach((folder, index) => {
+            if (folder.type === 'folder') {
+                const navItem = CreateSidebarItemElement(folder.title, folder.id);
+                const toggleIcon = CreateIconElement();
+
+                if (folder.children && folder.children.length > 0) {
+                    navItem.appendChild(toggleIcon);
                 }
+                parentElement.appendChild(navItem);
 
-                navItem.onclick = (e) => {
-                    closeMenu();//关闭右键菜单
-                    e.stopPropagation();
-                    document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-                    // navItem.classList.add('sidebar-active');
-                    if (subList.children.length > 0) {
-                        subList.classList.toggle('hidden');
-                        toggleIcon.classList.toggle('rotate-90');
+                // 如果当前文件夹有子项，模拟递归处理子文件夹
+                if (folder.children && folder.children.length > 0) {
+                    const subList = document.createElement('ul');
+                    subList.className = 'ml-4 space-y-2 hidden';
+                    stack.push({
+                        folders: folder.children,
+                        container: subList,
+                        path: path.concat({
+                            id: folder.id,
+                            title: folder.title,
+                            children: folder.children
+                        }),
+                        isFirstRender: false,
+                        parentElement: subList
+                    });
+                    parentElement.appendChild(subList);
+
+                    // 初次渲染时展开第一个项目
+                    if (isFirstRender && index === 0) {
+                        subList.classList.remove('hidden');
+                        if (subList.children.length > 0) {
+                            toggleIcon.classList.toggle('rotate-90');
+                        }
                     }
-                    renderBookmarks(folder.children, path.concat({
-                        id: folder.id,
-                        title: folder.title,
-                        children: folder.children
-                    }));
-                };
-            } else {
-                navItem.onclick = (e) => {
-                    closeMenu();//关闭右键菜单
-                    e.stopPropagation();
-                    document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-                    // navItem.classList.add('sidebar-active');
 
-                    renderBookmarks(folder.children, path.concat({
-                        id: folder.id,
-                        title: folder.title,
-                        children: folder.children
-                    }));
-                };
+                    navItem.onclick = (e) => {
+                        closeMenu(); // 关闭右键菜单
+                        e.stopPropagation();
+                        document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
+                        if (subList.children.length > 0) {
+                            subList.classList.toggle('hidden');
+                            toggleIcon.classList.toggle('rotate-90');
+                        }
+                        renderBookmarks(folder.children, path.concat({
+                            id: folder.id,
+                            title: folder.title,
+                            children: folder.children
+                        }));
+                    };
+                } else {
+                    navItem.onclick = (e) => {
+                        closeMenu(); // 关闭右键菜单
+                        e.stopPropagation();
+                        document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
+                        renderBookmarks(folder.children, path.concat({
+                            id: folder.id,
+                            title: folder.title,
+                            children: folder.children
+                        }));
+                    };
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 // 为导航渲染面包屑

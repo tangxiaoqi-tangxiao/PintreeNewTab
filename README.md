@@ -17,7 +17,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 - 韩语
 - 德语
 
-# 待实现功能
+## 待实现功能
 
 - [x] 创建文件夹
 - [ ] 可移动书签到文件夹
