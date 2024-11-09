@@ -5,23 +5,29 @@ class IndexedDBHelper {
         this.db = null;
     }
 
-    // 打开数据库
-    openDB(storeName) {
+    // 打开数据库并创建多个表
+    openDB(storeNames) {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(this.dbName, this.version);
 
+            //更改数据库版本触发的事件
             request.onupgradeneeded = (event) => {
                 this.db = event.target.result;
-                if (!this.db.objectStoreNames.contains(storeName)) {
-                    this.db.createObjectStore(storeName, {keyPath: "id", autoIncrement: true});
-                }
+                storeNames.forEach(storeName => {
+                    if (!this.db.objectStoreNames.contains(storeName)) {
+                        console.log('创建表', storeName);
+                        this.db.createObjectStore(storeName, {keyPath: "id", autoIncrement: true});
+                    }
+                });
             };
 
+            // 打开数据库成功触发的事件
             request.onsuccess = (event) => {
                 this.db = event.target.result;
                 resolve(this.db);
             };
 
+            // 打开数据库失败触发的事件
             request.onerror = (event) => {
                 reject(`打开数据库失败: ${event.target.error}`);
             };
@@ -79,30 +85,6 @@ class IndexedDBHelper {
         });
     }
 
-    //游标
-    GetCursor(storeName, f, f2) {
-        const transaction = this.db.transaction([storeName]);
-        const store = transaction.objectStore(storeName);
-        const request = store.openCursor();
-
-        request.onsuccess = (event) => {
-            const cursor = event.target.result;
-            if (cursor) {
-                // 处理数据
-                f(cursor.value);
-                // 继续遍历
-                cursor.continue();
-            } else {
-                //结束
-                f2();
-            }
-        };
-
-        request.onerror = (event) => {
-            f(null);
-        };
-    }
-
     // 更新数据
     updateData(storeName, data) {
         return new Promise((resolve, reject) => {
@@ -137,24 +119,34 @@ class IndexedDBHelper {
         });
     }
 
-    //批量删除
+    // 批量删除数据
     deleteMultipleData(storeName, ids) {
-        // 创建一个空数组来存储每个删除操作的Promise
-        const deletePromises = ids.map(id => {
-            // 返回一个新的Promise，它将执行单个删除操作
-            return this.deleteData(storeName, id);
-        });
+        const deletePromises = ids.map(id => this.deleteData(storeName, id));
 
-        // 使用Promise.all来处理所有的删除操作
         return Promise.all(deletePromises)
-            .then(results => {
-                // 如果所有删除操作都成功，返回成功消息
-                return `所有数据删除成功，共删除了${results.length}条数据。`;
-            })
-            .catch(error => {
-                // 如果任何一个删除操作失败，返回错误消息
-                return `删除数据时发生错误: ${error}`;
-            });
+            .then(results => `所有数据删除成功，共删除了${results.length}条数据。`)
+            .catch(error => `删除数据时发生错误: ${error}`);
+    }
+
+    // 游标
+    getCursor(storeName, f, f2) {
+        const transaction = this.db.transaction([storeName]);
+        const store = transaction.objectStore(storeName);
+        const request = store.openCursor();
+
+        request.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+                f(cursor.value);
+                cursor.continue();
+            } else {
+                f2();
+            }
+        };
+
+        request.onerror = (event) => {
+            f(null);
+        };
     }
 
     // 关闭数据库
@@ -181,6 +173,5 @@ class IndexedDBHelper {
     }
 }
 
-const dbHelper = new IndexedDBHelper('Database', 1);
-
-export default dbHelper;
+// 使用示例，注意：更改结构需要更改数据库版本
+export default new IndexedDBHelper('Database', 2);

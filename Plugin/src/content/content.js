@@ -17,6 +17,9 @@ let BreadcrumbsList = [];
 
 //常量
 const bookmark_link = "bookmark-link";
+// 定义两个数据库名称
+const dbName1 = 'Icons';
+const dbName2 = 'SetUp';
 
 document.addEventListener('DOMContentLoaded', () => {
     Initialize();
@@ -29,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //编辑书签的初始化
     BookmarkEditInitialize();
     //数据库初始化
-    db.openDB('Icons').then(async () => {
+    db.openDB([dbName1, dbName2]).then(() => {
         //初始化书签
         BookmarkInitialize();
         //删除已经删除书签的缓存图标
@@ -37,6 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // fetchFaviconAsBase64("https://registry.hub.docker.com/")
 });
+
+window.onbeforeunload = () => {
+    // 关闭数据库连接
+    db.closeDB();
+};
 
 //将浏览器书签节点转换为结构化数据格式
 function bookmarkToStructuredData(bookmarkNode) {
@@ -157,7 +165,7 @@ function createCard(link) {
     const cardIcon = document.createElement('img');
 
     cardIcon.src = new URL("../assets/empty.svg", import.meta.url).toString();
-    db.getData("Icons", id).then((data) => {
+    db.getData(dbName1, id).then((data) => {
         if (data) {
             cardIcon.src = data.base64;
         } else {
@@ -298,15 +306,17 @@ function createFolderCard(title, id, children, path) {
 //         }
 //     });
 // }
+
+// 渲染侧边栏导航
 function renderNavigation(folders, container, isFirstRender = false, path = []) {
     container.innerHTML = ''; // 清空之前的内容
 
     // 使用栈来模拟递归
     const stack = [];
-    stack.push({ folders, container, path, isFirstRender, parentElement: container });
+    stack.push({folders, container, path, isFirstRender, parentElement: container});
 
     while (stack.length > 0) {
-        const { folders, container, path, isFirstRender, parentElement } = stack.pop();
+        const {folders, container, path, isFirstRender, parentElement} = stack.pop();
 
         folders.forEach((folder, index) => {
             if (folder.type === 'folder') {
@@ -449,6 +459,14 @@ function updateSidebarActiveState(path) {
     // console.log(BreadcrumbsList, BookmarkFolderActiveId);
     if (ActiveId) {
         ExpandActiveFolder();
+        //保存当前活跃文件夹id
+        db.getData(dbName2, "ActiveId").then((data) => {
+            if (data) {
+                db.updateData(dbName2, {id: "ActiveId", data: ActiveId});
+            } else {
+                db.addData(dbName2, {id: "ActiveId", data: ActiveId});
+            }
+        });
     }
 }
 
@@ -590,7 +608,9 @@ function BookmarkInitialize() {
                 const firstItem = firstLayer[0];
                 // console.log([{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
                 // 使用第一层数据渲染导航
-                renderNavigation(firstLayer, document.getElementById('navigation'), true);
+                renderNavigation(firstLayer, document.getElementById('navigation'));
+                // 展开默认文件夹
+                ExpandDefaultFolder();
                 // // 使用第一层数据渲染书签，从书签开始
                 // renderBookmarks(firstLayer, [{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
                 // //更新侧边栏项的活动状态
@@ -771,7 +791,7 @@ function ContextMenu(e, link) {
             editBookmark_modal.showModal();
             editBookmark_modal.focus();//设置为焦点，用于阻止UI库模态窗口将第一个可交互元素设置为焦点
 
-            db.getData("Icons", id).then((data) => {
+            db.getData(dbName1, id).then((data) => {
                 if (data) {
                     defaultImage.src = data.base64;
                     defaultIcon.classList.remove("hidden");
@@ -1216,26 +1236,26 @@ function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {//本地图片
                         img.src = localPreviewImage.src;
                         if (localPreviewImage.src != location.href) {
-                            db.getData("Icons", id).then((data) => {
+                            db.getData(dbName1, id).then((data) => {
                                 if (data) {
-                                    db.updateData("Icons", {base64: localPreviewImage.src, id});
+                                    db.updateData(dbName1, {base64: localPreviewImage.src, id});
                                 } else {
-                                    db.addData("Icons", {base64: localPreviewImage.src, id});
+                                    db.addData(dbName1, {base64: localPreviewImage.src, id});
                                 }
                             });
                         }
                     } else if (!iconBorder.classList.contains('default')) {//网络图片
                         img.src = PreviewImage.src;
                         if (PreviewImage.src != location.href) {
-                            db.getData("Icons", id).then((data) => {
+                            db.getData(dbName1, id).then((data) => {
                                 if (data) {
-                                    db.updateData("Icons", {base64: PreviewImage.src, id});
+                                    db.updateData(dbName1, {base64: PreviewImage.src, id});
                                 } else {
-                                    db.addData("Icons", {base64: PreviewImage.src, id});
+                                    db.addData(dbName1, {base64: PreviewImage.src, id});
                                 }
                             });
                         } else {
-                            db.deleteData("Icons", id);
+                            db.deleteData(dbName1, id);
                         }
                     }
                     return true;
@@ -1277,12 +1297,12 @@ function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {//本地图片
                         if (localPreviewImage.src != location.href) {
                             imgsrc = localPreviewImage.src;
-                            db.addData("Icons", {base64: localPreviewImage.src, id: link.id});
+                            db.addData(dbName1, {base64: localPreviewImage.src, id: link.id});
                         }
                     } else if (!iconBorder.classList.contains('default')) {//网络图片
                         if (PreviewImage.src != location.href) {
                             imgsrc = PreviewImage.src;
-                            db.addData("Icons", {base64: PreviewImage.src, id: link.id});
+                            db.addData(dbName1, {base64: PreviewImage.src, id: link.id});
                         }
                     }
 
@@ -1477,12 +1497,12 @@ async function DelIconsCache() {
         }
     }
     GetArrId(datas);
-    db.GetCursor("Icons", (data) => {
+    db.getCursor(dbName1, (data) => {
         if (!ArrId.includes(data.id)) {
             DelArrId.push(data.id);
         }
     }, () => {
-        db.deleteMultipleData("Icons", DelArrId).then(() => {
+        db.deleteMultipleData(dbName1, DelArrId).then(() => {
             console.log("删除缓存成功");
         });
     });
@@ -1738,4 +1758,19 @@ function ErrorMessageNotification() {
         return true;
     }
     return false;
+}
+
+//展开默认文件夹
+function ExpandDefaultFolder() {
+    //获取关闭页面前活跃的文件夹id
+    db.getData(dbName2, "ActiveId").then((value) => {
+        if (value) {
+            let item = GetParentIdElement(value.data);
+            item.click();
+        } else {
+            const firstItem = firstLayer[0];
+            let item = GetParentIdElement(firstItem.id);
+            item.click();
+        }
+    });
 }

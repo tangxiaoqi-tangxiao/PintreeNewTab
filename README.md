@@ -21,7 +21,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 
 - [x] 创建文件夹
 - [ ] 可移动书签到文件夹
-- [ ] 保存侧边栏位置
+- [x] 保存侧边栏位置
 
 ## 安装和运行
 
