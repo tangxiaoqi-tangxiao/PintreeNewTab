@@ -240,8 +240,8 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
     container.innerHTML = ''; // Clear previous content
     folders.forEach((folder, index) => {
         if (folder.type === 'folder') {
-            const navItem = CreateSidebarElement(folder.title, folder.id);
-            const toggleIcon = CreateIcon();
+            const navItem = CreateSidebarItemElement(folder.title, folder.id);
+            const toggleIcon = CreateIconElement();
 
             if (folder.children && folder.children.length > 0) {
                 navItem.appendChild(toggleIcon);
@@ -270,8 +270,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                     closeMenu();//关闭右键菜单
                     e.stopPropagation();
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-                    navItem.classList.add('sidebar-active');
-
+                    // navItem.classList.add('sidebar-active');
                     if (subList.children.length > 0) {
                         subList.classList.toggle('hidden');
                         toggleIcon.classList.toggle('rotate-90');
@@ -287,7 +286,7 @@ function renderNavigation(folders, container, isFirstRender = false, path = []) 
                     closeMenu();//关闭右键菜单
                     e.stopPropagation();
                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-                    navItem.classList.add('sidebar-active');
+                    // navItem.classList.add('sidebar-active');
 
                     renderBookmarks(folder.children, path.concat({
                         id: folder.id,
@@ -837,10 +836,8 @@ function ContextMenuBlank(e) {
                             node.children.push(link);
 
                             // let newNode = BreadcrumbsList.concat(link);
-                            console.log(firstLayer, findParentFolders(firstLayer, link.id), link.id)
                             let newNode = findParentFolders(firstLayer, link.id).slice(0, -1);
-                            console.log(newNode);
-                            CreateSidebarItem(link, newNode, link.parentId);
+                            CreateSidebarItem(link, newNode);
 
                             const container = document.getElementById('bookmarks');
                             let folderSection = document.getElementById("grid_folders");
@@ -1198,6 +1195,9 @@ function SaveBookmark(id, element) {
                 if (node.id === link.parentId) {
                     node.children.push(link);
 
+                    //创建箭头图标，如果箭头存在不会创建新的图标
+                    CreateSidebarItemArrowIcon(link.parentId);
+
                     let imgsrc = null;
                     if (iconBorder.classList.contains('image')) {//本地图片
                         if (localPreviewImage.src != location.href) {
@@ -1491,7 +1491,14 @@ function folderIsNull() {
 function ExpandActiveFolder() {
     let active = document.querySelector(".sidebar-active");
 
+    let bool = false;
     while (active) {
+        if (bool) {
+            active.querySelector("li>span")?.classList.add("rotate-90");
+        } else {
+            bool = true;
+        }
+
         let ul = active.parentNode;
         if (ul) {
             ul.classList.remove("hidden");
@@ -1520,29 +1527,24 @@ function MessageBoxError(value, time = 5000) {
 }
 
 //创建侧边栏项
-function CreateSidebarItem(folder, path, parentId) {
+function CreateSidebarItem(folder, path) {
     if (folder.type !== 'folder') {
         return;
     }
 
-    let navItem_ = GetParentIdElement(parentId);
+    let navItem_ = GetParentIdElement(folder.parentId);
     let container = null;
 
     if (navItem_.nextElementSibling) {
         container = navItem_.nextElementSibling;
         if (!navItem_.querySelector("li>span")) {
-            navItem_.appendChild(CreateIcon());
+            navItem_.appendChild(CreateIconElement());
         }
     } else {
         container = document.createElement('ul');
-        let icon = navItem_.querySelector("li>span");
+        let icon = CreateSidebarItemArrowIcon(folder.parentId);
         container.className = 'ml-4 space-y-2 hidden';
         navItem_.parentNode.insertBefore(container, navItem_.nextSibling);
-
-        if (!icon) {
-            icon = CreateIcon();
-            navItem_.appendChild(icon);
-        }
 
         navItem_.onclick = (e) => {
             closeMenu();//关闭右键菜单
@@ -1563,8 +1565,8 @@ function CreateSidebarItem(folder, path, parentId) {
     }
 
     //创建新文件夹
-    const navItem = CreateSidebarElement(folder.title, folder.id);
-    const toggleIcon = CreateIcon();
+    const navItem = CreateSidebarItemElement(folder.title, folder.id);
+    const toggleIcon = CreateIconElement();
     if (folder.children && folder.children.length > 0) {
         navItem.appendChild(toggleIcon);
     }
@@ -1578,7 +1580,7 @@ function CreateSidebarItem(folder, path, parentId) {
         closeMenu();//关闭右键菜单
         e.stopPropagation();
         document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-        navItem.classList.add('sidebar-active');
+        // navItem.classList.add('sidebar-active');
 
         if (subList.children.length > 0) {
             subList.classList.toggle('hidden');
@@ -1604,7 +1606,19 @@ function GetParentIdElement(parentId) {
     return item_;
 }
 
-function CreateSidebarElement(title, id) {
+//创建侧边栏项的箭头图标
+function CreateSidebarItemArrowIcon(parentId) {
+    let navItem = GetParentIdElement(parentId);
+    let icon = navItem.querySelector("li>span");
+    if (!icon) {
+        icon = CreateIconElement();
+        navItem.appendChild(icon);
+    }
+    return icon;
+}
+
+//创建侧边栏项元素
+function CreateSidebarItemElement(title, id) {
     const navItem = document.createElement('li');
     navItem.className = 'items-center group flex justify-between gap-x-3 rounded-md p-2 text-gray-700 dark:text-gray-400 hover:text-main-500 hover:bg-gray-50 dark:hover:pintree-bg-gray-800 bg-opacity-50';
 
@@ -1626,13 +1640,15 @@ function CreateSidebarElement(title, id) {
     return navItem;
 }
 
-function CreateIcon() {
+//创建图标元素
+function CreateIconElement() {
     const toggleIcon = document.createElement('span');
     toggleIcon.className = 'ml-2 transform transition-transform';
     toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
     return toggleIcon;
 }
 
+//错误消息通知
 function ErrorMessageNotification() {
     let err = chrome.runtime.lastError?.message;
     if (err) {
