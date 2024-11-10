@@ -1630,7 +1630,7 @@ function CreateSidebarItem(folder, path) {
     let navItem_ = GetParentIdElement(folder.parentId);
     let container = null;
 
-    if (navItem_.nextElementSibling) {
+    if (navItem_.nextElementSibling && navItem_.nextElementSibling.tagName === 'UL') {
         container = navItem_.nextElementSibling;
         if (!navItem_.querySelector("li>span")) {
             navItem_.appendChild(CreateIconElement());
