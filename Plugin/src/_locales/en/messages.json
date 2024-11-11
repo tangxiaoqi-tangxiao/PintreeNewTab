@@ -115,5 +115,14 @@
     },
     "bookmarkAdd": {
         "message": "Add Bookmark"
+    },
+    "newFolder": {
+        "message": "New Folder"
+    },
+    "folderNameNotEmpty": {
+        "message": "Folder name cannot be empty"
+    },
+    "newFolderName": {
+        "message": "New Folder Name"
     }
 }

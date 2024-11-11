@@ -115,5 +115,14 @@
     },
     "bookmarkAdd": {
         "message": "添加书签"
+    },
+    "newFolder": {
+        "message": "新建文件夹"
+    },
+    "folderNameNotEmpty": {
+        "message": "文件夹名称不能为空"
+    },
+    "newFolderName": {
+        "message": "新文件夹名称"
     }
 }

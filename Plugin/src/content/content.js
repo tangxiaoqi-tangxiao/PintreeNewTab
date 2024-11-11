@@ -670,9 +670,18 @@ function SetBookmarkNewTab() {
 
 // i18n 多语言国际化
 function i18n() {
+    //通用
     let appName_i18ns = [...document.getElementsByClassName("appName_i18n")];
     appName_i18ns.forEach((item) => {
         item.textContent = chrome.i18n.getMessage("appName");
+    });
+    let save_i18ns = [...document.getElementsByClassName("save_i18n")];
+    save_i18ns.forEach((item) => {
+        item.textContent = chrome.i18n.getMessage("save");
+    });
+    let cancel_i18ns = [...document.getElementsByClassName("cancel_i18n")];
+    cancel_i18ns.forEach((item) => {
+        item.textContent = chrome.i18n.getMessage("cancel");
     });
     //搜索
     searchInput.setAttribute("placeholder", chrome.i18n.getMessage("search"));
@@ -691,6 +700,7 @@ function i18n() {
     editBookmark_i18n.textContent = chrome.i18n.getMessage("editBookmark");
     del_i18n.textContent = chrome.i18n.getMessage("del");
     bookmarkAdd_i18n.textContent = chrome.i18n.getMessage("bookmarkAdd");
+    newFolder_i18n.textContent = chrome.i18n.getMessage("newFolder");
     //书签编辑
     infoEdit_i18n.textContent = chrome.i18n.getMessage("infoEdit");
     IconDescribe_i18n.textContent = chrome.i18n.getMessage("IconDescribe");
@@ -706,15 +716,9 @@ function i18n() {
     official_i18n.textContent = chrome.i18n.getMessage("official");
     upload_i18n.textContent = chrome.i18n.getMessage("upload");
     uploadImage_i18n.textContent = chrome.i18n.getMessage("uploadImage");
-    let save_i18ns = [...document.getElementsByClassName("save_i18n")];
-    save_i18ns.forEach((item) => {
-        item.textContent = chrome.i18n.getMessage("save");
-    });
-    let cancel_i18ns = [...document.getElementsByClassName("cancel_i18n")];
-    cancel_i18ns.forEach((item) => {
-        item.textContent = chrome.i18n.getMessage("cancel");
-    });
-    // document.getElementById("closeSidebar_i18n").textContent = chrome.i18n.getMessage("closeSidebar");
+    //文件夹编辑
+    newFolderName.setAttribute("placeholder", chrome.i18n.getMessage("newFolderName"));
+    folderNameNotEmpty_i18n.textContent = chrome.i18n.getMessage("folderNameNotEmpty");
 }
 
 //读取配置判断是否显示右键菜单

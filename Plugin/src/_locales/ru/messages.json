@@ -115,5 +115,14 @@
     },
     "bookmarkAdd": {
         "message": "Добавить закладку"
+    },
+    "newFolder": {
+        "message": "Новая папка"
+    },
+    "folderNameNotEmpty": {
+        "message": "Имя папки не может быть пустым"
+    },
+    "newFolderName": {
+        "message": "Название новой папки"
     }
 }

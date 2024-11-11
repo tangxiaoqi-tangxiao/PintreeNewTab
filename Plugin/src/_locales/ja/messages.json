@@ -115,5 +115,14 @@
     },
     "bookmarkAdd": {
         "message": "ブックマークを追加"
+    },
+    "newFolder": {
+        "message": "新しいフォルダー"
+    },
+    "folderNameNotEmpty": {
+        "message": "フォルダー名を空にすることはできません"
+    },
+    "newFolderName": {
+        "message": "新しいフォルダー名"
     }
 }

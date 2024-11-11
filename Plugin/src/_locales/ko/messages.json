@@ -115,5 +115,14 @@
     },
     "bookmarkAdd": {
         "message": "북마크 추가"
+    },
+    "newFolder": {
+        "message": "새 폴더"
+    },
+    "folderNameNotEmpty": {
+        "message": "폴더 이름은 비워둘 수 없습니다"
+    },
+    "newFolderName": {
+        "message": "새 폴더 이름"
     }
 }

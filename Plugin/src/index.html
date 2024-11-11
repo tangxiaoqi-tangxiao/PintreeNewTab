@@ -317,10 +317,10 @@
     <div class="bg-white dark:pintree-bg-gray-900 rounded-lg max-w-screen-md select-none">
         <div class="w-80 m-8">
             <label>
-                <input id="newFolderName" type="text" placeholder="新文件夹名称"
+                <input id="newFolderName" type="text" placeholder=""
                        class="input input-bordered w-full max-w-xs"/>
             </label>
-            <p class="hidden text-red-400 mt-2" id="newFolderNameError"><span>文件夹名称不能为空</span></p>
+            <p class="hidden text-red-400 mt-2" id="newFolderNameError"><span id="folderNameNotEmpty_i18n"></span></p>
         </div>
         <!-- 按钮居中 -->
         <div class="flex justify-center mt-4 mb-2">
@@ -408,7 +408,7 @@
                     <line x1="9" y1="14" x2="15" y2="14"></line>
                 </svg>
             </div>
-            <span class="ml-4" id="_i18n">新建文件夹</span>
+            <span class="ml-4" id="newFolder_i18n"></span>
         </a>
     </li>
 </ul>

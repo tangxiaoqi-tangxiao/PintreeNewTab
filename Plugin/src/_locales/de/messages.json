@@ -115,5 +115,14 @@
     },
     "bookmarkAdd": {
         "message": "Lesezeichen hinzufügen"
+    },
+    "newFolder": {
+        "message": "Neuer Ordner"
+    },
+    "folderNameNotEmpty": {
+        "message": "Der Ordnername darf nicht leer sein"
+    },
+    "newFolderName": {
+        "message": "Neuer Ordnername"
     }
 }
