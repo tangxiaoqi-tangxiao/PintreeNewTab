@@ -616,11 +616,11 @@ function BookmarkInitialize() {
                 // //更新侧边栏项的活动状态
                 // updateSidebarActiveState([{id: firstItem.id, title: firstItem.title, children: firstItem.children}]);
                 //渲染书签
-                renderBookmarks(firstItem.children, [{
-                    id: firstItem.id,
-                    title: firstItem.title,
-                    children: firstItem.children
-                }]);
+                // renderBookmarks(firstItem.children, [{
+                //     id: firstItem.id,
+                //     title: firstItem.title,
+                //     children: firstItem.children
+                // }]);
             }
         })
         .catch(error => {
