@@ -1,3 +1,17 @@
+//全局变量
+const browserRelatedHeaders = {
+    "sec-ch-ua": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
+    "sec-ch-ua-arch": "x86",
+    "sec-ch-ua-bitness": "64",
+    "sec-ch-ua-full-version": "131.0.6778.69",
+    "sec-ch-ua-full-version-list": "\"Google Chrome\";v=\"131.0.6778.69\", \"Chromium\";v=\"131.0.6778.69\", \"Not_A Brand\";v=\"24.0.0.0\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-model": "",
+    "sec-ch-ua-platform": "Windows",
+    "sec-ch-ua-platform-version": "15.0.0",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+};
+
 /**
  * 异步获取网站的favicon图标，并将其转换为base64编码字符串
  * @param {string} url - 要获取图标的网站的URL
@@ -8,7 +22,9 @@ async function fetchFaviconAsBase64(url) {
         try {
             if (!isValidUrl(url)) return null;
             // 获取网站的 HTML 源代码
-            fetchWithTimeout(url, {}, 5000)
+            fetchWithTimeout(url, {
+                headers: browserRelatedHeaders
+            }, 5000)
                 .then(response => response.text())
                 .then(async text => {
                     // 使用 DOMParser 来解析 HTML
@@ -16,41 +32,12 @@ async function fetchFaviconAsBase64(url) {
                     const doc = parser.parseFromString(text, 'text/html');
 
                     // 查找 <link rel="icon"> 或 <link rel="shortcut icon">
-                    let iconLinkArr = Array.from(doc.querySelectorAll('link')).filter(link => link.getAttribute('rel').includes('icon'));
+                    let iconLinks = Array.from(doc.querySelectorAll('link'))
+                        .filter(link => link.getAttribute('rel').includes('icon'))
+                        .map(link => link.getAttribute('href'));
 
-                    // 如果没有找到图标链接，尝试使用默认路径 /favicon.ico
-                    let faviconUrl;
-                    let blob = null;
-                    if (iconLinkArr.length > 0) {
-                        for (let i = 0; i < iconLinkArr.length; i++) {
-                            let iconLink = iconLinkArr[i];
-                            let href = iconLink.getAttribute('href');
-                            // 判断 href 是否为相对路径
-                            if (href.startsWith('http') && href.startsWith('//')) {
-                                faviconUrl = href;
-                            } else {
-                                // 将相对路径转换为绝对路径
-                                faviconUrl = new URL(href, url).href;
-                            }
-                            // 获取图标的二进制数据
-                            const iconResponse = await fetch(faviconUrl);
-                            if (iconResponse.status !== 200) {
-
-                            } else {
-                                blob = await iconResponse.blob();
-                                break;
-                            }
-                        }
-
-                    } else {
-                        // 如果没有找到 <link> 标签，使用默认的 /favicon.ico
-                        faviconUrl = new URL('/favicon.ico', url).href;
-                        // 获取图标的二进制数据
-                        const iconResponse = await fetch(faviconUrl);
-                        if (iconResponse.status === 200) {
-                            blob = await iconResponse.blob();
-                        }
-                    }
+                    // 调用新的封装函数获取图标的 Blob 数据
+                    const { blob, faviconUrl } = await fetchFaviconBlobData(url, iconLinks);
 
                     if (blob != null && (isImageBlob(blob, faviconUrl, ["ico"]))) {//判断是否是图片
                         // 读取 Blob 数据并转换为 Base64
@@ -326,12 +313,8 @@ function compressImageToTargetSize(file, targetSize, callback) {
 function isImageBlob(blob, url, arrtype) {
     // 获取Blob的MIME类型
     const type = blob.type;
-    if (type == "application/octet-stream" && url && arrtype) {
-        if (arrtype.some((item) => url.endsWith(`.${item}`))) {
-            return true;
-        } else {
-            return false;
-        }
+    if (type === "application/octet-stream" && url && arrtype) {
+        return arrtype.some((item) => url.endsWith(`.${item}`));
     }
     // 检查MIME类型是否以'image/'开头
     return /^image\//.test(type);
@@ -392,6 +375,52 @@ function findParentFolders(folders, targetId) {
     return result.reverse(); // 反转顺序从根到目标文件夹
 }
 
+// 获取图标的 Blob 数据
+async function fetchFaviconBlobData(url, iconLinks) {
+    try {
+        let faviconUrl;
+        let blob = null;
+
+        // 如果找到了图标链接，尝试获取图标数据
+        if (iconLinks.length > 0) {
+            for (let i = 0; i < iconLinks.length; i++) {
+                let href = iconLinks[i];
+
+                // 判断 href 是否为绝对路径或相对路径
+                if (href.startsWith('http')) {
+                    faviconUrl = href;
+                } else {
+                    // 将相对路径转换为绝对路径
+                    faviconUrl = new URL(href, url).href;
+                }
+
+                // 获取图标的二进制数据
+                const iconResponse = await fetch(faviconUrl,{
+                    headers:browserRelatedHeaders
+                });
+                if (iconResponse.status === 200 || iconResponse.status === 200) {
+                    blob = await iconResponse.blob();
+                    break;
+                }
+            }
+        } else {
+            // 如果没有找到 <link> 标签，使用默认的 /favicon.ico
+            faviconUrl = new URL('/favicon.ico', url).href;
+            const iconResponse = await fetch(faviconUrl,{
+                headers:browserRelatedHeaders
+            });
+            if (iconResponse.status === 200) {
+                blob = await iconResponse.blob();
+            }
+        }
+
+        return { blob, faviconUrl };
+    } catch (error) {
+        console.error('Error fetching favicon:', error);
+        return { blob: null, faviconUrl: null };
+    }
+}
+
 export {
     fetchFaviconAsBase64,
     debounce,
@@ -400,5 +429,7 @@ export {
     convertBlobToBase64,
     compressImageToTargetSize,
     isValidUrl,
-    findParentFolders
+    findParentFolders,
+    fetchFaviconBlobData,
+    isImageBlob
 };
