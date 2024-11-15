@@ -42,7 +42,6 @@ chrome.bookmarks.onCreated.addListener((id, bookmark) => {
 
 //监听书签删除
 chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
-    console.log(removeInfo,id);
     // 查找需要删除的书签的索引
     const index = flatBookmarks.findIndex(bookmark => bookmark.id === id);
     // 检查索引是否有效
@@ -52,6 +51,7 @@ chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
     }
 });
 
+// 打开扩展页面
 chrome.action.onClicked.addListener(() => {
     chrome.tabs.create({
         url: new URL('../index.html', import.meta.url).toString(),
@@ -78,7 +78,6 @@ async function Initialize() {
 async function GetWebUrlIsExist(domain) {
     return new Promise((resolve) => {
         chrome.storage.sync.get('CacheIcon', (data) => {
-            console.log(data)
             if (data.CacheIcon) {
                 resolve(flatBookmarks.some(e => e.domain === domain));
             } else {
@@ -123,7 +122,7 @@ async function fetchFlatBookmarks() {
 async function SaveWebIcon(url, iconLinks) {
     // 调用新的封装函数获取图标的 Blob 数据
     const {blob, faviconUrl} = await fetchFaviconBlobData(url, iconLinks);
-    console.log(blob, faviconUrl)
+
     if (blob != null && (isImageBlob(blob, faviconUrl, ["ico"]))) {//判断是否是图片
         // 读取 Blob 数据并转换为 Base64
         const base64 = await convertBlobToBase64(blob);
