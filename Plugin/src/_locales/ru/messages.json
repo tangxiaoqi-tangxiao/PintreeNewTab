@@ -124,5 +124,8 @@
     },
     "newFolderName": {
         "message": "Название новой папки"
+    },
+    "CacheIcon": {
+        "message": "Авто кеш иконка"
     }
 }

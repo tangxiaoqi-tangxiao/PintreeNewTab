@@ -124,5 +124,8 @@
     },
     "newFolderName": {
         "message": "新文件夹名称"
+    },
+    "CacheIcon": {
+        "message": "自动缓存图标"
     }
 }

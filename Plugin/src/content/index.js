@@ -23,14 +23,6 @@ const dbName2 = 'SetUp';
 
 document.addEventListener('DOMContentLoaded', () => {
     Initialize();
-    //国际化
-    i18n();
-    //设置关闭右键菜单
-    CloseContextMenu();
-    //设置打开新标签页
-    SetBookmarkNewTab();
-    //编辑书签的初始化
-    BookmarkEditInitialize();
     //数据库初始化
     db.openDB([dbName1, dbName2]).then(() => {
         //初始化书签
@@ -38,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
         //删除已经删除书签的缓存图标
         DelIconsCache();
     });
-    // fetchFaviconAsBase64("https://registry.hub.docker.com/")
 });
 
 window.onbeforeunload = () => {
@@ -631,7 +622,7 @@ function BookmarkInitialize() {
 }
 
 //设置右键菜单
-function CloseContextMenu() {
+function SetCloseContextMenu() {
     const checkbox = document.getElementById('ContextMenuCheckbox');
     chrome.storage.sync.get('ContextMenu', (data) => {
         if (data.ContextMenu) {
@@ -668,6 +659,25 @@ function SetBookmarkNewTab() {
     }
 }
 
+//设置图标缓存
+function SetCacheIcon() {
+    const checkbox = document.getElementById('CacheIcon');
+    chrome.storage.sync.get('CacheIcon', (data) => {
+        if (data.CacheIcon) {
+            checkbox.checked = true;
+        } else {
+            checkbox.checked = false;
+        }
+    });
+    checkbox.onclick = () => {
+        if (checkbox.checked) {
+            chrome.storage.sync.set({'CacheIcon': true});
+        } else {
+            chrome.storage.sync.set({'CacheIcon': false});
+        }
+    }
+}
+
 // i18n 多语言国际化
 function i18n() {
     //通用
@@ -690,6 +700,7 @@ function i18n() {
     set_i18n.textContent = chrome.i18n.getMessage("set");
     setContextMenu_i18n.textContent = chrome.i18n.getMessage("setContextMenu");
     setOpenNewTab_i18n.textContent = chrome.i18n.getMessage("setOpenNewTab");
+    CacheIcon_i18n.textContent = chrome.i18n.getMessage("CacheIcon");
     //书签
     bookmark_i18n.textContent = chrome.i18n.getMessage("bookmark");
     baidu_i18n.textContent = chrome.i18n.getMessage("baidu");
@@ -1377,6 +1388,17 @@ function EmptyBookmarkEdit() {
 
 //初始化
 function Initialize() {
+    //国际化
+    i18n();
+    //设置关闭右键菜单
+    SetCloseContextMenu();
+    //设置打开新标签页
+    SetBookmarkNewTab();
+    //设置缓存图标
+    SetCacheIcon();
+    //编辑书签的初始化
+    BookmarkEditInitialize();
+
     // 按Enter时的搜索功能
     document.getElementById('searchInput').addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {

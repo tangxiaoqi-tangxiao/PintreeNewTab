@@ -124,5 +124,8 @@
     },
     "newFolderName": {
         "message": "新資料夾名稱"
+    },
+    "CacheIcon": {
+        "message": "自動快取圖示"
     }
 }

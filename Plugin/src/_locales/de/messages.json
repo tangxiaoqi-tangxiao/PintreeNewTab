@@ -124,5 +124,8 @@
     },
     "newFolderName": {
         "message": "Neuer Ordnername"
+    },
+    "CacheIcon": {
+        "message": "Automatische Cache-Symbol"
     }
 }
