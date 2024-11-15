@@ -332,18 +332,22 @@ function isImageBlob(blob, url, arrtype) {
  */
 function convertBlobToBase64(blob) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader();
+        if (blob && blob.size > 0) {
+            const reader = new FileReader();
 
-        // 读取Blob并转换为Data URL
-        reader.onloadend = () => {
-            resolve(reader.result);
-        };
+            // 读取Blob并转换为Data URL
+            reader.onloadend = () => {
+                resolve(reader.result);
+            };
 
-        reader.onerror = (error) => {
-            reject('Error converting Blob to Base64: ' + error);
-        };
+            reader.onerror = (error) => {
+                reject('Error converting Blob to Base64: ' + error);
+            };
 
-        reader.readAsDataURL(blob);
+            reader.readAsDataURL(blob);
+        } else {
+            reject('Blob is empty');
+        }
     });
 }
 
