@@ -11,11 +11,11 @@ function SaveWebIcon() {
     let iconLinks = Array.from(document.querySelectorAll('link'))
         .filter(link => link.getAttribute('rel').includes('icon'))
         .map(link => link.getAttribute('href'));
-    let protocolAndDomain = window.location.protocol + "//" + window.location.hostname;
+
     chrome.runtime.sendMessage({
         type: "SaveWebIcon",
         message: {
-            url: protocolAndDomain,
+            url: window.location.href,
             iconLinks
         }
     });

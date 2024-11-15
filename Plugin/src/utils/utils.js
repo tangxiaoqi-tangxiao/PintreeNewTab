@@ -37,7 +37,7 @@ async function fetchFaviconAsBase64(url) {
                         .map(link => link.getAttribute('href'));
 
                     // 调用新的封装函数获取图标的 Blob 数据
-                    const { blob, faviconUrl } = await fetchFaviconBlobData(url, iconLinks);
+                    const {blob, faviconUrl} = await fetchFaviconBlobData(url, iconLinks);
 
                     if (blob != null && (isImageBlob(blob, faviconUrl, ["ico"]))) {//判断是否是图片
                         // 读取 Blob 数据并转换为 Base64
@@ -311,6 +311,10 @@ function compressImageToTargetSize(file, targetSize, callback) {
  * @returns {boolean} - 如果Blob对象是一个图像文件，返回true，否则返回false
  */
 function isImageBlob(blob, url, arrtype) {
+    // 检查Blob是否为空
+    if (!blob) {
+        return false;
+    }
     // 获取Blob的MIME类型
     const type = blob.type;
     if (type === "application/octet-stream" && url && arrtype) {
@@ -395,8 +399,8 @@ async function fetchFaviconBlobData(url, iconLinks) {
                 }
 
                 // 获取图标的二进制数据
-                const iconResponse = await fetch(faviconUrl,{
-                    headers:browserRelatedHeaders
+                const iconResponse = await fetch(faviconUrl, {
+                    headers: browserRelatedHeaders
                 });
                 if (iconResponse.status === 200 || iconResponse.status === 200) {
                     blob = await iconResponse.blob();
@@ -406,18 +410,18 @@ async function fetchFaviconBlobData(url, iconLinks) {
         } else {
             // 如果没有找到 <link> 标签，使用默认的 /favicon.ico
             faviconUrl = new URL('/favicon.ico', url).href;
-            const iconResponse = await fetch(faviconUrl,{
-                headers:browserRelatedHeaders
+            const iconResponse = await fetch(faviconUrl, {
+                headers: browserRelatedHeaders
             });
             if (iconResponse.status === 200) {
                 blob = await iconResponse.blob();
             }
         }
 
-        return { blob, faviconUrl };
+        return {blob, faviconUrl};
     } catch (error) {
         console.error('Error fetching favicon:', error);
-        return { blob: null, faviconUrl: null };
+        return {blob: null, faviconUrl: null};
     }
 }
 

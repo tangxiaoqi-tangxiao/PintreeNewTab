@@ -13,7 +13,7 @@ import "../lib/Sortable.min.js";
 //全局变量
 let firstLayer = null;//书签集合
 let BookmarkFolderActiveId = null;//当前活跃的文件夹id
-let BreadcrumbsList = [];
+let BreadcrumbsList = [];//面包屑列表
 
 //常量
 const bookmark_link = "bookmark-link";
