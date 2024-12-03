@@ -1,5 +1,6 @@
 import db from "../utils/IndexedDB.js"
 import {convertBlobToBase64, fetchFaviconBlobData, isImageBlob} from "../utils/utils.js"
+import { dbNames } from "../config/index.js"
 
 // const newTabUrls = [
 //   'chrome://newtab/',      // Chrome
@@ -10,8 +11,7 @@ import {convertBlobToBase64, fetchFaviconBlobData, isImageBlob} from "../utils/u
 let flatBookmarks = [];
 
 // 定义两个数据库名称
-const dbName1 = 'Icons';
-db.openDB([dbName1]).then(() => {
+db.openDB(dbNames).then(() => {
     // 初始化
     Initialize();
 });

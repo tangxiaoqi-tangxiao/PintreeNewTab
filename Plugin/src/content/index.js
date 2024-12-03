@@ -8,6 +8,7 @@ import {
     isValidUrl
 } from "../utils/utils.js";
 import db from "../utils/IndexedDB.js";
+import { dbNames } from "../config/index.js"
 import "../lib/Sortable.min.js";
 
 //全局变量
@@ -24,7 +25,7 @@ const dbName2 = 'SetUp';
 document.addEventListener('DOMContentLoaded', () => {
     Initialize();
     //数据库初始化
-    db.openDB([dbName1, dbName2]).then(() => {
+    db.openDB(dbNames).then(() => {
         //初始化书签
         BookmarkInitialize();
         //删除已经删除书签的缓存图标
