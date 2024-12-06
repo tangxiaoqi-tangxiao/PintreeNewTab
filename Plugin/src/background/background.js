@@ -1,6 +1,6 @@
 import db from "../utils/IndexedDB.js"
 import {convertBlobToBase64, fetchFaviconBlobData, isImageBlob} from "../utils/utils.js"
-import { dbNames } from "../config/index.js"
+import {dbNames, IconsStr} from "../config/index.js"
 
 // const newTabUrls = [
 //   'chrome://newtab/',      // Chrome
@@ -137,9 +137,9 @@ async function SaveWebIcon(url, iconLinks) {
         // 遍历书签并更新图标（因为可能出现同一个域名被保存多次）
         Bookmarks.forEach(bookmark => {
             //查询是否存在不存在添加
-            db.getData(dbName1, bookmark.id).then(data => {
+            db.getData(IconsStr, bookmark.id).then(data => {
                 if (!data) {
-                    db.addData(dbName1, {
+                    db.addData(IconsStr, {
                         id: bookmark.id,
                         base64,
                     });

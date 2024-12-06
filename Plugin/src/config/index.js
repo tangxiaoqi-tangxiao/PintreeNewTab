@@ -1,1 +1,5 @@
-export let dbNames = ['Icons', 'SetUp'];
+export const IconsStr = "Icons";
+
+export const SetUpStr = "SetUp";
+
+export const dbNames = [IconsStr, SetUpStr];

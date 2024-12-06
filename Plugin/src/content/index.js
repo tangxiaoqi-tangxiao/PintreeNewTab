@@ -8,7 +8,7 @@ import {
     isValidUrl
 } from "../utils/utils.js";
 import db from "../utils/IndexedDB.js";
-import { dbNames } from "../config/index.js"
+import {dbNames, IconsStr, SetUpStr} from "../config/index.js"
 import "../lib/Sortable.min.js";
 
 //全局变量
@@ -19,8 +19,8 @@ let BreadcrumbsList = [];//面包屑列表
 //常量
 const bookmark_link = "bookmark-link";
 // 定义两个数据库名称
-const dbName1 = 'Icons';
-const dbName2 = 'SetUp';
+const dbName1 = IconsStr;
+const dbName2 = SetUpStr;
 
 document.addEventListener('DOMContentLoaded', () => {
     Initialize();
