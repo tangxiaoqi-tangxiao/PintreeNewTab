@@ -6,10 +6,13 @@ import {
     findInTree,
     findParentFolders,
     isValidUrl
-} from "../utils/utils.js";
-import db from "../utils/IndexedDB.js";
-import {dbNames, IconsStr, SetUpStr} from "../config/index.js"
-import "../lib/Sortable.min.js";
+} from "@/entrypoints/page/utils/utils.js";
+import db from "@/entrypoints/page/utils/IndexedDB.js";
+import {dbNames, IconsStr, SetUpStr} from "@/entrypoints/page/config/index.js"
+import Sortable from 'sortablejs';
+//导入资源
+import empty_svg from '/images/empty.svg'
+import default_svg from '/images/default-icon.svg'
 
 //全局变量
 let firstLayer = null;//书签集合
@@ -49,10 +52,18 @@ function bookmarkToStructuredData(bookmarkNode) {
         parentId: parentId
     };
 
+    //获取浏览器书签图标
+    function faviconURL(pageUrl, size = 32) {
+        const url = new URL(chrome.runtime.getURL("/_favicon/"));
+        url.searchParams.set("pageUrl", pageUrl);
+        url.searchParams.set("size", size);
+        return url.toString();
+    }
+
     if (children) {
         structuredNode.children = children.map(bookmarkToStructuredData);
     } else {
-        structuredNode.icon = `https://logo.clearbit.com/${new URL(bookmarkNode.url).hostname}`;
+        structuredNode.icon = faviconURL(bookmarkNode.url);
         structuredNode.url = bookmarkNode.url;
     }
 
@@ -156,15 +167,12 @@ function createCard(link) {
 
     const cardIcon = document.createElement('img');
 
-    cardIcon.src = new URL("../assets/empty.svg", import.meta.url).toString();
+    cardIcon.src = empty_svg;
     db.getData(dbName1, id).then((data) => {
         if (data) {
             cardIcon.src = data.base64;
         } else {
-            cardIcon.src = icon || new URL(
-                '../assets/default-icon.svg',
-                import.meta.url
-            ); // Use provided icon or default icon
+            cardIcon.src = icon || default_svg; // Use provided icon or default icon
         }
     });
 
@@ -173,10 +181,7 @@ function createCard(link) {
 
     // Check if the image URL returns 404 and replace it with the default icon if it does
     cardIcon.onerror = () => {
-        cardIcon.src = new URL(
-            '../assets/default-icon.svg',
-            import.meta.url
-        );
+        cardIcon.src = default_svg;
     };
 
     const cardContent = document.createElement('div');

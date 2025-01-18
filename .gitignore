@@ -129,10 +129,8 @@ dist
 .pnp.*
 
 # 排除项目中不需要的文件
-*.zip
-*/src/css/tailwind.css
-/Plugin/output/
-/Plugin/dist/
+*.wxt
+*.output
 
 # 排除IDEA
 .idea

@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     mode: 'jit',
-    content: ['src/index.html', 'src/content/*.js'],
+    content: ['src/entrypoints/page/index.html', 'src/entrypoints/page/js/*.js'],
     darkMode: ['selector', '[data-theme="dark"]'],
     plugins: [
         // require('@tailwindcss/forms'),

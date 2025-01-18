@@ -4,20 +4,17 @@
 
 1. 安装依赖
 
-    - Plugin 目录下执行 `npm install`
+    - 项目执行 `npm install`
 
 2. 运行项目
 
-    - Plugin 目录下执行 `npm run watch:css`
+    - 项目执行 `npm run dev`
 
-3. 打开浏览器扩展管理页面
-
-    - 打开开发者模式
-    - 加载已解压的扩展程序
-    - 选择 `Plugin/src` 目录
+3. 打开浏览器
+    - 运行项目会自动打开浏览器安装扩展，后续代码更新会自动刷新扩展
 
 ### 打包项目
 
 1. 打包项目
-    - Plugin 目录下执行 `npm run build`
-    - 打包后的文件位于 `Plugin/dist` 目录
+    - 项目执行 `npm run build`
+    - 打包后的文件位于 `.output` 目录
