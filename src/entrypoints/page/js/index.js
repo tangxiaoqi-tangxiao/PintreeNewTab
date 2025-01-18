@@ -700,18 +700,18 @@ function i18n() {
         item.textContent = chrome.i18n.getMessage("cancel");
     });
     //搜索
-    searchInput.setAttribute("placeholder", chrome.i18n.getMessage("search"));
-    clear_i18n.textContent = chrome.i18n.getMessage("clear");
+    // searchInput.setAttribute("placeholder", chrome.i18n.getMessage("search"));
+    // clear_i18n.textContent = chrome.i18n.getMessage("clear");
     //设置
     set_i18n.textContent = chrome.i18n.getMessage("set");
     setContextMenu_i18n.textContent = chrome.i18n.getMessage("setContextMenu");
     setOpenNewTab_i18n.textContent = chrome.i18n.getMessage("setOpenNewTab");
     CacheIcon_i18n.textContent = chrome.i18n.getMessage("CacheIcon");
     //书签
-    bookmark_i18n.textContent = chrome.i18n.getMessage("bookmark");
-    baidu_i18n.textContent = chrome.i18n.getMessage("baidu");
-    google_i18n.textContent = chrome.i18n.getMessage("google");
-    bing_i18n.textContent = chrome.i18n.getMessage("bing");
+    // bookmark_i18n.textContent = chrome.i18n.getMessage("bookmark");
+    // baidu_i18n.textContent = chrome.i18n.getMessage("baidu");
+    // google_i18n.textContent = chrome.i18n.getMessage("google");
+    // bing_i18n.textContent = chrome.i18n.getMessage("bing");
     //右键菜单
     copyUrl_i18n.textContent = chrome.i18n.getMessage("copyUrl");
     editBookmark_i18n.textContent = chrome.i18n.getMessage("editBookmark");
@@ -1406,25 +1406,42 @@ function Initialize() {
     BookmarkEditInitialize();
 
     // 按Enter时的搜索功能
-    document.getElementById('searchInput').addEventListener('keydown', function (event) {
+    document.getElementById('searchInput')?.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             Search();
         }
     });
 
     // 按钮点击的搜索功能
-    document.getElementById('searchButton').addEventListener('click', function () {
+    document.getElementById('searchButton')?.addEventListener('click', function () {
         Search();
     });
 
     // 清除搜索结果的按钮
-    document.getElementById('clearSearchButton').addEventListener('click', clearSearchResults);
-    document.getElementById('searchButton').onclick = () => {
-        const query = document.getElementById('searchInput').value;
-        if (query.trim() === '') {
-            return;
-        }
-        searchBookmarks(query);
+    document.getElementById('clearSearchButton')?.addEventListener('click', clearSearchResults);
+    // document.getElementById('searchButton').onclick = () => {
+    //     const query = document.getElementById('searchInput').value;
+    //     if (query.trim() === '') {
+    //         return;
+    //     }
+    //     searchBookmarks(query);
+    // }
+
+    //关闭侧导航栏
+    SideNavigationToggle.onclick=()=>{
+        chrome.storage.sync.get('SideNavigationToggle', (data) => {
+            console.log(data);
+            if (data.SideNavigationToggle) {
+                chrome.storage.sync.set({ SideNavigationToggle: true });
+                SideNavigation.classList.toggle('hidden');
+            } else {
+                chrome.storage.sync.set({ SideNavigationToggle: false });
+                SideNavigation.classList.toggle('hidden');
+                SideNavigation.classList.toggle('lg:flex');
+                SideNavigation.classList.toggle('lg:fixed');
+                SideNavigationToggle.classList.toggle('lg:pl-60');
+            }
+        });
     }
 
     // Event listener for theme toggle button

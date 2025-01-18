@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="h-full dark:pintree-bg-gray-900 bg-white" lang="zh">
+<html class="max-h-screen dark:pintree-bg-gray-900 bg-white" lang="zh">
 
 <head>
     <title class="appName_i18n"></title>
@@ -22,7 +22,7 @@
     <link href="css/index.css" rel="stylesheet">
 </head>
 
-<body class="h-full dark:pintree-bg-gray-900 bg-white">
+<body class="dark:pintree-bg-gray-900 bg-white">
 
 <!-- 页面主要功能 -->
 <div>
@@ -42,173 +42,199 @@
         <span id="messageValue"></span>
     </div>
 
-    <!-- 桌面侧边栏 -->
-    <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-60 lg:flex-col">
-        <div
-                class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
-            <div class="flex p-0 h-16 shrink-0 items-center">
-                <img alt="Pintree" class="pl-2 h-8 w-auto" src="images/logo.svg">
-                <a class="ml-4 font-extrabold text-lg dark:text-white" href=""><span
-                        class="appName_i18n"></span></a>
-            </div>
-            <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
-                <div class="flex flex-1 flex-col" id="sidebar">
-                    <ul class="space-y-1 select-none" id="navigation">
-                        <!-- 导航项目将在此处插入 -->
-                    </ul>
+    <div class="flex flex-row h-screen">
+        <!-- 桌面侧边栏 -->
+        <div class="hidden lg:w-64 lg:block">
+            <div
+                    class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
+                <div class="flex p-0 h-16 shrink-0 items-center">
+                    <img alt="Pintree" class="pl-2 h-8 w-auto" src="images/logo.svg">
+                    <a class="ml-4 font-extrabold text-lg dark:text-white" href=""><span
+                            class="appName_i18n"></span></a>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 主要内容领域 -->
-    <div class="lg:pl-60 dark:pintree-bg-gray-900 flex flex-col min-h-screen">
-        <!-- 搜索框-->
-        <div
-                class="z-10 items-center justify-between sticky top-0 flex h-16 shrink-0 gap-x-4 border-b border-gray-200 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
-            <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
-                <div class="flex gap-x-4 justify-between lg:w-8/12">
-                    <img alt="Pintree" class="pl-2 h-8 w-auto lg:hidden" src="images/logo.svg">
-                    <div class="hidden lg:flex lg:w-full">
-                        <div class="flex w-10/12">
-                            <div class="join w-full">
-                                <select class="select select-bordered w-24 select-md join-item" id="currency">
-                                    <option id="bookmark_i18n" selected value="0"></option>
-                                    <option id="baidu_i18n" value="1"></option>
-                                    <option id="google_i18n" value="2"></option>
-                                    <option id="bing_i18n" value="3"></option>
-                                </select>
-
-                                <input class="w-full input input-bordered input-md join-item" id="searchInput"
-                                       placeholder=""/>
-
-                                <button class="btn rounded-r-full join-item" id="searchButton">
-                                    <svg class="h-4 w-4 opacity-70" fill="currentColor" viewBox="0 0 16 16"
-                                         xmlns="http://www.w3.org/2000/svg">
-                                        <path clip-rule="evenodd"
-                                              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                                              fill-rule="evenodd"/>
-                                    </svg>
-                                </button>
-                            </div>
-
-                        </div>
-                        <button class="btn hidden ml-4" id="clearSearchButton"><span id="clear_i18n"></span></button>
-                    </div>
-                </div>
-                <a class="lg:hidden font-extrabold text-2xl dark:text-white" href=""><span
-                        class="appName_i18n"></span></a>
-                <div class="relative">
-                    <button aria-label="Switch theme"
-                            class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20"
-                            id="themeToggleButton"
-                            type="button">
-                        <svg aria-hidden="true"
-                             class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
-                             id="sunIcon" stroke-linecap="round"
-                             stroke-linejoin="round"
-                             stroke-width="1.5"
-                             viewBox="0 0 24 24">
-                            <path
-                                    d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z">
-                            </path>
-                            <path
-                                    d="M12.25 3v1.5M21.5 12.25H20M18.791 18.791l-1.06-1.06M18.791 5.709l-1.06 1.06M12.25 20v1.5M4.5 12.25H3M6.77 6.77 5.709 5.709M6.77 17.73l-1.061 1.061"
-                                    fill="none"></path>
-                        </svg>
-                        <svg aria-hidden="true"
-                             class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
-                             id="moonIcon"
-                             viewBox="0 0 24 24">
-                            <path
-                                    d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
-                                    stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
-                        </svg>
-                    </button>
-                    <button aria-label="Switch theme"
-                            class="max-md:hidden md:inline-block ml-2 group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20"
-                            id="SetUp_modal_but">
-                        <svg
-                                class="size-6 h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
-                                fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"/>
-                        </svg>
-                        <svg
-                                class="size-6 hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
-                                fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                            <path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex-grow flex flex-col" id="main">
-            <!-- 主要内容 -->
-            <main class="mt-4 dark:pintree-bg-gray-900">
-                <div class="flex justify-center items-center h-full" id="loading-spinner">
-                    <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
-                </div>
-                <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
-                    <div class="breadcrumbs text-sm">
-                        <ul id="breadcrumbs-path">
-                            <!-- 面包屑将被插入这里 -->
+                <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
+                    <div class="flex flex-1 flex-col" id="sidebar">
+                        <ul class="space-y-1 select-none" id="navigation">
+                            <!-- 导航项目将在此处插入 -->
                         </ul>
                     </div>
                 </div>
-                <div class="grid gap-6 p-6" id="bookmarks">
-                    <!-- 书签卡将在此处插入 -->
-                </div>
-            </main>
-            <!-- 页脚 -->
-            <footer class="mt-auto bg-white w-full dark:pintree-bg-gray-900">
-                <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
-                    <div class="flex justify-center space-x-6 md:order-2">
-                        <a class="text-gray-400 hover:text-gray-500"
-                           href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
-                           target="_blank">
-                            <span class="sr-only">GitHub</span>
-                            <svg aria-hidden="true" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path clip-rule="evenodd"
-                                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
-                                      fill-rule="evenodd"/>
+            </div>
+        </div>
+
+        <!-- 主要内容领域 -->
+        <div class="flex-1 overflow-auto h-full flex flex-col bor">
+            <!-- 搜索框-->
+            <div class="h-12 z-10 items-center justify-between sticky top-0 flex h-16 shrink-0   dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6">
+                <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
+                    <div class="relative hidden lg:flex">
+                        <button aria-label="Switch theme"
+                                id="SideNavigationToggle"
+                                class="group"
+                                type="button">
+                            <svg
+                                    aria-hidden="true"
+                                    class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
+                                    stroke-linejoin="round"
+                                    stroke-width="1"
+                                    viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                                <path d="M9 3v18"></path>
                             </svg>
-                        </a>
+                            <svg
+                                    aria-hidden="true"
+                                    class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
+                                    stroke-width="1"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+                                <path d="M9 3v18"></path>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="mt-8 md:order-1 md:mt-0">
-                        <p class="text-center text-xs leading-5 text-gray-500 dark:text-gray-400 flex justify-center items-center">
-                            &copy; <span id="currentYear"></span>&nbsp;Built with
-                            <a class="text-green-600 hover:text-green-500 flex items-center ml-1"
-                               href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab" target="_blank">
-                                <svg class="inline-block mr-1" fill="none" height="12" viewBox="0 0 10 12"
-                                     width="10"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_421_47774)">
-                                        <path d="M4.27777 9.11133H6.6111V12.0002L5.44444 10.8783L4.27777 12.0002V9.11133Z"
-                                              fill="#FCB11E"/>
-                                        <path
-                                                d="M9.05557 5.72222L5.22223 0L1.3889 5.72222H2.68634L0.444458 9.11111H10L7.75813 5.72222H9.05557Z"
-                                                fill="#2D9C6C"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_421_47774">
-                                            <rect fill="white" height="12" transform="translate(0.444458)"
-                                                  width="9.55556"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                                <span class="appName_i18n"></span>
-                            </a>
-                        </p>
+                    <div class="flex gap-x-4 justify-between lg:w-8/12">
+                        <img alt="Pintree" class="pl-2 h-8 w-auto lg:hidden" src="images/logo.svg">
+                        <!--                    <div class="hidden lg:flex lg:w-full">-->
+                        <!--                        <div class="flex w-10/12">-->
+                        <!--                            <div class="join w-full">-->
+                        <!--                                <select class="select select-bordered w-24 select-md join-item" id="currency">-->
+                        <!--                                    <option id="bookmark_i18n" selected value="0"></option>-->
+                        <!--                                    <option id="baidu_i18n" value="1"></option>-->
+                        <!--                                    <option id="google_i18n" value="2"></option>-->
+                        <!--                                    <option id="bing_i18n" value="3"></option>-->
+                        <!--                                </select>-->
+
+                        <!--                                <input class="w-full input input-bordered input-md join-item" id="searchInput"-->
+                        <!--                                       placeholder=""/>-->
+
+                        <!--                                <button class="btn rounded-r-full join-item" id="searchButton">-->
+                        <!--                                    <svg class="h-4 w-4 opacity-70" fill="currentColor" viewBox="0 0 16 16"-->
+                        <!--                                         xmlns="http://www.w3.org/2000/svg">-->
+                        <!--                                        <path clip-rule="evenodd"-->
+                        <!--                                              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"-->
+                        <!--                                              fill-rule="evenodd"/>-->
+                        <!--                                    </svg>-->
+                        <!--                                </button>-->
+                        <!--                            </div>-->
+
+                        <!--                        </div>-->
+                        <!--                        <button class="btn hidden ml-4" id="clearSearchButton"><span id="clear_i18n"></span></button>-->
+                        <!--                    </div>-->
+                    </div>
+                    <a class="lg:hidden font-extrabold text-2xl dark:text-white" href=""><span
+                            class="appName_i18n"></span></a>
+                    <div class="relative">
+                        <button aria-label="Switch theme"
+                                class="group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20"
+                                id="themeToggleButton"
+                                type="button">
+                            <svg aria-hidden="true"
+                                 class="h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
+                                 id="sunIcon" stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 stroke-width="1.5"
+                                 viewBox="0 0 24 24">
+                                <path
+                                        d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z">
+                                </path>
+                                <path
+                                        d="M12.25 3v1.5M21.5 12.25H20M18.791 18.791l-1.06-1.06M18.791 5.709l-1.06 1.06M12.25 20v1.5M4.5 12.25H3M6.77 6.77 5.709 5.709M6.77 17.73l-1.061 1.061"
+                                        fill="none"></path>
+                            </svg>
+                            <svg aria-hidden="true"
+                                 class="hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
+                                 id="moonIcon"
+                                 viewBox="0 0 24 24">
+                                <path
+                                        d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
+                                        stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                            </svg>
+                        </button>
+                        <button aria-label="Switch theme"
+                                class="max-md:hidden md:inline-block ml-2 group rounded-full bg-white/90 px-3 py-2 shadow-lg shadow-zinc-800/5 ring-1 ring-zinc-900/5 backdrop-blur transition dark:pintree-bg-gray-900 dark:ring-white/10 dark:hover:ring-white/20"
+                                id="SetUp_modal_but">
+                            <svg
+                                    class="size-6 h-6 w-6 fill-zinc-100 stroke-zinc-500 transition group-hover:fill-zinc-200 group-hover:stroke-zinc-700 dark:hidden"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>
+                            <svg
+                                    class="size-6 hidden h-6 w-6 fill-zinc-700 transition dark:block dark:stroke-teal-500 dark:group-hover:stroke-teal-400"
+                                    fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-            </footer>
+            </div>
+
+            <div class="flex-1 flex flex-col" id="main">
+                <!-- 主要内容 -->
+                <main class="mt-4 dark:pintree-bg-gray-900">
+                    <div class="flex justify-center items-center h-full" id="loading-spinner">
+                        <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
+                    </div>
+                    <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
+                        <div class="breadcrumbs text-sm">
+                            <ul id="breadcrumbs-path">
+                                <!-- 面包屑将被插入这里 -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="grid gap-6 p-6" id="bookmarks">
+                        <!-- 书签卡将在此处插入 -->
+                    </div>
+                </main>
+                <!-- 页脚 -->
+                <footer class="mt-auto bg-white w-full dark:pintree-bg-gray-900">
+                    <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
+                        <div class="flex justify-center space-x-6 md:order-2">
+                            <a class="text-gray-400 hover:text-gray-500"
+                               href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
+                               target="_blank">
+                                <span class="sr-only">GitHub</span>
+                                <svg aria-hidden="true" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path clip-rule="evenodd"
+                                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                          fill-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="mt-8 md:order-1 md:mt-0">
+                            <p class="text-center text-xs leading-5 text-gray-500 dark:text-gray-400 flex justify-center items-center">
+                                &copy; <span id="currentYear"></span>&nbsp;Built with
+                                <a class="text-green-600 hover:text-green-500 flex items-center ml-1"
+                                   href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab" target="_blank">
+                                    <svg class="inline-block mr-1" fill="none" height="12" viewBox="0 0 10 12"
+                                         width="10"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <g clip-path="url(#clip0_421_47774)">
+                                            <path d="M4.27777 9.11133H6.6111V12.0002L5.44444 10.8783L4.27777 12.0002V9.11133Z"
+                                                  fill="#FCB11E"/>
+                                            <path
+                                                    d="M9.05557 5.72222L5.22223 0L1.3889 5.72222H2.68634L0.444458 9.11111H10L7.75813 5.72222H9.05557Z"
+                                                    fill="#2D9C6C"/>
+                                        </g>
+                                        <defs>
+                                            <clipPath id="clip0_421_47774">
+                                                <rect fill="white" height="12" transform="translate(0.444458)"
+                                                      width="9.55556"/>
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                    <span class="appName_i18n"></span>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
         </div>
     </div>
 </div>
