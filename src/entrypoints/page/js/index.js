@@ -151,7 +151,7 @@ function createCard(link) {
     a_element.onclick = function (event) {
         // 阻止a标签默认行为
         event.preventDefault();
-        chrome.storage.sync.get('BookmarkNewTab', (data) => {
+        browser.storage.sync.get('BookmarkNewTab', (data) => {
             if (data.BookmarkNewTab) {
                 window.open(this.href, '_blank');
             } else {
@@ -630,7 +630,7 @@ function BookmarkInitialize() {
 //设置右键菜单
 function SetCloseContextMenu() {
     const checkbox = document.getElementById('ContextMenuCheckbox');
-    chrome.storage.sync.get('ContextMenu', (data) => {
+    browser.storage.sync.get('ContextMenu', (data) => {
         if (data.ContextMenu) {
             checkbox.checked = true;
         } else {
@@ -639,9 +639,9 @@ function SetCloseContextMenu() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            chrome.storage.sync.set({'ContextMenu': true});
+            browser.storage.sync.set({'ContextMenu': true});
         } else {
-            chrome.storage.sync.set({'ContextMenu': false});
+            browser.storage.sync.set({'ContextMenu': false});
         }
     }
 }
@@ -649,7 +649,7 @@ function SetCloseContextMenu() {
 //设置打开新标签页
 function SetBookmarkNewTab() {
     const checkbox = document.getElementById('bookmarkNewTab');
-    chrome.storage.sync.get('BookmarkNewTab', (data) => {
+    browser.storage.sync.get('BookmarkNewTab', (data) => {
         if (data.BookmarkNewTab) {
             checkbox.checked = true;
         } else {
@@ -658,9 +658,9 @@ function SetBookmarkNewTab() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            chrome.storage.sync.set({'BookmarkNewTab': true});
+            browser.storage.sync.set({'BookmarkNewTab': true});
         } else {
-            chrome.storage.sync.set({'BookmarkNewTab': false});
+            browser.storage.sync.set({'BookmarkNewTab': false});
         }
     }
 }
@@ -668,7 +668,7 @@ function SetBookmarkNewTab() {
 //设置图标缓存
 function SetCacheIcon() {
     const checkbox = document.getElementById('CacheIcon');
-    chrome.storage.sync.get('CacheIcon', (data) => {
+    browser.storage.sync.get('CacheIcon', (data) => {
         if (data.CacheIcon) {
             checkbox.checked = true;
         } else {
@@ -677,9 +677,9 @@ function SetCacheIcon() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            chrome.storage.sync.set({'CacheIcon': true});
+            browser.storage.sync.set({'CacheIcon': true});
         } else {
-            chrome.storage.sync.set({'CacheIcon': false});
+            browser.storage.sync.set({'CacheIcon': false});
         }
     }
 }
@@ -742,7 +742,7 @@ function i18n() {
 function ContextMenuSet(e, link) {
     e.preventDefault();//阻止默认菜单显示
     // e.stopPropagation();//阻止事件冒泡
-    chrome.storage.sync.get('ContextMenu', (data) => {
+    browser.storage.sync.get('ContextMenu', (data) => {
         if (!data.ContextMenu) {
             ContextMenu(e, link);
         }
@@ -1428,18 +1428,14 @@ function Initialize() {
     // }
 
     //关闭侧导航栏
-    SideNavigationToggle.onclick=()=>{
-        chrome.storage.sync.get('SideNavigationToggle', (data) => {
-            console.log(data);
+    SideNavigationToggle.onclick = () => {
+        browser.storage.sync.get('SideNavigationToggle', (data) => {
             if (data.SideNavigationToggle) {
-                chrome.storage.sync.set({ SideNavigationToggle: true });
-                SideNavigation.classList.toggle('hidden');
+                browser.storage.sync.set({SideNavigationToggle: false});
+                SideNavigation.classList.add('lg:block');
             } else {
-                chrome.storage.sync.set({ SideNavigationToggle: false });
-                SideNavigation.classList.toggle('hidden');
-                SideNavigation.classList.toggle('lg:flex');
-                SideNavigation.classList.toggle('lg:fixed');
-                SideNavigationToggle.classList.toggle('lg:pl-60');
+                browser.storage.sync.set({SideNavigationToggle: true});
+                SideNavigation.classList.remove('lg:block');
             }
         });
     }
@@ -1486,7 +1482,7 @@ function Initialize() {
     (() => {
         // 添加多个事件监听器来关闭菜单
         document.onclick = closeMenu;
-        document.onscroll = closeMenu; // 捕获所有滚动事件
+        document.querySelector("body > div > div.flex.flex-row.h-screen > div.flex-1.overflow-auto.h-full.flex.flex-col.bor").onscroll = closeMenu; // 捕获所有滚动事件
         document.onkeydown = closeMenu; // 按下任意键关闭菜单
         document.oncontextmenu = closeMenu; // 按下任意键关闭菜单
         window.onresize = closeMenu; // 窗口大小改变时关闭菜单
@@ -1508,13 +1504,25 @@ function Initialize() {
             }
             const targetElement = event.target.closest(`.${bookmark_link}`);
             if (!targetElement) {
-                chrome.storage.sync.get('ContextMenu', (data) => {
+                browser.storage.sync.get('ContextMenu', (data) => {
                     if (!data.ContextMenu) {
                         ContextMenuBlank(event);
                     }
                 });
             }
         };
+    })();
+
+    //设置侧导航栏隐藏状态
+    (() => {
+        browser.storage.sync.get('SideNavigationToggle', (data) => {
+            console.log(data);
+            if (!data.SideNavigationToggle) {
+                SideNavigation.classList.add('lg:block');
+            } else {
+                SideNavigation.classList.remove('lg:block');
+            }
+        });
     })();
 
     //更新日期
