@@ -127,5 +127,26 @@
     },
     "CacheIcon": {
         "message": "자동 캐시 아이콘"
+    },
+    "all_bookmarks": {
+        "message": "모든 북마크"
+    },
+    "current_bookmark": {
+        "message": "현재 북마크"
+    },
+    "chatgpt": {
+        "message": "ChatGPT"
+    },
+    "perplexity": {
+        "message": "Perplexity"
+    },
+    "secret_tower": {
+        "message": "비밀탑"
+    },
+    "web_search": {
+        "message": "웹 검색"
+    },
+    "ai_search": {
+        "message": "AI 검색"
     }
 }

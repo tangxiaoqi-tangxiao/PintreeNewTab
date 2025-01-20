@@ -127,5 +127,26 @@
     },
     "CacheIcon": {
         "message": "Авто кеш иконка"
+    },
+    "all_bookmarks": {
+        "message": "Все закладки"
+    },
+    "current_bookmark": {
+        "message": "Текущая закладка"
+    },
+    "chatgpt": {
+        "message": "ChatGPT"
+    },
+    "perplexity": {
+        "message": "Perplexity"
+    },
+    "secret_tower": {
+        "message": "Тайная башня"
+    },
+    "web_search": {
+        "message": "Веб-поиск"
+    },
+    "ai_search": {
+        "message": "Искусственный интеллект поиск"
     }
 }

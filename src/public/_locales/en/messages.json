@@ -127,5 +127,26 @@
     },
     "CacheIcon": {
         "message": "Auto Cache Icon"
+    },
+    "all_bookmarks": {
+        "message": "All Bookmarks"
+    },
+    "current_bookmark": {
+        "message": "Current Bookmark"
+    },
+    "chatgpt": {
+        "message": "ChatGPT"
+    },
+    "perplexity": {
+        "message": "Perplexity"
+    },
+    "secret_tower": {
+        "message": "Secret Tower"
+    },
+    "web_search": {
+        "message": "Web Search"
+    },
+    "ai_search": {
+        "message": "AI Search"
     }
 }

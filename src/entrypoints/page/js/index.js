@@ -8,15 +8,19 @@ import {
     isValidUrl
 } from "@/entrypoints/page/utils/utils.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
-import {dbNames, IconsStr, SetUpStr} from "@/entrypoints/page/config/index.js"
+import {dbNames, IconsStr, SetUpStr} from "@/entrypoints/page/config/index.js";
 import Sortable from 'sortablejs';
 //导入资源
-import empty_svg from '/images/empty.svg'
-import default_svg from '/images/default-icon.svg'
+import empty_svg from '/images/empty.svg';
+import default_svg from '/images/default-icon.svg';
+import google_svg from '~/assets/svg/google.svg';
+import bing_svg from '~/assets/svg/bing.svg';
+import baidu_svg from '~/assets/svg/baidu.svg';
 
 //全局变量
 let firstLayer = null;//书签集合
 let BookmarkFolderActiveId = null;//当前活跃的文件夹id
+let SearchOldBookmarkFolderActiveId = null;//搜索之前活跃的文件夹id
 let BreadcrumbsList = [];//面包屑列表
 
 //常量
@@ -84,16 +88,29 @@ async function fetchBookmarks() {
     });
 }
 
-function searchInData(data, query) {
+function searchInData(data, query, currentTab) {
+    query = query.toLowerCase();
     let results = [];
     data.forEach(item => {
-        if (item.title.toLowerCase().includes(query)) {
-            results.push(item);
-        }
-        if (item.children) {
-            const childResults = searchInData(item.children, query);
-            if (childResults.length > 0) {
-                results = results.concat(childResults);
+        if (currentTab === "All_bookmarks") {
+            if (item.title.toLowerCase().includes(query)) {
+                results.push(item);
+            }
+            if (item.children) {
+                const childResults = searchInData(item.children, query, currentTab);
+                if (childResults.length > 0) {
+                    results = results.concat(childResults);
+                }
+            }
+        } else {
+            if (item.parentId == SearchOldBookmarkFolderActiveId && item.title.toLowerCase().includes(query)) {
+                results.push(item);
+            }
+            if (item.children) {
+                const childResults = searchInData(item.children, query, currentTab);
+                if (childResults.length > 0) {
+                    results = results.concat(childResults);
+                }
             }
         }
     });
@@ -101,42 +118,76 @@ function searchInData(data, query) {
 }
 
 // 清除搜索结果并重置UI
-function clearSearchResults() {
-    // fetchBookmarks()
-    //     .then(data => {
-    //         const secondLayer = data;
-    //         if (secondLayer.length > 0) {
-    //             const item = secondLayer[0];
-    //             renderNavigation(secondLayer, document.getElementById('navigation'));
-    //             renderBookmarks(secondLayer, [{id: item.id, title: item.title, children: secondLayer}]);
-    //         }
-    //         document.getElementById('searchInput').value = '';
-    //         document.getElementById('clearSearchButton').classList.add('hidden');
-    //     })
-    //     .catch(error => console.error(`${chrome.i18n.getMessage("errorSearch")}:`, error));
+function clearSearchResults(ActiveId) {
+    let item = GetParentIdElement(ActiveId);
+    item.classList.add("sidebar-active");
 
-    // 自动选择并显示第一项
-    if (firstLayer.length > 0) {
-        const firstItem = firstLayer[0];
-        // 使用第一层数据渲染导航
-        renderNavigation(firstLayer, document.getElementById('navigation'), true);
-        //渲染书签
-        renderBookmarks(firstItem.children, [{id: firstItem.id, title: firstItem.title, children: firstItem.children}]);
-        document.getElementById('searchInput').value = '';
-        document.getElementById('clearSearchButton').classList.add('hidden');
-    }
+    findInTree(firstLayer, (node) => {
+        if (node.id === ActiveId) {
+            //获取面包屑列表
+            let path = findParentFolders(firstLayer, ActiveId).slice(0, -1);
+            //渲染书签和面包屑
+            renderBookmarks(node.children, path.concat({
+                id: node.id,
+                title: node.title,
+                children: node.children
+            }));
+        }
+    });
 }
 
 // 搜索书签
-function searchBookmarks(query) {
+function searchBookmarks(query, currentTab) {
+    if (BookmarkFolderActiveId) SearchOldBookmarkFolderActiveId = BookmarkFolderActiveId;
     BookmarkFolderActiveId = null;
+    if (query.trim() === '') {
+        clearSearchResults(SearchOldBookmarkFolderActiveId);
+        return;
+    }
     fetchBookmarks()
         .then(data => {
-            const results = searchInData(data, query.toLowerCase());
-            renderBookmarks(results, [{id: "0", title: chrome.i18n.getMessage("searchResults"), children: results}]);
-            document.getElementById('clearSearchButton').classList.remove('hidden');
+            const results = searchInData(data, query, currentTab);
+            renderBookmarks(results, [{id: "0", title: browser.i18n.getMessage("searchResults"), children: results}]);
         })
-        .catch(error => console.error(`${chrome.i18n.getMessage("errorSearchBookmark")}:`, error));
+        .catch(error => console.error(`${browser.i18n.getMessage("errorSearchBookmark")}:`, error));
+}
+
+// 搜索Web
+function searchWeb(query, currentTab) {
+    var encodedStr = encodeURIComponent(query);
+    switch (currentTab) {
+        case "Google":
+            window.open(`https://www.google.com/search?q=${encodedStr}`, '_blank');
+            return;
+        case "Baidu":
+            window.open(`https://www.baidu.com/s?wd=${encodedStr}&ie=utf-8`, '_blank');
+            return;
+        case "Bing":
+            window.open(`https://cn.bing.com/search?q=${encodedStr}`, '_blank');
+            return;
+        default:
+            break;
+
+    }
+};
+
+//搜索 AI
+function searchAI(query, currentTab) {
+    var encodedStr = encodeURIComponent(query);
+    switch (currentTab) {
+        case "ChatGPT":
+            window.open(`https://chatgpt.com/?q=${encodedStr}`, '_blank');
+            return;
+        case "Perplexity":
+            window.open(`https://www.perplexity.ai/search/new?q=${encodedStr}&ie=utf-8`, '_blank');
+            return;
+        case "秘塔":
+            window.open(`https://metaso.cn?q=${encodedStr}`, '_blank');
+            return;
+        default:
+            break;
+
+    }
 }
 
 // 创建书签卡元素
@@ -412,7 +463,6 @@ function renderBreadcrumbs(path) {
                 //渲染书签
                 renderBookmarks(item.children, newPath);
                 // updateSidebarActiveState(newPath); //更新侧边栏活动状态
-                document.getElementById('clearSearchButton').classList.add('hidden'); // Hide clear button when navigating through breadcrumbs
             };
             li_element.appendChild(a_element);
         }
@@ -486,11 +536,11 @@ function showNoResultsMessage() {
 
     const title = document.createElement('h2');
     title.className = 'text-gray-500 text-xl font-semibold mt-4';
-    title.textContent = chrome.i18n.getMessage("nope");
+    title.textContent = browser.i18n.getMessage("nope");
 
     const message = document.createElement('p');
     message.className = 'text-gray-500 mt-2';
-    message.textContent = chrome.i18n.getMessage("searchTips");
+    message.textContent = browser.i18n.getMessage("searchTips");
 
 
     messageContainer.appendChild(icon);
@@ -621,7 +671,7 @@ function BookmarkInitialize() {
             }
         })
         .catch(error => {
-            console.error(`${chrome.i18n.getMessage("errorLoadingBookmarks")}`, error);
+            console.error(`${browser.i18n.getMessage("errorLoadingBookmarks")}`, error);
             // 隐藏加载状态
             document.getElementById('loading-spinner').style.display = 'none';
         });
@@ -689,53 +739,55 @@ function i18n() {
     //通用
     let appName_i18ns = [...document.getElementsByClassName("appName_i18n")];
     appName_i18ns.forEach((item) => {
-        item.textContent = chrome.i18n.getMessage("appName");
+        item.textContent = browser.i18n.getMessage("appName");
     });
     let save_i18ns = [...document.getElementsByClassName("save_i18n")];
     save_i18ns.forEach((item) => {
-        item.textContent = chrome.i18n.getMessage("save");
+        item.textContent = browser.i18n.getMessage("save");
     });
     let cancel_i18ns = [...document.getElementsByClassName("cancel_i18n")];
     cancel_i18ns.forEach((item) => {
-        item.textContent = chrome.i18n.getMessage("cancel");
+        item.textContent = browser.i18n.getMessage("cancel");
     });
     //搜索
-    // searchInput.setAttribute("placeholder", chrome.i18n.getMessage("search"));
-    // clear_i18n.textContent = chrome.i18n.getMessage("clear");
+    searchInput.setAttribute("placeholder", browser.i18n.getMessage("search"));
+    bookmark_i18n.textContent = browser.i18n.getMessage("bookmark");
+    web_search_i18n.textContent = browser.i18n.getMessage("web_search");
+    ai_search_i18n.textContent = browser.i18n.getMessage("ai_search");
     //设置
-    set_i18n.textContent = chrome.i18n.getMessage("set");
-    setContextMenu_i18n.textContent = chrome.i18n.getMessage("setContextMenu");
-    setOpenNewTab_i18n.textContent = chrome.i18n.getMessage("setOpenNewTab");
-    CacheIcon_i18n.textContent = chrome.i18n.getMessage("CacheIcon");
+    set_i18n.textContent = browser.i18n.getMessage("set");
+    setContextMenu_i18n.textContent = browser.i18n.getMessage("setContextMenu");
+    setOpenNewTab_i18n.textContent = browser.i18n.getMessage("setOpenNewTab");
+    // CacheIcon_i18n.textContent = browser.i18n.getMessage("CacheIcon");
     //书签
-    // bookmark_i18n.textContent = chrome.i18n.getMessage("bookmark");
-    // baidu_i18n.textContent = chrome.i18n.getMessage("baidu");
-    // google_i18n.textContent = chrome.i18n.getMessage("google");
-    // bing_i18n.textContent = chrome.i18n.getMessage("bing");
+    // bookmark_i18n.textContent = browser.i18n.getMessage("bookmark");
+    // baidu_i18n.textContent = browser.i18n.getMessage("baidu");
+    // google_i18n.textContent = browser.i18n.getMessage("google");
+    // bing_i18n.textContent = browser.i18n.getMessage("bing");
     //右键菜单
-    copyUrl_i18n.textContent = chrome.i18n.getMessage("copyUrl");
-    editBookmark_i18n.textContent = chrome.i18n.getMessage("editBookmark");
-    del_i18n.textContent = chrome.i18n.getMessage("del");
-    bookmarkAdd_i18n.textContent = chrome.i18n.getMessage("bookmarkAdd");
-    newFolder_i18n.textContent = chrome.i18n.getMessage("newFolder");
+    copyUrl_i18n.textContent = browser.i18n.getMessage("copyUrl");
+    editBookmark_i18n.textContent = browser.i18n.getMessage("editBookmark");
+    del_i18n.textContent = browser.i18n.getMessage("del");
+    bookmarkAdd_i18n.textContent = browser.i18n.getMessage("bookmarkAdd");
+    newFolder_i18n.textContent = browser.i18n.getMessage("newFolder");
     //书签编辑
-    infoEdit_i18n.textContent = chrome.i18n.getMessage("infoEdit");
-    IconDescribe_i18n.textContent = chrome.i18n.getMessage("IconDescribe");
-    websiteLink_i18n.textContent = chrome.i18n.getMessage("websiteLink");
-    websiteLink.setAttribute("placeholder", chrome.i18n.getMessage("websiteLinkPlaceholder"));
-    websiteLinkError_i18n.textContent = chrome.i18n.getMessage("websiteLinkError");
-    websiteName_i18n.textContent = chrome.i18n.getMessage("websiteName");
-    websiteName.setAttribute("placeholder", chrome.i18n.getMessage("websiteNamePlaceholder"));
-    websiteNameError_i18n.textContent = chrome.i18n.getMessage("websiteNameError");
-    iconEdit_i18n.textContent = chrome.i18n.getMessage("iconEdit");
-    iconChoose_i18n.textContent = chrome.i18n.getMessage("iconChoose");
-    default_i18n.textContent = chrome.i18n.getMessage("default");
-    official_i18n.textContent = chrome.i18n.getMessage("official");
-    upload_i18n.textContent = chrome.i18n.getMessage("upload");
-    uploadImage_i18n.textContent = chrome.i18n.getMessage("uploadImage");
+    infoEdit_i18n.textContent = browser.i18n.getMessage("infoEdit");
+    IconDescribe_i18n.textContent = browser.i18n.getMessage("IconDescribe");
+    websiteLink_i18n.textContent = browser.i18n.getMessage("websiteLink");
+    websiteLink.setAttribute("placeholder", browser.i18n.getMessage("websiteLinkPlaceholder"));
+    websiteLinkError_i18n.textContent = browser.i18n.getMessage("websiteLinkError");
+    websiteName_i18n.textContent = browser.i18n.getMessage("websiteName");
+    websiteName.setAttribute("placeholder", browser.i18n.getMessage("websiteNamePlaceholder"));
+    websiteNameError_i18n.textContent = browser.i18n.getMessage("websiteNameError");
+    iconEdit_i18n.textContent = browser.i18n.getMessage("iconEdit");
+    iconChoose_i18n.textContent = browser.i18n.getMessage("iconChoose");
+    default_i18n.textContent = browser.i18n.getMessage("default");
+    official_i18n.textContent = browser.i18n.getMessage("official");
+    upload_i18n.textContent = browser.i18n.getMessage("upload");
+    uploadImage_i18n.textContent = browser.i18n.getMessage("uploadImage");
     //文件夹编辑
-    newFolderName.setAttribute("placeholder", chrome.i18n.getMessage("newFolderName"));
-    folderNameNotEmpty_i18n.textContent = chrome.i18n.getMessage("folderNameNotEmpty");
+    newFolderName.setAttribute("placeholder", browser.i18n.getMessage("newFolderName"));
+    folderNameNotEmpty_i18n.textContent = browser.i18n.getMessage("folderNameNotEmpty");
 }
 
 //读取配置判断是否显示右键菜单
@@ -1401,31 +1453,29 @@ function Initialize() {
     //设置打开新标签页
     SetBookmarkNewTab();
     //设置缓存图标
-    SetCacheIcon();
+    // SetCacheIcon();
     //编辑书签的初始化
     BookmarkEditInitialize();
 
     // 按Enter时的搜索功能
     document.getElementById('searchInput')?.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
-            Search();
+            browser.storage.sync.get('SearchTab', (data) => {
+                if (data.SearchTab) {
+                    Search(data.SearchTab);
+                }
+            });
         }
     });
 
     // 按钮点击的搜索功能
     document.getElementById('searchButton')?.addEventListener('click', function () {
-        Search();
+        browser.storage.sync.get('SearchTab', (data) => {
+            if (data.SearchTab) {
+                Search(data.SearchTab);
+            }
+        });
     });
-
-    // 清除搜索结果的按钮
-    document.getElementById('clearSearchButton')?.addEventListener('click', clearSearchResults);
-    // document.getElementById('searchButton').onclick = () => {
-    //     const query = document.getElementById('searchInput').value;
-    //     if (query.trim() === '') {
-    //         return;
-    //     }
-    //     searchBookmarks(query);
-    // }
 
     //关闭侧导航栏
     SideNavigationToggle.onclick = () => {
@@ -1478,6 +1528,119 @@ function Initialize() {
         };
     })();
 
+    //搜索状态
+    (() => {
+        let tab_ = null;
+        let currentTab_ = null;
+        // 初始数据
+        const tabData = {
+            bookmarks: ["All_bookmarks", "Current_bookmark"],
+            "web-search": ["Google", "Baidu", "Bing"],
+            "ai-search": ["ChatGPT", "Perplexity", "Secret_Tower"],
+        };
+
+        // DOM 元素
+        const tabs = document.querySelectorAll(".tab-btn");
+        const collections = document.getElementById("collections");
+
+        // 切换 Tab 时更新集合按钮
+        function updateCollections(tabKey, currentTab = null) {
+            collections.innerHTML = ""; // 清空集合按钮
+            let icons = {
+                "Google": google_svg,
+                "Baidu": baidu_svg,
+                "Bing": bing_svg,
+            }
+            tabData[tabKey].forEach((label, index) => {
+                const btn = document.createElement("button");
+
+                if (icons[label]) {
+                    const svg = document.createElement("img");
+                    svg.src = icons[label];
+                    svg.classList.add("w-4", "h-4", "mr-2");
+                    btn.appendChild(svg);
+                }
+
+                const span = document.createElement("span");
+                span.textContent = browser.i18n.getMessage(label.toLowerCase());
+                btn.appendChild(span);
+                btn.dataset.tab = label;
+                btn.className = `collection-btn flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-gray-50 hover:bg-gray-200 dark:pintree-bg-gray-900 dark:text-gray-300 dark:hover:pintree-bg-gray-800 dark:border dark:border-gray-700 rounded-full`;
+                btn.onclick = (e) => {
+                    document.querySelectorAll(".collection-btn").forEach((btn) => {
+                        btn.classList.add("hover:bg-gray-200", "bg-gray-50");
+                        btn.classList.remove("bg-gray-200", "dark:pintree-bg-gray-800");
+                    });
+                    btn.classList.add("bg-gray-200", "dark:pintree-bg-gray-800")
+                    btn.classList.remove("bg-gray-50", "hover:bg-gray-200");
+
+                    currentTab_ = btn.dataset.tab;
+
+                    //保存当前选中的Tab
+                    browser.storage.sync.set({
+                        SearchTab: {
+                            tab: tab_,
+                            currentTab: currentTab_
+                        }
+                    });
+                }
+                //判断是否选中
+                if ((currentTab === null && index === 0) || (currentTab === btn.dataset.tab)) {
+                    btn.click();
+                }
+                collections.appendChild(btn);
+            });
+        }
+
+        // 添加事件监听器
+        tabs.forEach((tab) => {
+            tab.addEventListener("click", () => {
+                // 移除所有 Tab 的选中样式
+                tabs.forEach((t) => {
+                    t.classList.remove("bg-black", "text-white")
+                    t.classList.add("hover:text-black")
+                });
+
+                // 为当前点击的 Tab 添加选中样式
+                tab.classList.add("bg-black", "text-white");
+                tab.classList.remove("hover:text-black")
+
+                tab_ = tab.dataset.tab;
+
+                browser.storage.sync.get('SearchTab', (data) => {
+                    if (data.SearchTab) {
+                        if (data.SearchTab.tab === tab_) {
+                            currentTab_ = data.SearchTab.currentTab;
+                        } else {
+                            currentTab_ = null;
+                        }
+                    } else {
+                        currentTab_ = null;
+                    }
+                    // 更新集合按钮
+                    updateCollections(tab_, currentTab_);
+                });
+            });
+        });
+
+        browser.storage.sync.get('SearchTab', (data) => {
+            if (data.SearchTab) {
+                let Isdefault = true;
+                tabs.forEach((tab) => {
+                    if (tab.dataset.tab === data.SearchTab.tab) {
+                        Isdefault = false;
+                        tab.click();
+                        currentTab_ = data.SearchTab.currentTab;
+                        updateCollections(tab_, currentTab_);
+                    }
+                });
+                if (Isdefault) tabs[0]?.click();
+            } else {
+                tabs[0]?.click();
+            }
+        });
+    })();
+
     //关闭鼠标右键菜单
     (() => {
         // 添加多个事件监听器来关闭菜单
@@ -1516,7 +1679,6 @@ function Initialize() {
     //设置侧导航栏隐藏状态
     (() => {
         browser.storage.sync.get('SideNavigationToggle', (data) => {
-            console.log(data);
             if (!data.SideNavigationToggle) {
                 SideNavigation.classList.add('lg:block');
             } else {
@@ -1566,27 +1728,17 @@ async function DelIconsCache() {
 }
 
 //搜索
-function Search() {
+function Search(data) {
     const query = document.getElementById('searchInput').value;
-    const selectElement = document.getElementById('currency');
-    switch (selectElement.value) {
-        case "0":
-            if (query.trim() === '') {
-                return;
-            }
-            searchBookmarks(query);
+    switch (data.tab) {
+        case "bookmarks":
+            searchBookmarks(query, data.currentTab);
             break;
-        case "1":
-            var encodedStr = encodeURIComponent(query);
-            window.open(`https://www.baidu.com/s?wd=${encodedStr}&ie=utf-8`, '_blank');
+        case "web-search":
+            searchWeb(query, data.currentTab);
             break;
-        case "2":
-            var encodedStr = encodeURIComponent(query);
-            window.open(`https://www.google.com/search?q=${encodedStr}`, '_blank');
-            break;
-        case "3":
-            var encodedStr = encodeURIComponent(query);
-            window.open(`https://www.bing.com/search?q=${encodedStr}`, '_blank');
+        case "ai-search":
+            searchAI(query, data.currentTab);
             break;
         default:
             break;
@@ -1747,11 +1899,11 @@ function CreateSidebarItem(folder, path) {
 }
 
 //获取指定id的侧导航元素
-function GetParentIdElement(parentId) {
+function GetParentIdElement(ActiveId) {
     let item_ = null;
     let SidebarItemList = [...document.querySelectorAll("#navigation li div a")];
     SidebarItemList.forEach(item => {
-        if (item.dataset.id === parentId) {
+        if (item.dataset.id === ActiveId) {
             item_ = item.parentNode.parentNode;
         }
     });

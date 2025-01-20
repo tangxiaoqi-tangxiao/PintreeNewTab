@@ -127,5 +127,26 @@
     },
     "CacheIcon": {
         "message": "自动缓存图标"
+    },
+    "all_bookmarks": {
+        "message": "所有书签"
+    },
+    "current_bookmark": {
+        "message": "当前书签"
+    },
+    "chatgpt": {
+        "message": "ChatGPT"
+    },
+    "perplexity": {
+        "message": "Perplexity"
+    },
+    "secret_tower": {
+        "message": "秘塔"
+    },
+    "web_search": {
+        "message": "Web 搜索"
+    },
+    "ai_search": {
+        "message": "AI 搜索"
     }
 }

@@ -127,5 +127,26 @@
     },
     "CacheIcon": {
         "message": "自動キャッシュアイコン"
+    },
+    "all_bookmarks": {
+        "message": "すべてのブックマーク"
+    },
+    "current_bookmark": {
+        "message": "現在のブックマーク"
+    },
+    "chatgpt": {
+        "message": "ChatGPT"
+    },
+    "perplexity": {
+        "message": "Perplexity"
+    },
+    "secret_tower": {
+        "message": "秘塔"
+    },
+    "web_search": {
+        "message": "ウェブ検索"
+    },
+    "ai_search": {
+        "message": "AI検索"
     }
 }

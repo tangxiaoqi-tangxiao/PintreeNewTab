@@ -127,5 +127,26 @@
     },
     "CacheIcon": {
         "message": "Automatische Cache-Symbol"
+    },
+    "all_bookmarks": {
+        "message": "Alle Lesezeichen"
+    },
+    "current_bookmark": {
+        "message": "Aktuelles Lesezeichen"
+    },
+    "chatgpt": {
+        "message": "ChatGPT"
+    },
+    "perplexity": {
+        "message": "Perplexity"
+    },
+    "secret_tower": {
+        "message": "Geheime Turm"
+    },
+    "web_search": {
+        "message": "Websuche"
+    },
+    "ai_search": {
+        "message": "KI-Suche"
     }
 }

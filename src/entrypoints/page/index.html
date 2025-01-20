@@ -65,7 +65,7 @@
         <!-- 主要内容领域 -->
         <div class="flex-1 overflow-auto h-full flex flex-col bor">
             <!-- 搜索框-->
-            <div class="z-10 items-center justify-between sticky top-0 flex h-14 shrink-0   dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6">
+            <div class="z-10 items-center justify-between sticky top-0 flex h-14 shrink-0 dark:pintree-border-gray-800 bg-white dark:pintree-bg-gray-900 px-4 shadow-sm sm:gap-x-6">
                 <div class="h-full items-center flex flex-1 gap-x-4 self-stretch lg:gap-x-6 justify-between">
                     <div class="relative hidden lg:flex">
                         <button aria-label="Switch theme"
@@ -173,6 +173,55 @@
                     </div>
                 </div>
             </div>
+            <div class="mt-8">
+                <div class="w-full max-w-screen-lg mx-auto">
+                    <!-- Tab Buttons -->
+                    <div class="flex space-x-6 mb-4">
+                        <button id="bookmark_i18n" data-tab="bookmarks"
+                                class="tab-btn px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        </button>
+                        <button id="web_search_i18n" data-tab="web-search"
+                                class="tab-btn px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        </button>
+                        <button id="ai_search_i18n" data-tab="ai-search"
+                                class="tab-btn px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-black dark:text-gray-400 dark:hover:text-white">
+                        </button>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="relative border border-gray-300 rounded-xl p-4 shadow-sm dark:border-gray-700">
+                        <!-- Input Field -->
+                        <div class="relative flex items-center border border-gray-300 rounded-full dark:border-gray-600 shadow-sm">
+                            <span class="w-7 h-7 flex items-center justify-center  text-gray-500 dark:text-gray-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-arrow-right h-4 w-4"><circle cx="11"
+                                                                                                               cy="11"
+                                                                                                               r="8"></circle><path
+                                        d="m21 21-4.3-4.3"></path>
+                                </svg>
+                            </span>
+                            <input id="searchInput"
+                                   type="text"
+                                   class="flex-grow pl-1 py-3 text-gray-700 dark:text-gray-200 bg-transparent border-none outline-none dark:placeholder-gray-400"
+                            />
+                            <button id="searchButton"
+                                    class="flex items-center justify-center w-7 h-7 mr-2 bg-black hover:bg-gray-700 text-white rounded-full shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round" class="lucide lucide-arrow-right h-4 w-4 text-white">
+                                    <path d="M5 12h14"></path>
+                                    <path d="m12 5 7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Collections Buttons -->
+                        <div id="collections" class="flex space-x-2 mt-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- 书签-->
             <div class="flex-1 flex flex-col" id="main">
                 <!-- 主要内容 -->
@@ -255,12 +304,12 @@
                 <input checked="checked" class="toggle toggle-success ml-auto" id="bookmarkNewTab" type="checkbox"/>
             </div>
         </div>
-        <div class="mt-4">
-            <div class="flex justify-start items-center text-sm">
-                <label for="CacheIcon"><span id="CacheIcon_i18n"></span></label>
-                <input checked="checked" class="toggle toggle-success ml-auto" id="CacheIcon" type="checkbox"/>
-            </div>
-        </div>
+        <!--        <div class="mt-4">-->
+        <!--            <div class="flex justify-start items-center text-sm">-->
+        <!--                <label for="CacheIcon"><span id="CacheIcon_i18n"></span></label>-->
+        <!--                <input checked="checked" class="toggle toggle-success ml-auto" id="CacheIcon" type="checkbox"/>-->
+        <!--            </div>-->
+        <!--        </div>-->
     </div>
     <form class="modal-backdrop" method="dialog">
         <button>close</button>
