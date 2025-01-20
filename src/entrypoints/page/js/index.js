@@ -181,7 +181,7 @@ function searchAI(query, currentTab) {
         case "Perplexity":
             window.open(`https://www.perplexity.ai/search/new?q=${encodedStr}&ie=utf-8`, '_blank');
             return;
-        case "秘塔":
+        case "Secret_Tower":
             window.open(`https://metaso.cn?q=${encodedStr}`, '_blank');
             return;
         default:
