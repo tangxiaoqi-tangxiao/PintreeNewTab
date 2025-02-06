@@ -23,9 +23,6 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: 打印当前文件夹
-        run: dir
-
       # Step 3: 恢复依赖项
       - name: 安装依赖项
         run: npm install
@@ -33,6 +30,12 @@ jobs:
       # Step 4: 构建项目
       - name: 构建项目
         run: npm run zip
+
+      - name: 打印当前文件夹
+        run: dir
+
+      - name: 打印.output文件夹
+        run: dir .\.output
 
       # Step 5: 上传文件到Release
       - name: 创建 Release
