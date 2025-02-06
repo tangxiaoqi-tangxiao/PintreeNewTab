@@ -22,6 +22,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 - [x] 创建文件夹
 - [ ] 可移动书签到文件夹
 - [x] 保存侧边栏位置
+- [x] 新增AI搜索
 
 ## 安装和运行
 
@@ -54,6 +55,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 
 ## 使用技术
 
+- WXT
 - HTML/CSS/JavaScript
 - JSON格式处理
 - 浏览器扩展
