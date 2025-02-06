@@ -8,7 +8,7 @@ name: Google Extensions
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
