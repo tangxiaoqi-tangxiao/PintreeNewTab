@@ -25,9 +25,6 @@ let BreadcrumbsList = [];//面包屑列表
 
 //常量
 const bookmark_link = "bookmark-link";
-// 定义两个数据库名称
-const dbName1 = IconsStr;
-const dbName2 = SetUpStr;
 
 document.addEventListener('DOMContentLoaded', () => {
     Initialize();
@@ -83,6 +80,18 @@ async function fetchBookmarks() {
         // fetch('json/pintree.json')
         //     .then(response => response.json())
         //     .then((data) => {
+        //         function addIds(data) {
+        //             for (let i = 0; i < data.length; i++) {
+        //                 // 给当前项添加 id
+        //                 data[i].id = i.toString();
+        //
+        //                 // 如果有 children，则递归处理
+        //                 if (data[i].children && data[i].children.length > 0) {
+        //                     addIds(data[i].children);
+        //                 }
+        //             }
+        //         }
+        //         addIds(data);
         //         resolve(data);
         //     });
     });
@@ -219,7 +228,7 @@ function createCard(link) {
     const cardIcon = document.createElement('img');
 
     cardIcon.src = empty_svg;
-    db.getData(dbName1, id).then((data) => {
+    db.getData(IconsStr, id).then((data) => {
         if (data) {
             cardIcon.src = data.base64;
         } else {
@@ -507,11 +516,11 @@ function updateSidebarActiveState(path) {
     if (ActiveId) {
         ExpandActiveFolder();
         //保存当前活跃文件夹id
-        db.getData(dbName2, "ActiveId").then((data) => {
+        db.getData(SetUpStr, "ActiveId").then((data) => {
             if (data) {
-                db.updateData(dbName2, {id: "ActiveId", data: ActiveId});
+                db.updateData(SetUpStr, {id: "ActiveId", data: ActiveId});
             } else {
-                db.addData(dbName2, {id: "ActiveId", data: ActiveId});
+                db.addData(SetUpStr, {id: "ActiveId", data: ActiveId});
             }
         });
     }
@@ -864,7 +873,7 @@ function ContextMenu(e, link) {
             editBookmark_modal.showModal();
             editBookmark_modal.focus();//设置为焦点，用于阻止UI库模态窗口将第一个可交互元素设置为焦点
 
-            db.getData(dbName1, id).then((data) => {
+            db.getData(IconsStr, id).then((data) => {
                 if (data) {
                     defaultImage.src = data.base64;
                     defaultIcon.classList.remove("hidden");
@@ -1309,26 +1318,26 @@ function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {//本地图片
                         img.src = localPreviewImage.src;
                         if (localPreviewImage.src != location.href) {
-                            db.getData(dbName1, id).then((data) => {
+                            db.getData(IconsStr, id).then((data) => {
                                 if (data) {
-                                    db.updateData(dbName1, {base64: localPreviewImage.src, id});
+                                    db.updateData(IconsStr, {base64: localPreviewImage.src, id});
                                 } else {
-                                    db.addData(dbName1, {base64: localPreviewImage.src, id});
+                                    db.addData(IconsStr, {base64: localPreviewImage.src, id});
                                 }
                             });
                         }
                     } else if (!iconBorder.classList.contains('default')) {//网络图片
                         img.src = PreviewImage.src;
                         if (PreviewImage.src != location.href) {
-                            db.getData(dbName1, id).then((data) => {
+                            db.getData(IconsStr, id).then((data) => {
                                 if (data) {
-                                    db.updateData(dbName1, {base64: PreviewImage.src, id});
+                                    db.updateData(IconsStr, {base64: PreviewImage.src, id});
                                 } else {
-                                    db.addData(dbName1, {base64: PreviewImage.src, id});
+                                    db.addData(IconsStr, {base64: PreviewImage.src, id});
                                 }
                             });
                         } else {
-                            db.deleteData(dbName1, id);
+                            db.deleteData(IconsStr, id);
                         }
                     }
                     return true;
@@ -1370,12 +1379,12 @@ function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {//本地图片
                         if (localPreviewImage.src != location.href) {
                             imgsrc = localPreviewImage.src;
-                            db.addData(dbName1, {base64: localPreviewImage.src, id: link.id});
+                            db.addData(IconsStr, {base64: localPreviewImage.src, id: link.id});
                         }
                     } else if (!iconBorder.classList.contains('default')) {//网络图片
                         if (PreviewImage.src != location.href) {
                             imgsrc = PreviewImage.src;
-                            db.addData(dbName1, {base64: PreviewImage.src, id: link.id});
+                            db.addData(IconsStr, {base64: PreviewImage.src, id: link.id});
                         }
                     }
 
@@ -1716,12 +1725,12 @@ async function DelIconsCache() {
         }
     }
     GetArrId(datas);
-    db.getCursor(dbName1, (data) => {
+    db.getCursor(IconsStr, (data) => {
         if (!ArrId.includes(data.id)) {
             DelArrId.push(data.id);
         }
     }, () => {
-        db.deleteMultipleData(dbName1, DelArrId).then(() => {
+        db.deleteMultipleData(IconsStr, DelArrId).then(() => {
             console.log("删除缓存成功");
         });
     });
@@ -1972,7 +1981,7 @@ function ErrorMessageNotification() {
 //展开默认文件夹
 function ExpandDefaultFolder() {
     //获取关闭页面前活跃的文件夹id
-    db.getData(dbName2, "ActiveId").then((value) => {
+    db.getData(SetUpStr, "ActiveId").then((value) => {
         if (value) {
             let item = GetParentIdElement(value.data);
             item.click();
