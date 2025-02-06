@@ -16,7 +16,7 @@ jobs:
 
     steps:
       # Step 1: 检出代码
-      - name: Checkout code
+      - name: 检出代码
         uses: actions/checkout@v4
 
       # Step 2: 配置 NodeJS 环境
@@ -33,21 +33,23 @@ jobs:
         run: npm install
 
       # Step 4: 构建项目
-      - name: Build project
+      - name: 构建项目
         run: npm run build
 
       # Step 5: 获取标签消息
-      - name: Get tag message
+      - name: 获取标签消息
         id: tag_message
         run: |
-          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
-            TAG_NAME="${GITHUB_REF#refs/tags/}"
-            TAG_MESSAGE=$(git tag -n99 | grep "^${TAG_NAME} " | sed "s/^${TAG_NAME} //")
-            echo "TAG_MESSAGE=${TAG_MESSAGE}" >> $GITHUB_ENV
-          fi
+          if ($Env:GITHUB_REF -like 'refs/tags/*') {
+            $TAG_NAME = $Env:GITHUB_REF.Substring(10)  # 获取标签名称
+            $TAG_MESSAGE = git tag -n99 | Select-String "^$TAG_NAME " | ForEach-Object { $_.Line.Substring($TAG_NAME.Length).Trim() }
+            Write-Host "TAG_MESSAGE=$TAG_MESSAGE"
+            echo "TAG_MESSAGE=$TAG_MESSAGE" >> $GITHUB_ENV  # 设置环境变量
+          }
+
 
       # Step 6: 上传文件到Release
-      - name: Create GitHub Release
+      - name: 创建 Release
         uses: softprops/action-gh-release@v2
         # if: startsWith(github.ref, 'refs/tags/')
         with:
