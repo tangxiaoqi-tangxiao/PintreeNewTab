@@ -42,7 +42,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: ${{ github.workspace }}/.output/wxt-starter-1.0.15-chrome.zip
+          files: ./.output/*.zip
           fail_on_unmatched_files: true
           body_path: './release.md'
         env:
