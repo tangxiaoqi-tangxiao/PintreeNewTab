@@ -36,10 +36,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      # Step 4: 压缩文件
-      - name: Compression
-        run: Compress-Archive -Path .\WallpaperMedia\bin\Release\net9.0\publish\win-x64\* -DestinationPath Win_x64.zip
-
+      # Step 5: 获取标签消息
       - name: Get tag message
         id: tag_message
         run: |
@@ -49,7 +46,7 @@ jobs:
             echo "TAG_MESSAGE=${TAG_MESSAGE}" >> $GITHUB_ENV
           fi
 
-      # Step 5: 上传文件到Release
+      # Step 6: 上传文件到Release
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         # if: startsWith(github.ref, 'refs/tags/')
