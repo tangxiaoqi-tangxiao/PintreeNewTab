@@ -1,4 +1,4 @@
-name: Google Extensions
+name: 谷歌扩展发布
 
 on:
   push:
@@ -32,21 +32,9 @@ jobs:
 
       # Step 4: 构建项目
       - name: 构建项目
-        run: npm run build
+        run: npm run zip
 
-      # Step 5: 获取标签消息
-      - name: 获取标签消息
-        id: tag_message
-        run: |
-          if ($Env:GITHUB_REF -like 'refs/tags/*') {
-            $TAG_NAME = $Env:GITHUB_REF.Substring(10)  # 获取标签名称
-            $TAG_MESSAGE = git tag -n99 | Select-String "^$TAG_NAME " | ForEach-Object { $_.Line.Substring($TAG_NAME.Length).Trim() }
-            Write-Host "TAG_MESSAGE=$TAG_MESSAGE"
-            echo "TAG_MESSAGE=$TAG_MESSAGE" >> $GITHUB_ENV  # 设置环境变量
-          }
-
-
-      # Step 6: 上传文件到Release
+      # Step 5: 上传文件到Release
       - name: 创建 Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
@@ -54,12 +42,6 @@ jobs:
           files: .\.output\*.zip
           body: |
             发布版本: ${{ github.ref_name }}
-            说明: ${{ env.TAG_MESSAGE }}  # 使用获取到的标签消息
+          body_path: './release.md'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#      - name: Upload Build Artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: build-Win_x64       # 自定义的上传名称
-#          path: Win_x64.zip         # 上传的文件或目录路径
