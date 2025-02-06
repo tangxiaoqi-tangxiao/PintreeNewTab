@@ -43,15 +43,14 @@ jobs:
         run: dir .\.output
 
       # Step 5: 上传文件到Release
-#      - name: 创建 Release
-#        uses: softprops/action-gh-release@v2
-#        if: startsWith(github.ref, 'refs/tags/')
-#        with:
-#          files: |
-#            .\.output\*.zip
-#          fail_on_unmatched_files: true
-#          body: |
-#            发布版本: ${{ github.ref_name }}
-#          body_path: './release.md'
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: 创建 Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: .\.output\*
+          fail_on_unmatched_files: true
+          body: |
+            发布版本: ${{ github.ref_name }}
+          body_path: './release.md'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
