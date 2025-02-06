@@ -8,6 +8,9 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write  # 需要写权限才能创建 Release
+      issues: read     # 其他相关权限（视情况而定）
 
     steps:
       # Step 1: 检出代码
