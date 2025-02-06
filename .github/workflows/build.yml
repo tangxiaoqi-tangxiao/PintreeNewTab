@@ -39,7 +39,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: .\.output\*.zip
+          files: |
+            .\.output\*.zip
+          fail_on_unmatched_files: true
           body: |
             发布版本: ${{ github.ref_name }}
           body_path: './release.md'
