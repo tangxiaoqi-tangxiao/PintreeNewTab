@@ -44,13 +44,14 @@ window.onbeforeunload = () => {
 
 //将浏览器书签节点转换为结构化数据格式
 function bookmarkToStructuredData(bookmarkNode) {
-    const {id, title, dateAdded, children, parentId} = bookmarkNode;
+    const {id, title, dateAdded, children, parentId, index} = bookmarkNode;
     const structuredNode = {
         type: children ? "folder" : "link",
         addDate: dateAdded,
         title: title,
         id: id,
-        parentId: parentId
+        parentId: parentId,
+        index
     };
 
     //获取浏览器书签图标
@@ -586,9 +587,17 @@ function renderBookmarks(data, path) {
         const folderSection = document.createElement('div');
         folderSection.className = 'grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-12 gap-6';
         folderSection.id = "grid_folders";
-        folders.forEach(folder => {
+        let index = 0;
+        folders.sort((a, b) => a.title.localeCompare(b.title)).forEach(folder => {
             const card = createFolderCard(folder.title, folder.id, folder.children, path);
-            folderSection.appendChild(card);
+            //每次渲染文件夹重新设置文件夹序号
+            chrome.bookmarks.move(folder.id, {
+                index: index,
+                parentId: BookmarkFolderActiveId
+            }, function () {
+                folderSection.appendChild(card);
+                index++;
+            });
         });
         container.appendChild(folderSection);
     }
@@ -1755,8 +1764,8 @@ function Search(data) {
 }
 
 //书签拖拽
-function BookmarkDrag(id) {
-    const element = document.getElementById(id);
+function BookmarkDrag(grid_id) {
+    const element = document.getElementById(grid_id);
     if (element) {
         new Sortable(element, {
             animation: 150,
@@ -1766,9 +1775,14 @@ function BookmarkDrag(id) {
                 // 当拖拽结束时，可以在这里获取新顺序
                 // console.log(`从索引 ${evt.oldIndex} 移动到索引 ${evt.newIndex}`);
                 let newIndex = evt.newIndex;
+                let folderLength = getFolderLength();
+
                 if (evt.oldIndex < evt.newIndex) {
-                    newIndex++;
+                    newIndex += 1 + folderLength;
+                } else {
+                    newIndex += folderLength;
                 }
+
                 //更新书签位置
                 if (BookmarkFolderActiveId) {
                     chrome.bookmarks.move(evt.item.dataset.id, {
@@ -1798,6 +1812,11 @@ function bookmarkIsNull() {
 function folderIsNull() {
     let folderList = document.querySelectorAll("#grid_folders > div").length;
     return !(folderList > 0);
+}
+
+//获取文件夹数量
+function getFolderLength() {
+    return document.querySelectorAll("#grid_folders > div").length;
 }
 
 //展开侧边栏当前活跃的文件夹
