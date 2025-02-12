@@ -7,7 +7,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 
 ![封面](.github/imgs/og.png)
 
-## 支持语言
+## 支持语言（根据浏览器语言自动调节）
 
 - 简体中文
 - 繁体中文
@@ -37,7 +37,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 
 ### 手动安装和更新
 
-1. 下载 `dist.zip` 文件后解压
+1. 下载 `wxt-starter-*-chrome.zip` 文件后解压
    ![图片](.github/imgs/屏幕截图-2024-09-24-145943.png)
 
 2. 打开Chrome浏览器，进入chrome://extensions/页面，打开开发者模式，点击“加载已解压的扩展程序”，选择解压后的文件夹。
