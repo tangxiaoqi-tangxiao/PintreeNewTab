@@ -1,5 +1,5 @@
 //全局变量
-const browserRelatedHeaders = {
+const _browserRelatedHeaders = {
     "sec-ch-ua": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
     "sec-ch-ua-arch": "x86",
     "sec-ch-ua-bitness": "64",
@@ -11,6 +11,8 @@ const browserRelatedHeaders = {
     "sec-ch-ua-platform-version": "15.0.0",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 };
+// 预加载默认图标数据
+let _defaultImageData;
 
 /**
  * 异步获取网站的favicon图标，并将其转换为base64编码字符串
@@ -23,7 +25,7 @@ async function fetchFaviconAsBase64(url) {
             if (!isValidUrl(url)) return null;
             // 获取网站的 HTML 源代码
             fetchWithTimeout(url, {
-                headers: browserRelatedHeaders
+                headers: _browserRelatedHeaders
             }, 5000)
                 .then(response => response.text())
                 .then(async text => {
@@ -404,7 +406,7 @@ async function fetchFaviconBlobData(url, iconLinks) {
 
                 // 获取图标的二进制数据
                 const iconResponse = await fetch(faviconUrl, {
-                    headers: browserRelatedHeaders
+                    headers: _browserRelatedHeaders
                 });
                 if (iconResponse.status === 200 || iconResponse.status === 200) {
                     blob = await iconResponse.blob();
@@ -415,7 +417,7 @@ async function fetchFaviconBlobData(url, iconLinks) {
             // 如果没有找到 <link> 标签，使用默认的 /favicon.ico
             faviconUrl = new URL('/favicon.ico', url).href;
             const iconResponse = await fetch(faviconUrl, {
-                headers: browserRelatedHeaders
+                headers: _browserRelatedHeaders
             });
             if (iconResponse.status === 200) {
                 blob = await iconResponse.blob();
@@ -429,10 +431,10 @@ async function fetchFaviconBlobData(url, iconLinks) {
     }
 }
 
-async function getFaviconURL(pageUrl, size = 32) {
-    // 预加载默认图标数据
-    let defaultImageData;
-    
+async function getFaviconURL(pageUrl, size = 32) {    
+    //声明图像比较图片大小(越小速度越快，但是准确率会降低)
+    const compareSize = 2;
+
     function faviconURL(iconUrl,size){
         const url = new URL(chrome.runtime.getURL("/_favicon/"));
         url.searchParams.set("pageUrl", iconUrl);
@@ -440,35 +442,27 @@ async function getFaviconURL(pageUrl, size = 32) {
         return url.toString();
     }
 
-    // 加载图像并缩放至16x16
+    // 加载图像并缩放
     function loadImage(url) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                canvas.width = 16;
-                canvas.height = 16;
+                canvas.width = compareSize;
+                canvas.height = compareSize;
                 const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, 16, 16);
-                resolve(ctx.getImageData(0, 0, 16, 16));
+                ctx.drawImage(img, 0, 0, compareSize, compareSize);
+                resolve(ctx.getImageData(0, 0, compareSize, compareSize));
             };
             img.onerror = reject;
             img.src = url;
         });
     }
 
-    // 检查目标图标是否为默认
-    async function checkFavicon(url) {
-        try {
-            const targetData = await loadImage(faviconURL(url,16));
-            return !areImageDataEqual(targetData, defaultImageData);
-        } catch (e) {
-            return false;
-        }
-    }
-
     // 比较图像数据
     function areImageDataEqual(a, b) {
+        console.log(a,b);
+        
         if (a.width !== b.width || a.height !== b.height) return false;
         const dataA = a.data;
         const dataB = b.data;
@@ -480,18 +474,19 @@ async function getFaviconURL(pageUrl, size = 32) {
 
     // 检查目标图标是否为默认
     async function checkFavicon(url) {
-        const targetUrl = faviconURL(url,16);
         try {
-            const targetData = await loadImage(targetUrl);
-            return !areImageDataEqual(targetData, defaultImageData);
+            const targetData = await loadImage(faviconURL(url,compareSize));
+            return !areImageDataEqual(targetData, _defaultImageData);
         } catch (e) {
             return false;
         }
     }
 
-    await loadImage(faviconURL("undefined",16)).then(data => {
-        defaultImageData = data;
-    });
+    if(!_defaultImageData){
+        await loadImage(faviconURL("undefined",compareSize)).then(data => {
+            _defaultImageData = data;
+        });
+    }
 
     return new Promise((resolve, reject) => {
         checkFavicon(pageUrl).then(isCustom => {
