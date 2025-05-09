@@ -5,10 +5,11 @@ import {
     fetchFaviconAsBase64,
     findInTree,
     findParentFolders,
-    isValidUrl
+    isValidUrl,
+    getFaviconURL
 } from "@/entrypoints/page/utils/utils.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
-import {dbNames, IconsStr, SetUpStr} from "@/entrypoints/page/config/index.js";
+import { dbNames, IconsStr, SetUpStr } from "@/entrypoints/page/config/index.js";
 import Sortable from 'sortablejs';
 //导入资源
 import empty_svg from '/images/empty.svg';
@@ -43,8 +44,8 @@ window.onbeforeunload = () => {
 };
 
 //将浏览器书签节点转换为结构化数据格式
-function bookmarkToStructuredData(bookmarkNode) {
-    const {id, title, dateAdded, children, parentId, index} = bookmarkNode;
+async function bookmarkToStructuredData(bookmarkNode, isIcon = false) {
+    const { id, title, dateAdded, children, parentId, index } = bookmarkNode;
     const structuredNode = {
         type: children ? "folder" : "link",
         addDate: dateAdded,
@@ -54,28 +55,26 @@ function bookmarkToStructuredData(bookmarkNode) {
         index
     };
 
-    //获取浏览器书签图标
-    function faviconURL(pageUrl, size = 32) {
-        const url = new URL(chrome.runtime.getURL("/_favicon/"));
-        url.searchParams.set("pageUrl", pageUrl);
-        url.searchParams.set("size", size);
-        return url.toString();
-    }
-
     if (children) {
-        structuredNode.children = children.map(bookmarkToStructuredData);
+        structuredNode.children = await Promise.all(children.map(value => {
+            return bookmarkToStructuredData(value, isIcon)
+        }));
     } else {
-        structuredNode.icon = faviconURL(bookmarkNode.url);
+        structuredNode.icon = isIcon ? await getFaviconURL(bookmarkNode.url) : "";
         structuredNode.url = bookmarkNode.url;
     }
 
     return structuredNode;
 }
 
-async function fetchBookmarks() {
+async function fetchBookmarks(isIcon = true) {
     return new Promise((resolve) => {
-        chrome.bookmarks.getTree((bookmarks) => {
-            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
+        chrome.bookmarks.getTree(async (bookmarks) => {
+            const structuredBookmarks = await Promise.all(bookmarks[0].children.map(value => {
+                return bookmarkToStructuredData(value, isIcon)
+            }));
+            console.log(structuredBookmarks);
+            
             resolve(structuredBookmarks);
         });
         // fetch('json/pintree.json')
@@ -157,7 +156,7 @@ function searchBookmarks(query, currentTab) {
     fetchBookmarks()
         .then(data => {
             const results = searchInData(data, query, currentTab);
-            renderBookmarks(results, [{id: "0", title: browser.i18n.getMessage("searchResults"), children: results}]);
+            renderBookmarks(results, [{ id: "0", title: browser.i18n.getMessage("searchResults"), children: results }]);
         })
         .catch(error => console.error(`${browser.i18n.getMessage("errorSearchBookmark")}:`, error));
 }
@@ -202,7 +201,7 @@ function searchAI(query, currentTab) {
 
 // 创建书签卡元素
 function createCard(link) {
-    const {id, title, url, icon, parentId} = link;
+    const { id, title, url, icon, parentId } = link;
 
     const a_element = document.createElement('a');
     a_element.className = bookmark_link;
@@ -275,7 +274,7 @@ function createFolderCard(title, id, children, path) {
     const card = document.createElement('div');
     card.className = 'select-none folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
     card.onclick = () => {
-        const newPath = path.concat({id, title, children});
+        const newPath = path.concat({ id, title, children });
         renderBookmarks(children, newPath);
     };
 
@@ -302,79 +301,15 @@ function createFolderCard(title, id, children, path) {
 }
 
 // 渲染侧边栏导航
-// function renderNavigation(folders, container, isFirstRender = false, path = []) {
-//     container.innerHTML = ''; // Clear previous content
-//     folders.forEach((folder, index) => {
-//         if (folder.type === 'folder') {
-//             const navItem = CreateSidebarItemElement(folder.title, folder.id);
-//             const toggleIcon = CreateIconElement();
-//
-//             if (folder.children && folder.children.length > 0) {
-//                 navItem.appendChild(toggleIcon);
-//             }
-//             container.appendChild(navItem);
-//
-//             if (folder.children && folder.children.length > 0) {
-//                 const subList = document.createElement('ul');
-//                 subList.className = 'ml-4 space-y-2 hidden';
-//                 renderNavigation(folder.children, subList, false, path.concat({
-//                     id: folder.id,
-//                     title: folder.title,
-//                     children: folder.children
-//                 }));
-//                 container.appendChild(subList);
-//
-//                 if (isFirstRender && index === 0) {
-//                     // 在初始渲染时展开第一个项目
-//                     subList.classList.remove('hidden');
-//                     if (subList.children.length > 0) {
-//                         toggleIcon.classList.toggle('rotate-90');
-//                     }
-//                 }
-//
-//                 navItem.onclick = (e) => {
-//                     closeMenu();//关闭右键菜单
-//                     e.stopPropagation();
-//                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-//                     // navItem.classList.add('sidebar-active');
-//                     if (subList.children.length > 0) {
-//                         subList.classList.toggle('hidden');
-//                         toggleIcon.classList.toggle('rotate-90');
-//                     }
-//                     renderBookmarks(folder.children, path.concat({
-//                         id: folder.id,
-//                         title: folder.title,
-//                         children: folder.children
-//                     }));
-//                 };
-//             } else {
-//                 navItem.onclick = (e) => {
-//                     closeMenu();//关闭右键菜单
-//                     e.stopPropagation();
-//                     document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-//                     // navItem.classList.add('sidebar-active');
-//
-//                     renderBookmarks(folder.children, path.concat({
-//                         id: folder.id,
-//                         title: folder.title,
-//                         children: folder.children
-//                     }));
-//                 };
-//             }
-//         }
-//     });
-// }
-
-// 渲染侧边栏导航
 function renderNavigation(folders, container, isFirstRender = false, path = []) {
     container.innerHTML = ''; // 清空之前的内容
 
     // 使用栈来模拟递归
     const stack = [];
-    stack.push({folders, container, path, isFirstRender, parentElement: container});
+    stack.push({ folders, container, path, isFirstRender, parentElement: container });
 
     while (stack.length > 0) {
-        const {folders, container, path, isFirstRender, parentElement} = stack.pop();
+        const { folders, container, path, isFirstRender, parentElement } = stack.pop();
 
         folders.forEach((folder, index) => {
             if (folder.type === 'folder') {
@@ -519,9 +454,9 @@ function updateSidebarActiveState(path) {
         //保存当前活跃文件夹id
         db.getData(SetUpStr, "ActiveId").then((data) => {
             if (data) {
-                db.updateData(SetUpStr, {id: "ActiveId", data: ActiveId});
+                db.updateData(SetUpStr, { id: "ActiveId", data: ActiveId });
             } else {
-                db.addData(SetUpStr, {id: "ActiveId", data: ActiveId});
+                db.addData(SetUpStr, { id: "ActiveId", data: ActiveId });
             }
         });
     }
@@ -707,9 +642,9 @@ function SetCloseContextMenu() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            browser.storage.sync.set({'ContextMenu': true});
+            browser.storage.sync.set({ 'ContextMenu': true });
         } else {
-            browser.storage.sync.set({'ContextMenu': false});
+            browser.storage.sync.set({ 'ContextMenu': false });
         }
     }
 }
@@ -726,9 +661,9 @@ function SetBookmarkNewTab() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            browser.storage.sync.set({'BookmarkNewTab': true});
+            browser.storage.sync.set({ 'BookmarkNewTab': true });
         } else {
-            browser.storage.sync.set({'BookmarkNewTab': false});
+            browser.storage.sync.set({ 'BookmarkNewTab': false });
         }
     }
 }
@@ -745,9 +680,9 @@ function SetCacheIcon() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            browser.storage.sync.set({'CacheIcon': true});
+            browser.storage.sync.set({ 'CacheIcon': true });
         } else {
-            browser.storage.sync.set({'CacheIcon': false});
+            browser.storage.sync.set({ 'CacheIcon': false });
         }
     }
 }
@@ -821,7 +756,7 @@ function ContextMenuSet(e, link) {
 
 //右键菜单
 function ContextMenu(e, link) {
-    let {id, url, title} = link;
+    let { id, url, title } = link;
     const contextMenu = document.getElementById('context-menu');
 
     // 右键菜单逻辑
@@ -1329,9 +1264,9 @@ function SaveBookmark(id, element) {
                         if (localPreviewImage.src != location.href) {
                             db.getData(IconsStr, id).then((data) => {
                                 if (data) {
-                                    db.updateData(IconsStr, {base64: localPreviewImage.src, id});
+                                    db.updateData(IconsStr, { base64: localPreviewImage.src, id });
                                 } else {
-                                    db.addData(IconsStr, {base64: localPreviewImage.src, id});
+                                    db.addData(IconsStr, { base64: localPreviewImage.src, id });
                                 }
                             });
                         }
@@ -1340,9 +1275,9 @@ function SaveBookmark(id, element) {
                         if (PreviewImage.src != location.href) {
                             db.getData(IconsStr, id).then((data) => {
                                 if (data) {
-                                    db.updateData(IconsStr, {base64: PreviewImage.src, id});
+                                    db.updateData(IconsStr, { base64: PreviewImage.src, id });
                                 } else {
-                                    db.addData(IconsStr, {base64: PreviewImage.src, id});
+                                    db.addData(IconsStr, { base64: PreviewImage.src, id });
                                 }
                             });
                         } else {
@@ -1388,12 +1323,12 @@ function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {//本地图片
                         if (localPreviewImage.src != location.href) {
                             imgsrc = localPreviewImage.src;
-                            db.addData(IconsStr, {base64: localPreviewImage.src, id: link.id});
+                            db.addData(IconsStr, { base64: localPreviewImage.src, id: link.id });
                         }
                     } else if (!iconBorder.classList.contains('default')) {//网络图片
                         if (PreviewImage.src != location.href) {
                             imgsrc = PreviewImage.src;
-                            db.addData(IconsStr, {base64: PreviewImage.src, id: link.id});
+                            db.addData(IconsStr, { base64: PreviewImage.src, id: link.id });
                         }
                     }
 
@@ -1499,10 +1434,10 @@ function Initialize() {
     SideNavigationToggle.onclick = () => {
         browser.storage.sync.get('SideNavigationToggle', (data) => {
             if (data.SideNavigationToggle) {
-                browser.storage.sync.set({SideNavigationToggle: false});
+                browser.storage.sync.set({ SideNavigationToggle: false });
                 SideNavigation.classList.add('lg:block');
             } else {
-                browser.storage.sync.set({SideNavigationToggle: true});
+                browser.storage.sync.set({ SideNavigationToggle: true });
                 SideNavigation.classList.remove('lg:block');
             }
         });
@@ -1714,7 +1649,7 @@ function Initialize() {
 
 //删除书签缓存的图标
 async function DelIconsCache() {
-    let datas = await fetchBookmarks();
+    let datas = await fetchBookmarks(false);
     let ArrId = [];
     let DelArrId = [];
     const GetArrId = (node) => {

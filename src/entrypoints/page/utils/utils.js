@@ -429,6 +429,81 @@ async function fetchFaviconBlobData(url, iconLinks) {
     }
 }
 
+async function getFaviconURL(pageUrl, size = 32) {
+    // 预加载默认图标数据
+    let defaultImageData;
+    
+    function faviconURL(iconUrl,size){
+        const url = new URL(chrome.runtime.getURL("/_favicon/"));
+        url.searchParams.set("pageUrl", iconUrl);
+        url.searchParams.set("size", size);
+        return url.toString();
+    }
+
+    // 加载图像并缩放至16x16
+    function loadImage(url) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 16;
+                canvas.height = 16;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, 16, 16);
+                resolve(ctx.getImageData(0, 0, 16, 16));
+            };
+            img.onerror = reject;
+            img.src = url;
+        });
+    }
+
+    // 检查目标图标是否为默认
+    async function checkFavicon(url) {
+        try {
+            const targetData = await loadImage(faviconURL(url,16));
+            return !areImageDataEqual(targetData, defaultImageData);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // 比较图像数据
+    function areImageDataEqual(a, b) {
+        if (a.width !== b.width || a.height !== b.height) return false;
+        const dataA = a.data;
+        const dataB = b.data;
+        for (let i = 0; i < dataA.length; i++) {
+            if (dataA[i] !== dataB[i]) return false;
+        }
+        return true;
+    }
+
+    // 检查目标图标是否为默认
+    async function checkFavicon(url) {
+        const targetUrl = faviconURL(url,16);
+        try {
+            const targetData = await loadImage(targetUrl);
+            return !areImageDataEqual(targetData, defaultImageData);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    await loadImage(faviconURL("undefined",16)).then(data => {
+        defaultImageData = data;
+    });
+
+    return new Promise((resolve, reject) => {
+        checkFavicon(pageUrl).then(isCustom => {
+            if (isCustom) {
+                resolve(faviconURL(pageUrl,size));
+            } else {
+                resolve("");
+            }
+          });
+    });
+}
+
 export {
     fetchFaviconAsBase64,
     debounce,
@@ -439,5 +514,6 @@ export {
     isValidUrl,
     findParentFolders,
     fetchFaviconBlobData,
-    isImageBlob
+    isImageBlob,
+    getFaviconURL
 };
