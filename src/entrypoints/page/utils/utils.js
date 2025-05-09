@@ -461,8 +461,6 @@ async function getFaviconURL(pageUrl, size = 32) {
 
     // 比较图像数据
     function areImageDataEqual(a, b) {
-        console.log(a,b);
-        
         if (a.width !== b.width || a.height !== b.height) return false;
         const dataA = a.data;
         const dataB = b.data;
