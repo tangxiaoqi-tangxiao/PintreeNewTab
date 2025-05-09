@@ -44,8 +44,8 @@ window.onbeforeunload = () => {
 };
 
 //将浏览器书签节点转换为结构化数据格式
-async function bookmarkToStructuredData(bookmarkNode, isIcon = false) {
-    const { id, title, dateAdded, children, parentId, index } = bookmarkNode;
+function bookmarkToStructuredData(bookmarkNode) {
+    const {id, title, dateAdded, children, parentId, index} = bookmarkNode;
     const structuredNode = {
         type: children ? "folder" : "link",
         addDate: dateAdded,
@@ -56,25 +56,18 @@ async function bookmarkToStructuredData(bookmarkNode, isIcon = false) {
     };
 
     if (children) {
-        structuredNode.children = await Promise.all(children.map(value => {
-            return bookmarkToStructuredData(value, isIcon)
-        }));
+        structuredNode.children = children.map(bookmarkToStructuredData);
     } else {
-        structuredNode.icon = isIcon ? await getFaviconURL(bookmarkNode.url) : "";
         structuredNode.url = bookmarkNode.url;
     }
 
     return structuredNode;
 }
 
-async function fetchBookmarks(isIcon = true) {
+async function fetchBookmarks() {
     return new Promise((resolve) => {
-        chrome.bookmarks.getTree(async (bookmarks) => {
-            const structuredBookmarks = await Promise.all(bookmarks[0].children.map(value => {
-                return bookmarkToStructuredData(value, isIcon)
-            }));
-            console.log(structuredBookmarks);
-            
+        chrome.bookmarks.getTree((bookmarks) => {
+            const structuredBookmarks = bookmarks[0].children.map(bookmarkToStructuredData);
             resolve(structuredBookmarks);
         });
         // fetch('json/pintree.json')
@@ -201,7 +194,7 @@ function searchAI(query, currentTab) {
 
 // 创建书签卡元素
 function createCard(link) {
-    const { id, title, url, icon, parentId } = link;
+    const { id, title, url, parentId } = link;
 
     const a_element = document.createElement('a');
     a_element.className = bookmark_link;
@@ -232,7 +225,9 @@ function createCard(link) {
         if (data) {
             cardIcon.src = data.base64;
         } else {
-            cardIcon.src = icon || default_svg; // Use provided icon or default icon
+            getFaviconURL(url).then(value=>{
+                cardIcon.src = value || default_svg; // Use provided icon or default icon
+            });
         }
     });
 
@@ -605,7 +600,6 @@ function BookmarkInitialize() {
             firstLayer = data;
             // 自动选择并显示第一项
             if (firstLayer.length > 0) {
-                const firstItem = firstLayer[0];
                 // console.log([{id: firstItem.id, title: firstItem.title, children: firstLayer}]);
                 // 使用第一层数据渲染导航
                 renderNavigation(firstLayer, document.getElementById('navigation'));
@@ -1649,7 +1643,7 @@ function Initialize() {
 
 //删除书签缓存的图标
 async function DelIconsCache() {
-    let datas = await fetchBookmarks(false);
+    let datas = await fetchBookmarks();
     let ArrId = [];
     let DelArrId = [];
     const GetArrId = (node) => {
