@@ -225,9 +225,7 @@ function createCard(link) {
         if (data) {
             cardIcon.src = data.base64;
         } else {
-            getFaviconURL(url).then(value=>{
-                cardIcon.src = value || default_svg; // Use provided icon or default icon
-            });
+            cardIcon.src = getFaviconURL(cardIcon,url) || default_svg;
         }
     });
 

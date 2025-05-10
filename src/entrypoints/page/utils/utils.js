@@ -1,3 +1,5 @@
+import default_svg from '/images/default-icon.svg';
+
 //全局变量
 const _browserRelatedHeaders = {
     "sec-ch-ua": "\"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"",
@@ -431,7 +433,7 @@ async function fetchFaviconBlobData(url, iconLinks) {
     }
 }
 
-async function getFaviconURL(pageUrl, size = 32) {    
+function getFaviconURL(image,pageUrl, size = 32) {    
     //声明图像比较图片大小(越小速度越快，但是准确率会降低)
     const compareSize = 2;
 
@@ -480,21 +482,23 @@ async function getFaviconURL(pageUrl, size = 32) {
         }
     }
 
-    if(!_defaultImageData){
-        await loadImage(faviconURL("undefined",compareSize)).then(data => {
-            _defaultImageData = data;
+    async function isDefaultIcon() {
+        if(!_defaultImageData){
+            await loadImage(faviconURL("undefined",compareSize)).then(data => {
+                _defaultImageData = data;
+            });
+        }
+
+        checkFavicon(pageUrl).then(isCustom => {
+            if (!isCustom) {
+                image.src = default_svg;
+            }
         });
     }
+    // 如果图像数据为浏览器默认图标，使用扩展默认图标
+    isDefaultIcon();
 
-    return new Promise((resolve, reject) => {
-        checkFavicon(pageUrl).then(isCustom => {
-            if (isCustom) {
-                resolve(faviconURL(pageUrl,size));
-            } else {
-                resolve("");
-            }
-          });
-    });
+    return faviconURL(pageUrl,size);
 }
 
 export {
