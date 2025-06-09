@@ -515,17 +515,10 @@ function renderBookmarks(data, path) {
         const folderSection = document.createElement('div');
         folderSection.className = 'grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-12 gap-6';
         folderSection.id = "grid_folders";
-        let index = 0;
-        folders.sort((a, b) => a.title.localeCompare(b.title)).forEach(folder => {
+
+        folders.forEach(folder => {
             const card = createFolderCard(folder.title, folder.id, folder.children, path);
-            //每次渲染文件夹重新设置文件夹序号
-            chrome.bookmarks.move(folder.id, {
-                index: index,
-                parentId: BookmarkFolderActiveId
-            }, function () {
-                folderSection.appendChild(card);
-                index++;
-            });
+            folderSection.appendChild(card);
         });
         container.appendChild(folderSection);
     }
