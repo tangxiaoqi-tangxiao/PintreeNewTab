@@ -1421,11 +1421,11 @@ function Initialize() {
             if (data.SideNavigationToggle) {
                 browser.storage.sync.set({ SideNavigationToggle: false });
                 SideNavigation.classList.add('lg:block');
-                main.classList.remove("mx-20");
+                document.getElementById('main-content').classList.remove("mx-20");
             } else {
                 browser.storage.sync.set({ SideNavigationToggle: true });
                 SideNavigation.classList.remove('lg:block');
-                main.classList.add("mx-20");
+                document.getElementById('main-content').classList.add("mx-20");
             }
         });
     }
@@ -1621,8 +1621,10 @@ function Initialize() {
         browser.storage.sync.get('SideNavigationToggle', (data) => {
             if (!data.SideNavigationToggle) {
                 SideNavigation.classList.add('lg:block');
+                document.getElementById('main-content').classList.remove("mx-20");
             } else {
                 SideNavigation.classList.remove('lg:block');
+                document.getElementById('main-content').classList.add("mx-20");
             }
         });
     })();
