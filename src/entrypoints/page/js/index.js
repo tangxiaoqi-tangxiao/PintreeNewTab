@@ -1421,9 +1421,11 @@ function Initialize() {
             if (data.SideNavigationToggle) {
                 browser.storage.sync.set({ SideNavigationToggle: false });
                 SideNavigation.classList.add('lg:block');
+                main.classList.remove("mx-20");
             } else {
                 browser.storage.sync.set({ SideNavigationToggle: true });
                 SideNavigation.classList.remove('lg:block');
+                main.classList.add("mx-20");
             }
         });
     }

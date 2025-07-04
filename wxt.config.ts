@@ -3,7 +3,6 @@ import { defineConfig } from 'wxt';
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   srcDir: 'src',
-  extensionApi: 'chrome',
   manifestVersion: 3,
   manifest: {
     name: '__MSG_appName__',
