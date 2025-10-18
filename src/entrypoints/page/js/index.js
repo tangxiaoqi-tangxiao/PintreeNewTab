@@ -214,8 +214,9 @@ function createCard(link) {
     };
 
     const card = document.createElement('div');
-    card.className = 'cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
+    card.className = 'tooltip cursor-pointer flex items-center hover:shadow-sm transition-shadow p-4 bg-white shadow-sm ring-1 ring-gray-900/5 dark:pintree-ring-gray-800 rounded-lg hover:bg-gray-100 dark:pintree-bg-gray-900 dark:hover:pintree-bg-gray-800';
     // card.onclick = () => window.open(url, '_blank'); // Make the whole card clickable
+    card.dataset.tip = title;
     card.oncontextmenu = (e) => ContextMenuSet(e, link);
 
     const cardIcon = document.createElement('img');
