@@ -1,4 +1,3 @@
-## 新增tooltip
+## 修复tooltip
 
-- 新增卡片tooltip
-- 修复卡片文本对齐错误
+- 修复tooltip宽度超出父元素导出出现水平滚动条
