@@ -29,3 +29,8 @@ html {
 .dark\:text-color:is(.dark *) {
     color: rgb(156, 163, 175);
 }
+
+/*卡片提示最大宽度，防止超出卡片宽度，导致出现水平滚动条*/
+.tooltip:before {
+    max-width: 100%;
+}
