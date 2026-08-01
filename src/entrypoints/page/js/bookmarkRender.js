@@ -156,19 +156,24 @@ function createFolderPreview(folder) {
     const children = folder.children || [];
     const previewItems = children.slice(0, 4);
 
-    if (previewItems.length > 0) {
-        previewItems.forEach(child => {
-            if (child.type === 'folder') {
-                preview.appendChild(createMiniFolderSvg('w-7 h-7 self-center justify-self-center'));
-            } else {
-                const img = document.createElement('img');
-                img.alt = child.title;
-                img.className = 'w-full h-full rounded object-contain min-w-0 min-h-0';
-                loadChildFavicon(img, child);
-                preview.appendChild(img);
-            }
-        });
-    }
+    previewItems.forEach(child => {
+        // 每个子项固定占一个 2x2 单元格，内容在单元格内从左到右、从上到下依次排列
+        const cell = document.createElement('div');
+        cell.className = 'flex items-start justify-start';
+        cell.style.width = '30px';
+        cell.style.height = '30px';
+
+        if (child.type === 'folder') {
+            cell.appendChild(createMiniFolderSvg('w-7 h-7'));
+        } else {
+            const img = document.createElement('img');
+            img.alt = child.title;
+            img.className = 'w-7 h-7 rounded object-contain min-w-0 min-h-0';
+            loadChildFavicon(img, child);
+            cell.appendChild(img);
+        }
+        preview.appendChild(cell);
+    });
 
     wrap.appendChild(preview);
     return wrap;

@@ -34,3 +34,10 @@ html {
 .bookmark-link .tooltip:before {
     max-width: 100%;
 }
+
+/* 右键添加书签/文件夹弹窗：取消关闭过渡动画，避免点击取消后延迟消失 */
+#editBookmark_modal,
+#newFolder_modal {
+    transition: none !important;
+    animation: none !important;
+}

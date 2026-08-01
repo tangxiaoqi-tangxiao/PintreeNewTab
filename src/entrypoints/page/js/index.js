@@ -115,12 +115,9 @@ function Initialize() {
         });
     }
 
-    // 主题切换按钮（一次性：点击后切换浅/深主题，不影响设置中的主题模式）
+    // 主题切换按钮（在浅色/深色间反复切换，不影响设置中的主题模式）
     const themeToggleButton = document.getElementById('themeToggleButton');
-    let themeToggled = false;
     themeToggleButton.addEventListener('click', () => {
-        if (themeToggled) return;
-        themeToggled = true;
         toggleTheme();
     });
 
