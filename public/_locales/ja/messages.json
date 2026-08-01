@@ -113,6 +113,9 @@
     "setOpenNewTab": {
         "message": "新しいタブを開く"
     },
+    "setFolderIconMode": {
+        "message": "フォルダをアイコンで表示"
+    },
     "bookmarkAdd": {
         "message": "ブックマークを追加"
     },

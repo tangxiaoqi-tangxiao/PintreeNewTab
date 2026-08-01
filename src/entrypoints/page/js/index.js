@@ -16,7 +16,7 @@ import { ContextMenuBlank, closeMenu } from "./contextMenu.js";
 import { initBookmarkEditor, SaveBookmark, BookmarkEditErrorHide, EmptyBookmarkEdit, ToggleSvgOrImage, setCreateCard as setEditorCreateCard, setBookmarkDrag as setEditorBookmarkDrag, setMainContentIsNull as setEditorMainContentIsNull, setBookmarkIsNull as setEditorBookmarkIsNull, setFolderIsNull as setEditorFolderIsNull } from "./bookmarkEditor.js";
 import { Search, setRenderBookmarks as setSearchRenderBookmarks } from "./search.js";
 import { applyDarkTheme, applyLightTheme, toggleTheme } from "./theme.js";
-import { SetCloseContextMenu, SetBookmarkNewTab } from "./settings.js";
+import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode } from "./settings.js";
 import { i18n } from "./i18n.js";
 import { BookmarkDrag } from "./drag.js";
 import { BookmarkFolderActiveId, BOOKMARK_LINK } from "./state.js";
@@ -71,6 +71,8 @@ function Initialize() {
     SetCloseContextMenu();
     // 设置书签新标签页打开
     SetBookmarkNewTab();
+    // 设置文件夹图标显示模式
+    SetFolderIconMode();
     // 书签编辑初始化
     initBookmarkEditor();
 

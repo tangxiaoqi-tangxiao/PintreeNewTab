@@ -113,6 +113,9 @@
     "setOpenNewTab": {
         "message": "Open a new tab"
     },
+    "setFolderIconMode": {
+        "message": "Show folders as icons"
+    },
     "bookmarkAdd": {
         "message": "Add Bookmark"
     },

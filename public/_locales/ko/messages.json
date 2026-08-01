@@ -113,6 +113,9 @@
     "setOpenNewTab": {
         "message": "새 탭 열기"
     },
+    "setFolderIconMode": {
+        "message": "폴더를 아이콘으로 표시"
+    },
     "bookmarkAdd": {
         "message": "북마크 추가"
     },

@@ -1,7 +1,7 @@
 import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { IconsStr } from "@/entrypoints/page/config/index.js";
 import { getFaviconURL } from "@/entrypoints/page/utils/utils.js";
-import { BOOKMARK_LINK, BookmarkFolderActiveId } from "./state.js";
+import { BOOKMARK_LINK, BookmarkFolderActiveId, BreadcrumbsList, folderIconMode } from "./state.js";
 import { renderBreadcrumbs } from "./breadcrumb.js";
 import { updateSidebarActiveState } from "./sidebar.js";
 import { ContextMenuSet } from "./contextMenu.js";
@@ -77,13 +77,21 @@ export function createCard(link) {
     return a_element;
 }
 
-// 创建文件夹卡片元素
+// 创建文件夹卡片元素（按图标模式开关分发）
 export function createFolderCard(title, id, children, path) {
+    const folder = { id, title, children: children || [] };
+    return folderIconMode
+        ? createFolderIconCard(folder, path)
+        : createClassicFolderCard(folder, path);
+}
+
+// 创建经典文件夹卡片（原有 SVG 文件夹样式）
+function createClassicFolderCard(folder, path) {
     const card = document.createElement('div');
     card.className = 'select-none folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
     card.onclick = () => {
-        const newPath = path.concat({ id, title, children });
-        renderBookmarks(children, newPath);
+        const newPath = path.concat(folder);
+        renderBookmarks(folder.children, newPath);
     };
 
     const cardIcon = document.createElement('div');
@@ -100,12 +108,99 @@ export function createFolderCard(title, id, children, path) {
 
     const cardTitle = document.createElement('h2');
     cardTitle.className = 'text-xs font-normal text-center w-full truncate dark:text-gray-400';
-    cardTitle.innerText = title;
+    cardTitle.innerText = folder.title;
 
     card.appendChild(cardIcon);
     card.appendChild(cardTitle);
 
     return card;
+}
+
+// 创建迷你文件夹 SVG 图标（使用 Tailwind 工具类，无自定义样式）
+function createMiniFolderSvg(sizeClass = 'w-5 h-5') {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 100 80');
+    svg.setAttribute('class', 'shrink-0 ' + sizeClass);
+    svg.innerHTML = `
+      <rect x="0" y="0" width="100" height="80" rx="10" ry="10" class="fill-[#0BA665]" />
+      <rect x="0" y="14" width="100" height="66" rx="10" ry="10" class="fill-[var(--folderColor)]" />
+    `;
+    return svg;
+}
+
+// 加载子书签图标并设置到 img 元素（与 createCard 相同的取图逻辑）
+function loadChildFavicon(img, link) {
+    img.src = empty_svg;
+    db.getData(IconsStr, link.id).then((data) => {
+        if (data) {
+            img.src = data.base64;
+        } else {
+            img.src = getFaviconURL(img, link.url) || default_svg;
+        }
+    });
+    img.onerror = () => {
+        img.src = default_svg;
+    };
+}
+
+// 创建文件夹的 2x2 子项图标预览
+function createFolderPreview(folder) {
+    const wrap = document.createElement('div');
+    wrap.className = 'mb-2';
+
+    const preview = document.createElement('div');
+    preview.className = 'grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-base-200/60';
+    preview.style.width = '80px';
+    preview.style.height = '80px';
+
+    const children = folder.children || [];
+    const previewItems = children.slice(0, 4);
+
+    if (previewItems.length > 0) {
+        previewItems.forEach(child => {
+            if (child.type === 'folder') {
+                preview.appendChild(createMiniFolderSvg('w-7 h-7 self-center justify-self-center'));
+            } else {
+                const img = document.createElement('img');
+                img.alt = child.title;
+                img.className = 'w-full h-full rounded object-contain min-w-0 min-h-0';
+                loadChildFavicon(img, child);
+                preview.appendChild(img);
+            }
+        });
+    }
+
+    wrap.appendChild(preview);
+    return wrap;
+}
+
+// 创建图标模式文件夹卡片
+function createFolderIconCard(folder, path) {
+    const card = document.createElement('div');
+    card.className = 'select-none folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
+    card.onclick = () => {
+        const newPath = path.concat(folder);
+        renderBookmarks(folder.children, newPath);
+    };
+
+    const cardIcon = createFolderPreview(folder);
+
+    const cardTitle = document.createElement('h2');
+    cardTitle.className = 'text-xs font-normal text-center w-full truncate dark:text-gray-400';
+    cardTitle.innerText = folder.title;
+
+    card.appendChild(cardIcon);
+    card.appendChild(cardTitle);
+
+    return card;
+}
+
+// 按当前面包屑路径重新渲染主内容区域
+export function reRenderCurrentFolder() {
+    const last = BreadcrumbsList[BreadcrumbsList.length - 1];
+    if (last && last.children) {
+        renderBookmarks(last.children, BreadcrumbsList);
+    }
 }
 
 // 显示未找到搜索结果的提示消息

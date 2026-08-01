@@ -113,6 +113,9 @@
     "setOpenNewTab": {
         "message": "打开新标签页"
     },
+    "setFolderIconMode": {
+        "message": "文件夹显示为图标"
+    },
     "bookmarkAdd": {
         "message": "添加书签"
     },

@@ -113,6 +113,9 @@
     "setOpenNewTab": {
         "message": "Открыть новую вкладку"
     },
+    "setFolderIconMode": {
+        "message": "Показывать папки значками"
+    },
     "bookmarkAdd": {
         "message": "Добавить закладку"
     },

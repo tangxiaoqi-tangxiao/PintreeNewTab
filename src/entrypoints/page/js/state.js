@@ -3,6 +3,7 @@ export let firstLayer = null; // 书签集合
 export let BookmarkFolderActiveId = null; // 当前活跃的文件夹id
 export let SearchOldBookmarkFolderActiveId = null; // 搜索之前活跃的文件夹id
 export let BreadcrumbsList = []; // 面包屑列表
+export let folderIconMode = false; // 文件夹图标显示模式开关
 
 export const BOOKMARK_LINK = "bookmark-link"; // 书签链接CSS类名
 
@@ -14,3 +15,5 @@ export function setBookmarkFolderActiveId(id) { BookmarkFolderActiveId = id; }
 export function setSearchOldBookmarkFolderActiveId(id) { SearchOldBookmarkFolderActiveId = id; }
 // 设置面包屑列表
 export function setBreadcrumbsList(list) { BreadcrumbsList = list; }
+// 设置文件夹图标显示模式
+export function setFolderIconMode(v) { folderIconMode = v; }

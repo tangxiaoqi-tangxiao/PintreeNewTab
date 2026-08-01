@@ -113,6 +113,9 @@
     "setOpenNewTab": {
         "message": "Neuen Tab öffnen"
     },
+    "setFolderIconMode": {
+        "message": "Ordner als Symbole anzeigen"
+    },
     "bookmarkAdd": {
         "message": "Lesezeichen hinzufügen"
     },

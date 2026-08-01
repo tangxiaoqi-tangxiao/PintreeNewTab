@@ -1,3 +1,6 @@
+import { setFolderIconMode } from "./state.js";
+import { reRenderCurrentFolder } from "./bookmarkRender.js";
+
 // 设置右键菜单开关
 export function SetCloseContextMenu() {
     const checkbox = document.getElementById('ContextMenuCheckbox');
@@ -33,6 +36,27 @@ export function SetBookmarkNewTab() {
         } else {
             browser.storage.sync.set({ 'BookmarkNewTab': false });
         }
+    }
+}
+
+// 设置文件夹图标显示模式开关
+export function SetFolderIconMode() {
+    const checkbox = document.getElementById('folderIconMode');
+    browser.storage.sync.get('FolderIconMode', (data) => {
+        const on = !!data.FolderIconMode;
+        setFolderIconMode(on);
+        checkbox.checked = on;
+        if (on) reRenderCurrentFolder();
+    });
+    checkbox.onclick = () => {
+        const on = checkbox.checked;
+        setFolderIconMode(on);
+        if (on) {
+            browser.storage.sync.set({ 'FolderIconMode': true });
+        } else {
+            browser.storage.sync.set({ 'FolderIconMode': false });
+        }
+        reRenderCurrentFolder();
     }
 }
 

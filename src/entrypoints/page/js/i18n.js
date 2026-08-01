@@ -20,6 +20,7 @@ export function i18n() {
     const set_i18n = document.getElementById('set_i18n');
     const setContextMenu_i18n = document.getElementById('setContextMenu_i18n');
     const setOpenNewTab_i18n = document.getElementById('setOpenNewTab_i18n');
+    const setFolderIconMode_i18n = document.getElementById('setFolderIconMode_i18n');
     const copyUrl_i18n = document.getElementById('copyUrl_i18n');
     const editBookmark_i18n = document.getElementById('editBookmark_i18n');
     const del_i18n = document.getElementById('del_i18n');
@@ -50,6 +51,7 @@ export function i18n() {
     set_i18n.textContent = browser.i18n.getMessage("set");
     setContextMenu_i18n.textContent = browser.i18n.getMessage("setContextMenu");
     setOpenNewTab_i18n.textContent = browser.i18n.getMessage("setOpenNewTab");
+    setFolderIconMode_i18n.textContent = browser.i18n.getMessage("setFolderIconMode");
 
     copyUrl_i18n.textContent = browser.i18n.getMessage("copyUrl");
     editBookmark_i18n.textContent = browser.i18n.getMessage("editBookmark");
