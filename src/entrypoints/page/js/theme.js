@@ -36,11 +36,12 @@ export function applyThemeMode(mode) {
     }
 }
 
-// 切换深色/浅色主题（同时写入设置，返回切换后的模式）
+// 切换深色/浅色主题（仅当前页面生效，不写入设置）
 export function toggleTheme() {
     const dark = document.documentElement.classList.contains('dark');
-    const mode = dark ? 'light' : 'dark';
-    applyThemeMode(mode);
-    browser.storage.sync.set({ ThemeMode: mode });
-    return mode;
+    if (dark) {
+        applyLightTheme();
+    } else {
+        applyDarkTheme();
+    }
 }

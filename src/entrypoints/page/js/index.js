@@ -16,7 +16,7 @@ import { ContextMenuBlank, closeMenu } from "./contextMenu.js";
 import { initBookmarkEditor, SaveBookmark, BookmarkEditErrorHide, EmptyBookmarkEdit, ToggleSvgOrImage, setCreateCard as setEditorCreateCard, setBookmarkDrag as setEditorBookmarkDrag, setMainContentIsNull as setEditorMainContentIsNull, setBookmarkIsNull as setEditorBookmarkIsNull, setFolderIsNull as setEditorFolderIsNull } from "./bookmarkEditor.js";
 import { Search, setRenderBookmarks as setSearchRenderBookmarks } from "./search.js";
 import { applyThemeMode, toggleTheme } from "./theme.js";
-import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode, syncThemeModeRadio } from "./settings.js";
+import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode } from "./settings.js";
 import { i18n } from "./i18n.js";
 import { BookmarkDrag } from "./drag.js";
 import { BookmarkFolderActiveId, BOOKMARK_LINK } from "./state.js";
@@ -115,11 +115,13 @@ function Initialize() {
         });
     }
 
-    // 主题切换按钮
+    // 主题切换按钮（一次性：点击后切换浅/深主题，不影响设置中的主题模式）
     const themeToggleButton = document.getElementById('themeToggleButton');
+    let themeToggled = false;
     themeToggleButton.addEventListener('click', () => {
-        const mode = toggleTheme();
-        syncThemeModeRadio(mode);
+        if (themeToggled) return;
+        themeToggled = true;
+        toggleTheme();
     });
 
     // 自动模式下监听系统主题变化
