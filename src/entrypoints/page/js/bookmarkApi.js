@@ -134,15 +134,23 @@ export async function BookmarkInitialize(renderNavigation, closeMenuFn) {
     await MoveFolderToFront();
     fetchBookmarks()
         .then(data => {
-            document.getElementById('loading-spinner').style.display = 'none';
             setFirstLayer(data);
             if (firstLayer.length > 0) {
                 renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenuFn);
                 ExpandDefaultFolder();
             }
+            hideLoadingOverlay();
         })
         .catch(error => {
             console.error(`${browser.i18n.getMessage("errorLoadingBookmarks")}`, error);
-            document.getElementById('loading-spinner').style.display = 'none';
+            hideLoadingOverlay();
         });
+}
+
+// 隐藏全屏加载遮罩，让整页内容一次性呈现
+function hideLoadingOverlay() {
+    const overlay = document.getElementById('loading-overlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
 }

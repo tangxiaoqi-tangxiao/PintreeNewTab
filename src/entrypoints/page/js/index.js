@@ -105,11 +105,11 @@ function Initialize() {
         browser.storage.sync.get('SideNavigationToggle', (data) => {
             if (data.SideNavigationToggle) {
                 browser.storage.sync.set({ SideNavigationToggle: false });
-                SideNavigation.classList.add('lg:block');
+                SideNavigation.classList.add('lg:flex');
                 document.getElementById('main-content').classList.remove("mx-20");
             } else {
                 browser.storage.sync.set({ SideNavigationToggle: true });
-                SideNavigation.classList.remove('lg:block');
+                SideNavigation.classList.remove('lg:flex');
                 document.getElementById('main-content').classList.add("mx-20");
             }
         });
@@ -295,12 +295,56 @@ function Initialize() {
     (() => {
         browser.storage.sync.get('SideNavigationToggle', (data) => {
             if (!data.SideNavigationToggle) {
-                SideNavigation.classList.add('lg:block');
+                SideNavigation.classList.add('lg:flex');
                 document.getElementById('main-content').classList.remove("mx-20");
             } else {
-                SideNavigation.classList.remove('lg:block');
+                SideNavigation.classList.remove('lg:flex');
                 document.getElementById('main-content').classList.add("mx-20");
             }
+        });
+    })();
+
+    // 侧边栏宽度拖动与状态保存
+    (() => {
+        const resizer = document.getElementById('sidebar-resizer');
+        const sidebarInner = document.getElementById('SideNavigationInner');
+        if (!resizer || !sidebarInner) return;
+
+        const SIDEBAR_W = 'SidebarWidth';
+        const MIN_W = 180;
+        const MAX_W = 480;
+        let isResizing = false;
+
+        // 恢复保存的宽度
+        browser.storage.sync.get(SIDEBAR_W, (data) => {
+            const w = data[SIDEBAR_W];
+            if (w && w >= MIN_W && w <= MAX_W) {
+                sidebarInner.style.width = w + 'px';
+            } else {
+                sidebarInner.style.width = '256px';
+            }
+        });
+
+        resizer.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            isResizing = true;
+            document.body.style.userSelect = 'none';
+            document.body.style.cursor = 'col-resize';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const w = Math.max(MIN_W, Math.min(MAX_W, e.clientX));
+            sidebarInner.style.width = w + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (!isResizing) return;
+            isResizing = false;
+            document.body.style.userSelect = '';
+            document.body.style.cursor = '';
+            const w = sidebarInner.offsetWidth;
+            browser.storage.sync.set({ [SIDEBAR_W]: w });
         });
     })();
 

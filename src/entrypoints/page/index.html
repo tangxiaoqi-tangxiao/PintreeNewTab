@@ -26,6 +26,12 @@
 
 <body class="dark:pintree-bg-gray-900 bg-white">
 
+<!-- 全屏加载遮罩：页面完全加载完成前覆盖整页，避免内容布局跳变闪烁 -->
+<div class="fixed inset-0 z-[9999] flex items-center justify-center bg-white dark:pintree-bg-gray-900"
+     id="loading-overlay">
+    <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
+</div>
+
 <!-- 页面主要功能 -->
 <div>
     <!-- 错误消息提示-->
@@ -46,9 +52,10 @@
 
     <div class="flex flex-row h-screen">
         <!-- 桌面侧边栏 -->
-        <div class="hidden lg:w-64" id="SideNavigation">
+        <div class="hidden lg:flex lg:flex-shrink-0" id="SideNavigation">
             <div
-                    class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
+                    class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900"
+                    id="SideNavigationInner">
                 <div class="flex p-0 h-16 shrink-0 items-center">
                     <img alt="Pintree" class="pl-2 h-8 w-auto" src="images/logo.svg">
                     <a class="ml-4 font-extrabold text-lg text-gray-900 dark:text-white" href=""><span
@@ -62,6 +69,9 @@
                     </div>
                 </div>
             </div>
+            <!-- 侧边栏宽度拖动手柄 -->
+            <div class="w-1 cursor-col-resize hover:bg-gray-300 dark:hover:pintree-bg-gray-700 transition-colors"
+                 id="sidebar-resizer" title="拖动调整侧边栏宽度"></div>
         </div>
 
         <!-- 主要内容领域 -->
@@ -202,9 +212,6 @@
             <div class="flex-1 flex flex-col" id="main">
                 <!-- 主要内容 -->
                 <main id="main-content" class="mt-4 dark:pintree-bg-gray-900">
-                    <div class="flex justify-center items-center h-full" id="loading-spinner">
-                        <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
-                    </div>
                     <div class="mt-2 px-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between items-center">
                         <div class="breadcrumbs text-sm">
                             <ul id="breadcrumbs-path">
