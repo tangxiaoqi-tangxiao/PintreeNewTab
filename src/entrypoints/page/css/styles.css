@@ -8,6 +8,22 @@
     color: rgba(11, 166, 101, var(--tw-text-opacity))
 }
 
+/* 主题色绿色按钮（与品牌色 #0BA665 一致） */
+.btn-brand {
+    --tw-bg-opacity: 1;
+    background-color: rgba(11, 166, 101, var(--tw-bg-opacity));
+    color: #fff;
+    border-color: transparent;
+}
+
+.btn-brand:hover {
+    background-color: #0a9457;
+}
+
+.btn-brand:active {
+    background-color: #09804b;
+}
+
 .dark {
     --tw-bg-opacity: 1;
     background-color: rgb(17 20 24 / var(--tw-bg-opacity));

@@ -143,6 +143,9 @@
     "folderNameNotEmpty": {
         "message": "폴더 이름은 비워둘 수 없습니다"
     },
+    "changelogConfirm": {
+        "message": "확인"
+    },
     "newFolderName": {
         "message": "새 폴더 이름"
     },

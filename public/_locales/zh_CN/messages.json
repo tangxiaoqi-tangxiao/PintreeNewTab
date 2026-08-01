@@ -143,6 +143,9 @@
     "folderNameNotEmpty": {
         "message": "文件夹名称不能为空"
     },
+    "changelogConfirm": {
+        "message": "知道了"
+    },
     "newFolderName": {
         "message": "新文件夹名称"
     },

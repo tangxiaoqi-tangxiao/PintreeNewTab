@@ -18,6 +18,7 @@ import { Search, setRenderBookmarks as setSearchRenderBookmarks } from "./search
 import { applyThemeMode, toggleTheme } from "./theme.js";
 import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode } from "./settings.js";
 import { i18n } from "./i18n.js";
+import { ShowChangelog } from "./changelog.js";
 import { BookmarkDrag } from "./drag.js";
 import { BookmarkFolderActiveId, BOOKMARK_LINK } from "./state.js";
 import { setCreateCard as setContextMenuCreateCard, setShowNoResultsMessage, setMainContentIsNull as setContextMenuMainContentIsNull, setBookmarkIsNull as setContextMenuBookmarkIsNull, setFolderIsNull as setContextMenuFolderIsNull, setInitBookmarkEditor, setSaveBookmark, setBookmarkEditErrorHide, setEmptyBookmarkEdit, setToggleSvgOrImage } from "./contextMenu.js";
@@ -77,6 +78,8 @@ function Initialize() {
     SetMoveFolderToFront();
     // 设置主题模式（浅色/自动/深色）
     SetThemeMode(applyThemeMode);
+    // 新版本功能提醒
+    ShowChangelog();
     // 书签编辑初始化
     initBookmarkEditor();
 

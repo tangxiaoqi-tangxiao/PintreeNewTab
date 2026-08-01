@@ -143,6 +143,9 @@
     "folderNameNotEmpty": {
         "message": "Folder name cannot be empty"
     },
+    "changelogConfirm": {
+        "message": "Got it"
+    },
     "newFolderName": {
         "message": "New Folder Name"
     },

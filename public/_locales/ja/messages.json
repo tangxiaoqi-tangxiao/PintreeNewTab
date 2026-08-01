@@ -143,6 +143,9 @@
     "folderNameNotEmpty": {
         "message": "フォルダー名を空にすることはできません"
     },
+    "changelogConfirm": {
+        "message": "了解"
+    },
     "newFolderName": {
         "message": "新しいフォルダー名"
     },

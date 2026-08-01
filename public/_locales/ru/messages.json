@@ -143,6 +143,9 @@
     "folderNameNotEmpty": {
         "message": "Имя папки не может быть пустым"
     },
+    "changelogConfirm": {
+        "message": "Понятно"
+    },
     "newFolderName": {
         "message": "Название новой папки"
     },

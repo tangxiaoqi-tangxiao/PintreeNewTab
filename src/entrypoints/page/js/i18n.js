@@ -45,6 +45,7 @@ export function i18n() {
     const uploadImage_i18n = document.getElementById('uploadImage_i18n');
     const newFolderName = document.getElementById('newFolderName');
     const folderNameNotEmpty_i18n = document.getElementById('folderNameNotEmpty_i18n');
+    const changelogConfirm_i18n = document.getElementById('changelogConfirm_i18n');
 
     searchInput.setAttribute("placeholder", browser.i18n.getMessage("search"));
     bookmark_i18n.textContent = browser.i18n.getMessage("bookmark");
@@ -88,4 +89,5 @@ export function i18n() {
 
     newFolderName.setAttribute("placeholder", browser.i18n.getMessage("newFolderName"));
     folderNameNotEmpty_i18n.textContent = browser.i18n.getMessage("folderNameNotEmpty");
+    changelogConfirm_i18n.textContent = browser.i18n.getMessage("changelogConfirm");
 }

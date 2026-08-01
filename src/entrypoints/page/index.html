@@ -331,6 +331,18 @@
     </form>
 </dialog>
 
+<!-- 新功能提醒 -->
+<dialog class="modal" id="changelog_modal">
+    <div class="modal-box max-w-md">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100"><span id="changelogTitle"></span></h3>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1" id="changelogVersion"></p>
+        <ul class="mt-4 space-y-2" id="changelogContent"></ul>
+        <div class="flex justify-end mt-6">
+            <button class="btn btn-brand" id="changelogConfirm"><span id="changelogConfirm_i18n"></span></button>
+        </div>
+    </div>
+</dialog>
+
 <!-- 编辑书签 -->
 <dialog class="modal" id="editBookmark_modal">
     <div class="bg-white dark:pintree-bg-gray-900 rounded-lg max-w-screen-md select-none">
