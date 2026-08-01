@@ -97,6 +97,14 @@ export function syncThemeModeRadio(mode) {
     });
 }
 
+// 写入主题模式（同时写入 storage.sync 与 localStorage 供首帧脚本使用）
+function saveThemeMode(mode) {
+    browser.storage.sync.set({ ThemeMode: mode });
+    try {
+        localStorage.setItem('ThemeMode', mode);
+    } catch (e) { /* 忽略 localStorage 异常 */ }
+}
+
 // 设置主题模式（浅色 / 自动 / 深色）
 export function SetThemeMode(applyThemeMode) {
     const radios = document.querySelectorAll('input[name="themeMode"]');
@@ -104,11 +112,14 @@ export function SetThemeMode(applyThemeMode) {
         const mode = data.ThemeMode || 'auto';
         syncThemeModeRadio(mode);
         applyThemeMode(mode);
+        try {
+            localStorage.setItem('ThemeMode', mode);
+        } catch (e) { /* 忽略 localStorage 异常 */ }
     });
     radios.forEach((radio) => {
         radio.onclick = () => {
             if (radio.checked) {
-                browser.storage.sync.set({ ThemeMode: radio.value });
+                saveThemeMode(radio.value);
                 applyThemeMode(radio.value);
             }
         };
