@@ -79,8 +79,59 @@ export function ExpandDefaultFolder() {
     });
 }
 
+// 移动单个书签到指定索引
+function moveBookmarkToIndex(id, parentId, index) {
+    return new Promise((resolve) => {
+        chrome.bookmarks.move(id, { parentId, index }, () => resolve());
+    });
+}
+
+// 将某个文件夹内的子文件夹移动到最前面（保持文件夹之间的相对顺序不变，仅在需要时移动）
+async function reorderFoldersToFront(node) {
+    const children = node.children || [];
+    const order = children.map(child => ({ id: child.id, isFolder: child.type === 'folder' }));
+    let folderIndex = 0;
+    for (let i = 0; i < order.length; i++) {
+        if (!order[i].isFolder) continue;
+        if (i !== folderIndex) {
+            await moveBookmarkToIndex(order[i].id, node.id, folderIndex);
+            const [moved] = order.splice(i, 1);
+            order.splice(folderIndex, 0, moved);
+        }
+        folderIndex++;
+    }
+}
+
+// 递归遍历所有文件夹执行前置排序
+async function sortFolderNode(node) {
+    if (!node || node.type !== 'folder') return;
+    await reorderFoldersToFront(node);
+    for (const child of node.children || []) {
+        await sortFolderNode(child);
+    }
+}
+
+// 设置开启时，将浏览器文件夹默认移动到所有书签最前面
+export async function MoveFolderToFront() {
+    return new Promise((resolve) => {
+        browser.storage.sync.get('MoveFolderToFront', (data) => {
+            if (!data.MoveFolderToFront) {
+                resolve();
+                return;
+            }
+            fetchBookmarks().then(async (roots) => {
+                for (const root of roots) {
+                    await sortFolderNode(root);
+                }
+                resolve();
+            });
+        });
+    });
+}
+
 // 书签初始化：获取书签数据并渲染导航
-export function BookmarkInitialize(renderNavigation, closeMenuFn) {
+export async function BookmarkInitialize(renderNavigation, closeMenuFn) {
+    await MoveFolderToFront();
     fetchBookmarks()
         .then(data => {
             document.getElementById('loading-spinner').style.display = 'none';

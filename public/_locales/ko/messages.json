@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "폴더를 아이콘으로 표시"
     },
+    "setMoveFolderToFront": {
+        "message": "모든 북마크 앞에 폴더 배치"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "폴더 위치가 모든 북마크 맨 앞으로 이동합니다"
+    },
     "bookmarkAdd": {
         "message": "북마크 추가"
     },

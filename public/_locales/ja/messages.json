@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "フォルダをアイコンで表示"
     },
+    "setMoveFolderToFront": {
+        "message": "フォルダをすべてのブックマークの前に配置"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "フォルダの位置がすべてのブックマークの先頭に移動します"
+    },
     "bookmarkAdd": {
         "message": "ブックマークを追加"
     },

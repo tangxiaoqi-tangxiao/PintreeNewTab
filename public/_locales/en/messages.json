@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "Show folders as icons"
     },
+    "setMoveFolderToFront": {
+        "message": "Show folders before bookmarks"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "Folders will be moved to the very front of all bookmarks"
+    },
     "bookmarkAdd": {
         "message": "Add Bookmark"
     },

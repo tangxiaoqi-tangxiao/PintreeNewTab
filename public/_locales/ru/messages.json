@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "Показывать папки значками"
     },
+    "setMoveFolderToFront": {
+        "message": "Папки перед всеми закладками"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "Папки будут перемещены в самое начало всех закладок"
+    },
     "bookmarkAdd": {
         "message": "Добавить закладку"
     },

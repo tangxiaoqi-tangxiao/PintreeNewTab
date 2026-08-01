@@ -78,3 +78,14 @@ export function SetCacheIcon() {
         }
     }
 }
+
+// 设置文件夹是否默认排在所有书签最前面
+export function SetMoveFolderToFront() {
+    const checkbox = document.getElementById('moveFolderToFront');
+    browser.storage.sync.get('MoveFolderToFront', (data) => {
+        checkbox.checked = !!data.MoveFolderToFront;
+    });
+    checkbox.onclick = () => {
+        browser.storage.sync.set({ 'MoveFolderToFront': checkbox.checked });
+    };
+}

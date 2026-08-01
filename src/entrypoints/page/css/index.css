@@ -31,6 +31,6 @@ html {
 }
 
 /*卡片提示最大宽度，防止超出卡片宽度，导致出现水平滚动条*/
-.tooltip:before {
+.bookmark-link .tooltip:before {
     max-width: 100%;
 }

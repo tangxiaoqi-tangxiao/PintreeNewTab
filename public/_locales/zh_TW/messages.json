@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "資料夾顯示為圖示"
     },
+    "setMoveFolderToFront": {
+        "message": "資料夾排在所有書籤前面"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "資料夾位置會移動到所有書籤最前面"
+    },
     "bookmarkAdd": {
         "message": "添加书签"
     },

@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "Ordner als Symbole anzeigen"
     },
+    "setMoveFolderToFront": {
+        "message": "Ordner vor allen Lesezeichen anzeigen"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "Ordner werden an den Anfang aller Lesezeichen verschoben"
+    },
     "bookmarkAdd": {
         "message": "Lesezeichen hinzufügen"
     },

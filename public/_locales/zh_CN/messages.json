@@ -116,6 +116,12 @@
     "setFolderIconMode": {
         "message": "文件夹显示为图标"
     },
+    "setMoveFolderToFront": {
+        "message": "文件夹排在所有书签前面"
+    },
+    "setMoveFolderToFrontTip": {
+        "message": "文件夹位置会移动到所有书签最前面"
+    },
     "bookmarkAdd": {
         "message": "添加书签"
     },
