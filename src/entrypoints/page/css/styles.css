@@ -1,6 +1,7 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui";
+
+@custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
 
 .text-main-500 {
     --tw-text-opacity: 1;

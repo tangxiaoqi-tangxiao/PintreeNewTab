@@ -20,11 +20,27 @@ export function applyLightTheme() {
     moonIcon.classList.add('hidden');
 }
 
-// 切换深色/浅色主题
-export function toggleTheme() {
-    if (document.documentElement.classList.contains('dark')) {
+// 应用主题模式：light 浅色 / auto 跟随系统 / dark 深色
+export function applyThemeMode(mode) {
+    if (mode === 'dark') {
+        applyDarkTheme();
+    } else if (mode === 'light') {
         applyLightTheme();
     } else {
-        applyDarkTheme();
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+            applyDarkTheme();
+        } else {
+            applyLightTheme();
+        }
     }
+}
+
+// 切换深色/浅色主题（同时写入设置，返回切换后的模式）
+export function toggleTheme() {
+    const dark = document.documentElement.classList.contains('dark');
+    const mode = dark ? 'light' : 'dark';
+    applyThemeMode(mode);
+    browser.storage.sync.set({ ThemeMode: mode });
+    return mode;
 }

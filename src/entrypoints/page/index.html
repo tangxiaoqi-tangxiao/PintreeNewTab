@@ -49,7 +49,7 @@
                     class="flex flex-col border-r border-gray-200 dark:pintree-border-gray-800 bg-white px-4 h-full font-semibold dark:pintree-bg-gray-900">
                 <div class="flex p-0 h-16 shrink-0 items-center">
                     <img alt="Pintree" class="pl-2 h-8 w-auto" src="images/logo.svg">
-                    <a class="ml-4 font-extrabold text-lg dark:text-white" href=""><span
+                    <a class="ml-4 font-extrabold text-lg text-gray-900 dark:text-white" href=""><span
                             class="appName_i18n"></span></a>
                 </div>
                 <div class="flex flex-1 flex-col overflow-y-auto no-scrollbar p-1 cursor-pointer">
@@ -95,7 +95,7 @@
                     <div class="flex gap-x-4 justify-between lg:w-8/12">
                         <img alt="Pintree" class="pl-2 h-8 w-auto lg:hidden" src="images/logo.svg">
                     </div>
-                    <a class="lg:hidden font-extrabold text-2xl dark:text-white" href=""><span
+                    <a class="lg:hidden font-extrabold text-2xl text-gray-900 dark:text-white" href=""><span
                             class="appName_i18n"></span></a>
                     <div class="relative">
                         <button aria-label="Switch theme"
@@ -177,7 +177,7 @@
                             </span>
                             <input id="searchInput"
                                    type="text"
-                                   class="flex-grow pl-1 py-3 text-gray-700 dark:text-gray-200 bg-transparent border-none outline-none dark:placeholder-gray-400"
+                                   class="flex-grow pl-1 py-3 text-gray-900 dark:text-gray-100 bg-transparent border-none outline-none dark:placeholder-gray-400"
                             />
                             <button id="searchButton"
                                     class="flex items-center justify-center w-7 h-7 mr-2 bg-black hover:bg-gray-700 text-white rounded-full shadow-md">
@@ -203,7 +203,7 @@
                     <div class="flex justify-center items-center h-full" id="loading-spinner">
                         <div class="loader ease-linear rounded-full border-2 border-t-2 border-gray-400 h-6 w-6"></div>
                     </div>
-                    <div class="mt-2 px-6 text-sm text-gray-400 flex justify-between items-center">
+                    <div class="mt-2 px-6 text-sm text-gray-500 dark:text-gray-400 flex justify-between items-center">
                         <div class="breadcrumbs text-sm">
                             <ul id="breadcrumbs-path">
                                 <!-- 面包屑将被插入这里 -->
@@ -218,7 +218,7 @@
                 <footer class="mt-auto bg-white w-full dark:pintree-bg-gray-900">
                     <div class="mx-auto px-6 py-6 md:flex md:items-center md:justify-between lg:px-8">
                         <div class="flex justify-center space-x-6 md:order-2">
-                            <a class="text-gray-400 hover:text-gray-500"
+                            <a class="text-gray-500 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-300"
                                href="https://github.com/tangxiaoqi-tangxiao/PintreeNewTab"
                                target="_blank">
                                 <svg aria-hidden="true" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -264,7 +264,17 @@
 <!-- 设置 -->
 <dialog class="modal" id="SetUp_modal">
     <div class="modal-box">
-        <h3 class="text-lg font-bold"><span id="set_i18n"></span></h3>
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100"><span id="set_i18n"></span></h3>
+        <div class="mt-4">
+            <div class="flex justify-start items-center text-sm">
+                <label><span id="setThemeMode_i18n"></span></label>
+                <div class="tabs tabs-box ml-auto">
+                    <input type="radio" name="themeMode" class="tab" value="light" aria-label="light"/>
+                    <input type="radio" name="themeMode" class="tab" value="auto" aria-label="auto" checked="checked"/>
+                    <input type="radio" name="themeMode" class="tab" value="dark" aria-label="dark"/>
+                </div>
+            </div>
+        </div>
         <div class="mt-4">
             <div class="flex justify-start items-center text-sm">
                 <label><span id="setContextMenu_i18n"></span></label>
@@ -289,7 +299,7 @@
                 <label class="flex items-center gap-1">
                     <span id="setMoveFolderToFront_i18n"></span>
                     <span class="tooltip cursor-help" data-tip="" id="moveFolderToFrontTip">
-                        <svg aria-hidden="true" class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor"
+                        <svg aria-hidden="true" class="h-4 w-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
                             <line x1="12" x2="12" y1="9" y2="13"/>
@@ -318,28 +328,28 @@
         <div class="grid grid-cols-2 gap-4 p-5">
             <!-- 左侧信息编辑 -->
             <div>
-                <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="infoEdit_i18n"></span></h2>
-                <p class="text-gray-500 mb-2"><span id="IconDescribe_i18n"></span></p>
-                <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="websiteLink_i18n"></span></label>
-                <input class="input input-bordered w-full input-sm" id="websiteLink" placeholder="" type="text"/>
+                <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100"><span id="infoEdit_i18n"></span></h2>
+                <p class="text-gray-500 dark:text-gray-400 mb-2"><span id="IconDescribe_i18n"></span></p>
+                <label class="block mb-1 text-gray-700 dark:text-gray-300"><span id="websiteLink_i18n"></span></label>
+                <input class="input w-full input-sm" id="websiteLink" placeholder="" type="text"/>
                 <p class="hidden text-red-400" id="websiteLinkError"><span id="websiteLinkError_i18n"></span></p>
                 <p class="hidden text-red-400" id="websiteLinkError2"><span>无效链接地址</span></p>
-                <label class="block mb-1 text-gray-950 dark:text-gray-400 mt-4"><span
+                <label class="block mb-1 text-gray-700 dark:text-gray-300 mt-4"><span
                         id="websiteName_i18n"></span></label>
-                <input class="input input-bordered w-full input-sm" id="websiteName" placeholder="" type="text"/>
+                <input class="input w-full input-sm" id="websiteName" placeholder="" type="text"/>
                 <p class="hidden text-red-400" id="websiteNameError"><span id="websiteNameError_i18n"></span></p>
             </div>
 
             <!-- 右侧图标编辑 -->
             <div>
-                <h2 class="text-xl font-bold mb-4 dark:text-gray-400"><span id="iconEdit_i18n"></span></h2>
-                <label class="block mb-1 text-gray-950 dark:text-gray-400"><span id="iconChoose_i18n"></span></label>
+                <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100"><span id="iconEdit_i18n"></span></h2>
+                <label class="block mb-1 text-gray-700 dark:text-gray-300"><span id="iconChoose_i18n"></span></label>
                 <div class="flex">
                     <div class="flex flex-col justify-center items-center mr-2" id="defaultIcon">
                         <div class="iconBorder default cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                             <img class="w-full h-full rounded-lg" id="defaultImage">
                         </div>
-                        <span class="dark:text-gray-400"><span id="default_i18n"></span></span>
+                        <span class="text-gray-600 dark:text-gray-400"><span id="default_i18n"></span></span>
                     </div>
                     <div class="flex flex-col justify-center items-center mr-2">
                         <div class="iconBorder cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2"
@@ -353,13 +363,13 @@
                                 </g>
                             </svg>
                         </div>
-                        <span class="dark:text-gray-400"><span id="official_i18n"></span></span>
+                        <span class="text-gray-600 dark:text-gray-400"><span id="official_i18n"></span></span>
                     </div>
                     <div class="flex flex-col justify-center items-center mr-2">
                         <div
                                 class="iconBorder image cursor-pointer hover:border-blue-400 bg-white dark:bg-gray-700 w-14 h-14 rounded-lg shadow-md flex justify-center items-center border-2">
                             <img class="hidden w-full h-full rounded-lg" id="localPreviewImage">
-                            <svg class="w-10 h-10 text-gray-400 dark:text-gray-500 lucide lucide-image-up"
+                            <svg class="w-10 h-10 text-gray-500 dark:text-gray-400 lucide lucide-image-up"
                                  fill="none" height="24" id="localPreviewSvg" stroke="currentColor"
                                  stroke-linecap="round"
                                  stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
@@ -371,7 +381,7 @@
                                 <circle cx="9" cy="9" r="2"/>
                             </svg>
                         </div>
-                        <span class="dark:text-gray-400"><span id="upload_i18n"></span></span>
+                        <span class="text-gray-600 dark:text-gray-400"><span id="upload_i18n"></span></span>
                     </div>
                 </div>
                 <p class="hidden text-red-400" id="PreviewImageError"><span id="uploadImage_i18n"></span></p>
@@ -394,7 +404,7 @@
         <div class="w-80 m-8">
             <label>
                 <input id="newFolderName" type="text" placeholder=""
-                       class="input input-bordered w-full max-w-xs"/>
+                       class="input w-full max-w-xs"/>
             </label>
             <p class="hidden text-red-400 mt-2" id="newFolderNameError"><span id="folderNameNotEmpty_i18n"></span></p>
         </div>

@@ -41,6 +41,18 @@
     "set": {
         "message": "設定"
     },
+    "setThemeMode": {
+        "message": "テーマモード"
+    },
+    "themeMode_light": {
+        "message": "ライト"
+    },
+    "themeMode_auto": {
+        "message": "自動"
+    },
+    "themeMode_dark": {
+        "message": "ダーク"
+    },
     "bookmark": {
         "message": "ブックマーク"
     },

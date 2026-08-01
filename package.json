@@ -15,11 +15,12 @@
     "postinstall": "wxt prepare"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/chrome": "^0.0.280",
     "autoprefixer": "^10.4.20",
-    "daisyui": "^4.12.23",
+    "daisyui": "^5.7.9",
     "postcss": "^8.5.1",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.6.3",
     "wxt": "^0.20.7"
   },

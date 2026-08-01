@@ -131,6 +131,7 @@ dist
 # 排除项目中不需要的文件
 *.wxt
 *.output
+*.plans
 
 # 排除IDEA
 .idea

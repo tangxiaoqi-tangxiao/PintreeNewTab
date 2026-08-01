@@ -18,6 +18,7 @@ export function i18n() {
     const web_search_i18n = document.getElementById('web_search_i18n');
     const ai_search_i18n = document.getElementById('ai_search_i18n');
     const set_i18n = document.getElementById('set_i18n');
+    const setThemeMode_i18n = document.getElementById('setThemeMode_i18n');
     const setContextMenu_i18n = document.getElementById('setContextMenu_i18n');
     const setOpenNewTab_i18n = document.getElementById('setOpenNewTab_i18n');
     const setFolderIconMode_i18n = document.getElementById('setFolderIconMode_i18n');
@@ -51,6 +52,13 @@ export function i18n() {
     ai_search_i18n.textContent = browser.i18n.getMessage("ai_search");
 
     set_i18n.textContent = browser.i18n.getMessage("set");
+    setThemeMode_i18n.textContent = browser.i18n.getMessage("setThemeMode");
+
+    // 主题模式标签（浅色/自动/深色）
+    document.querySelectorAll('input[name="themeMode"]').forEach((radio) => {
+        radio.setAttribute("aria-label", browser.i18n.getMessage("themeMode_" + radio.value));
+    });
+
     setContextMenu_i18n.textContent = browser.i18n.getMessage("setContextMenu");
     setOpenNewTab_i18n.textContent = browser.i18n.getMessage("setOpenNewTab");
     setFolderIconMode_i18n.textContent = browser.i18n.getMessage("setFolderIconMode");

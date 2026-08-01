@@ -41,6 +41,18 @@
     "set": {
         "message": "설정"
     },
+    "setThemeMode": {
+        "message": "테마 모드"
+    },
+    "themeMode_light": {
+        "message": "라이트"
+    },
+    "themeMode_auto": {
+        "message": "자동"
+    },
+    "themeMode_dark": {
+        "message": "다크"
+    },
     "bookmark": {
         "message": "북마크"
     },

@@ -15,8 +15,8 @@ import { setRenderBookmarksRef } from "./breadcrumb.js";
 import { ContextMenuBlank, closeMenu } from "./contextMenu.js";
 import { initBookmarkEditor, SaveBookmark, BookmarkEditErrorHide, EmptyBookmarkEdit, ToggleSvgOrImage, setCreateCard as setEditorCreateCard, setBookmarkDrag as setEditorBookmarkDrag, setMainContentIsNull as setEditorMainContentIsNull, setBookmarkIsNull as setEditorBookmarkIsNull, setFolderIsNull as setEditorFolderIsNull } from "./bookmarkEditor.js";
 import { Search, setRenderBookmarks as setSearchRenderBookmarks } from "./search.js";
-import { applyDarkTheme, applyLightTheme, toggleTheme } from "./theme.js";
-import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront } from "./settings.js";
+import { applyThemeMode, toggleTheme } from "./theme.js";
+import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode, syncThemeModeRadio } from "./settings.js";
 import { i18n } from "./i18n.js";
 import { BookmarkDrag } from "./drag.js";
 import { BookmarkFolderActiveId, BOOKMARK_LINK } from "./state.js";
@@ -75,6 +75,8 @@ function Initialize() {
     SetFolderIconMode();
     // 设置文件夹默认排在所有书签最前面
     SetMoveFolderToFront();
+    // 设置主题模式（浅色/自动/深色）
+    SetThemeMode(applyThemeMode);
     // 书签编辑初始化
     initBookmarkEditor();
 
@@ -115,24 +117,18 @@ function Initialize() {
 
     // 主题切换按钮
     const themeToggleButton = document.getElementById('themeToggleButton');
-    themeToggleButton.addEventListener('click', toggleTheme);
+    themeToggleButton.addEventListener('click', () => {
+        const mode = toggleTheme();
+        syncThemeModeRadio(mode);
+    });
 
-    // 应用主题
-    function applyColorTheme(theme) {
-        if (theme === 'dark') {
-            applyDarkTheme();
-        } else {
-            applyLightTheme();
-        }
-    }
-
-    // 检测系统主题并应用
-    const prefersDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    applyColorTheme(prefersDarkTheme ? 'dark' : 'light');
-
-    // 监听系统主题变化
+    // 自动模式下监听系统主题变化
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
-        applyColorTheme(event.matches ? 'dark' : 'light');
+        browser.storage.sync.get('ThemeMode', (data) => {
+            if ((data.ThemeMode || 'auto') === 'auto') {
+                applyThemeMode('auto');
+            }
+        });
     });
 
     // 设置弹窗
@@ -183,7 +179,7 @@ function Initialize() {
                 span.textContent = browser.i18n.getMessage(label.toLowerCase());
                 btn.appendChild(span);
                 btn.dataset.tab = label;
-                btn.className = `collection-btn flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-gray-50 hover:bg-gray-200 dark:pintree-bg-gray-900 dark:text-gray-300 dark:hover:pintree-bg-gray-800 dark:border dark:border-gray-700 rounded-full`;
+                btn.className = `collection-btn flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-500 bg-gray-50 hover:bg-gray-200 dark:pintree-bg-gray-900 dark:text-gray-400 dark:hover:pintree-bg-gray-800 dark:border dark:border-gray-700 rounded-full`;
                 btn.onclick = (e) => {
                     // 重置所有按钮样式
                     document.querySelectorAll(".collection-btn").forEach((btn) => {

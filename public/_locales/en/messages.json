@@ -41,6 +41,18 @@
     "set": {
         "message": "Settings"
     },
+    "setThemeMode": {
+        "message": "Theme mode"
+    },
+    "themeMode_light": {
+        "message": "Light"
+    },
+    "themeMode_auto": {
+        "message": "Auto"
+    },
+    "themeMode_dark": {
+        "message": "Dark"
+    },
     "bookmark": {
         "message": "Bookmark"
     },

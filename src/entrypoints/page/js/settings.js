@@ -89,3 +89,28 @@ export function SetMoveFolderToFront() {
         browser.storage.sync.set({ 'MoveFolderToFront': checkbox.checked });
     };
 }
+
+// 同步主题模式单选按钮选中状态
+export function syncThemeModeRadio(mode) {
+    document.querySelectorAll('input[name="themeMode"]').forEach((radio) => {
+        radio.checked = radio.value === mode;
+    });
+}
+
+// 设置主题模式（浅色 / 自动 / 深色）
+export function SetThemeMode(applyThemeMode) {
+    const radios = document.querySelectorAll('input[name="themeMode"]');
+    browser.storage.sync.get('ThemeMode', (data) => {
+        const mode = data.ThemeMode || 'auto';
+        syncThemeModeRadio(mode);
+        applyThemeMode(mode);
+    });
+    radios.forEach((radio) => {
+        radio.onclick = () => {
+            if (radio.checked) {
+                browser.storage.sync.set({ ThemeMode: radio.value });
+                applyThemeMode(radio.value);
+            }
+        };
+    });
+}

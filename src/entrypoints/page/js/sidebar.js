@@ -212,7 +212,7 @@ export function CreateSidebarItemArrowIcon(parentId) {
 // 创建侧边栏项元素（li + 文件夹图标 + 名称链接）
 export function CreateSidebarItemElement(title, id) {
     const navItem = document.createElement('li');
-    navItem.className = 'items-center group flex justify-between gap-x-3 rounded-md p-2 text-gray-700 dark:text-gray-400 hover:text-main-500 hover:bg-gray-50 dark:hover:pintree-bg-gray-800 bg-opacity-50';
+    navItem.className = 'items-center group flex justify-between gap-x-3 rounded-md p-2 text-gray-700 dark:text-gray-300 hover:text-main-500 hover:bg-gray-50 dark:hover:pintree-bg-gray-800 bg-opacity-50';
 
     const navLinkContainer = document.createElement('div');
     navLinkContainer.className = 'flex items-center space-x-2 truncate';
@@ -221,7 +221,7 @@ export function CreateSidebarItemElement(title, id) {
     folderIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h4l2 2h7a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" /></svg>';
 
     const navLink = document.createElement('a');
-    navLink.className = 'flex text-sm leading-6 font-semibold dark:text-gray-400';
+    navLink.className = 'flex text-sm leading-6 font-semibold text-gray-700 dark:text-gray-300';
     navLink.innerText = title;
     navLink.dataset.id = id;
 

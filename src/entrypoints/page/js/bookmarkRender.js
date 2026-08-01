@@ -57,13 +57,13 @@ export function createCard(link) {
     cardContent.className = 'flex flex-col overflow-hidden';
 
     const cardTitle = document.createElement('h2');
-    cardTitle.className = 'text-left text-sm font-medium mb-1 truncate dark:text-gray-400';
+    cardTitle.className = 'text-left text-sm font-medium mb-1 truncate text-gray-900 dark:text-gray-100';
     cardTitle.innerText = title;
 
     const cleanUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
     const cardUrl = document.createElement('p');
-    cardUrl.className = 'text-left text-xs text-gray-400 dark:text-gray-600 dark:hover:text-gray-400 truncate';
+    cardUrl.className = 'text-left text-xs text-gray-500 dark:text-gray-400 truncate';
     cardUrl.innerText = cleanUrl;
 
     cardContent.appendChild(cardTitle);
@@ -107,7 +107,7 @@ function createClassicFolderCard(folder, path) {
     cardIcon.className = 'mb-2';
 
     const cardTitle = document.createElement('h2');
-    cardTitle.className = 'text-xs font-normal text-center w-full truncate dark:text-gray-400';
+    cardTitle.className = 'text-xs font-normal text-center w-full truncate text-gray-900 dark:text-gray-100';
     cardTitle.innerText = folder.title;
 
     card.appendChild(cardIcon);
@@ -149,7 +149,7 @@ function createFolderPreview(folder) {
     wrap.className = 'mb-2';
 
     const preview = document.createElement('div');
-    preview.className = 'grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-base-200/60';
+    preview.className = 'grid grid-cols-2 gap-2 p-1.5 rounded-xl bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-700';
     preview.style.width = '80px';
     preview.style.height = '80px';
 
@@ -186,7 +186,7 @@ function createFolderIconCard(folder, path) {
     const cardIcon = createFolderPreview(folder);
 
     const cardTitle = document.createElement('h2');
-    cardTitle.className = 'text-xs font-normal text-center w-full truncate dark:text-gray-400';
+    cardTitle.className = 'text-xs font-normal text-center w-full truncate text-gray-900 dark:text-gray-100';
     cardTitle.innerText = folder.title;
 
     card.appendChild(cardIcon);
@@ -214,18 +214,18 @@ export function showNoResultsMessage() {
 
     const icon = document.createElement('svg');
     icon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    icon.setAttribute('class', 'h-16 w-16 text-gray-500');
+    icon.setAttribute('class', 'h-16 w-16 text-gray-500 dark:text-gray-400');
     icon.setAttribute('fill', 'none');
     icon.setAttribute('viewBox', '0 0 24 24');
     icon.setAttribute('stroke', 'currentColor');
     icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m9-3a9 9 0 11-18 0 9 9 0 0118 0z" />';
 
     const title = document.createElement('h2');
-    title.className = 'text-gray-500 text-xl font-semibold mt-4';
+    title.className = 'text-gray-500 dark:text-gray-400 text-xl font-semibold mt-4';
     title.textContent = browser.i18n.getMessage("nope");
 
     const message = document.createElement('p');
-    message.className = 'text-gray-500 mt-2';
+    message.className = 'text-gray-500 dark:text-gray-400 mt-2';
     message.textContent = browser.i18n.getMessage("searchTips");
 
     messageContainer.appendChild(icon);

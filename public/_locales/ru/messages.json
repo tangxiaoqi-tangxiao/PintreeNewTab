@@ -41,6 +41,18 @@
     "set": {
         "message": "Настройки"
     },
+    "setThemeMode": {
+        "message": "Тема"
+    },
+    "themeMode_light": {
+        "message": "Светлая"
+    },
+    "themeMode_auto": {
+        "message": "Авто"
+    },
+    "themeMode_dark": {
+        "message": "Тёмная"
+    },
     "bookmark": {
         "message": "Закладка"
     },
