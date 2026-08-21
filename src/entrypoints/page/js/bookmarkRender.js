@@ -116,13 +116,16 @@ function createClassicFolderCard(folder, path) {
     return card;
 }
 
-// 创建迷你文件夹 SVG 图标（使用 Tailwind 工具类，无自定义样式）
-function createMiniFolderSvg(sizeClass = 'w-5 h-5') {
+// 创建迷你文件夹 SVG 图标（仅图标模式使用：绿色标签页 + 微露的纸张 + 文件夹主体，便于辨识文件夹）
+function createMiniFolderSvg(sizeClass = 'w-7') {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('viewBox', '0 0 100 80');
+    // 只设宽度、高度由 viewBox 的 5:4 比例自动推导，避免在正方形盒子里纵向留白压缩
     svg.setAttribute('class', 'shrink-0 ' + sizeClass);
     svg.innerHTML = `
       <rect x="0" y="0" width="100" height="80" rx="10" ry="10" class="fill-[#0BA665]" />
+      <rect x="15" y="8" width="70" height="60" rx="10" ry="10" class="fill-[#f2f2f2]" />
+      <rect x="10" y="14" width="80" height="50" rx="10" ry="10" class="fill-[#ffffff]" />
       <rect x="0" y="14" width="100" height="66" rx="10" ry="10" class="fill-[var(--folderColor)]" />
     `;
     return svg;
@@ -164,7 +167,7 @@ function createFolderPreview(folder) {
         cell.style.height = '30px';
 
         if (child.type === 'folder') {
-            cell.appendChild(createMiniFolderSvg('w-7 h-7'));
+            cell.appendChild(createMiniFolderSvg('w-7'));
         } else {
             const img = document.createElement('img');
             img.alt = child.title;
