@@ -74,6 +74,9 @@
     "del": {
         "message": "삭제"
     },
+    "renameFolder": {
+        "message": "이름 바꾸기"
+    },
     "infoEdit": {
         "message": "정보 편집"
     },
@@ -133,6 +136,9 @@
     },
     "setMoveFolderToFrontTip": {
         "message": "폴더 위치가 모든 북마크 맨 앞으로 이동합니다"
+    },
+    "setDragToSidebar": {
+        "message": "사이드바로 드래그 허용"
     },
     "bookmarkAdd": {
         "message": "북마크 추가"

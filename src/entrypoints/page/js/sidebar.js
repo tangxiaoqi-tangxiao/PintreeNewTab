@@ -22,15 +22,17 @@ export function renderNavigation(folders, container, isFirstRender = false, path
 
         folders.forEach((folder, index) => {
             if (folder.type === 'folder') {
+                // 仅当存在子文件夹时才创建展开箭头和子列表（书签不显示在侧边栏中）
+                const hasSubFolders = (folder.children || []).some(child => child.type === 'folder');
                 const navItem = CreateSidebarItemElement(folder.title, folder.id);
                 const toggleIcon = CreateIconElement();
 
-                if (folder.children && folder.children.length > 0) {
+                if (hasSubFolders) {
                     navItem.appendChild(toggleIcon);
                 }
                 parentElement.appendChild(navItem);
 
-                if (folder.children && folder.children.length > 0) {
+                if (hasSubFolders) {
                     const subList = document.createElement('ul');
                     subList.className = 'ml-4 space-y-2 hidden';
                     stack.push({
@@ -238,6 +240,44 @@ export function CreateIconElement() {
     toggleIcon.className = 'ml-2 transform transition-transform';
     toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
     return toggleIcon;
+}
+
+// 展开侧边栏中指定文件夹的路径（含其自身子列表），不改变当前激活状态
+export function ExpandSidebarFolder(targetId) {
+    let current = GetParentIdElement(targetId);
+    if (!current) return;
+
+    // 展开目标文件夹自身的子列表（li 与子列表 ul 是兄弟节点）
+    const ownSub = current.nextElementSibling;
+    if (ownSub && ownSub.tagName === 'UL') {
+        ownSub.classList.remove('hidden');
+        current.querySelector(':scope > span')?.classList.add('rotate-90');
+    }
+
+    // 沿父级链展开（含父级文件夹的展开箭头）
+    let ul = current.parentNode;
+    while (ul && ul.id !== 'navigation') {
+        ul.classList.remove('hidden');
+        const parentLi = ul.previousElementSibling;
+        if (parentLi) {
+            parentLi.querySelector(':scope > span')?.classList.add('rotate-90');
+        }
+        ul = ul.parentNode;
+    }
+}
+
+// 收集当前所有展开状态的文件夹 id（用于侧边栏重建后恢复展开状态）
+export function collectExpandedFolderIds() {
+    const ids = [];
+    document.querySelectorAll('#navigation li').forEach(li => {
+        const link = li.querySelector('a');
+        if (!link) return;
+        const subList = li.nextElementSibling;
+        if (subList && subList.tagName === 'UL' && !subList.classList.contains('hidden')) {
+            ids.push(link.dataset.id);
+        }
+    });
+    return ids;
 }
 
 // 展开侧边栏中当前活跃的文件夹路径

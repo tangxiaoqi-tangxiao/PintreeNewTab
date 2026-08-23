@@ -74,6 +74,9 @@
     "del": {
         "message": "Löschen"
     },
+    "renameFolder": {
+        "message": "Umbenennen"
+    },
     "infoEdit": {
         "message": "Information bearbeiten"
     },
@@ -133,6 +136,9 @@
     },
     "setMoveFolderToFrontTip": {
         "message": "Ordner werden an den Anfang aller Lesezeichen verschoben"
+    },
+    "setDragToSidebar": {
+        "message": "Ziehen zur Seitenleiste erlauben"
     },
     "bookmarkAdd": {
         "message": "Lesezeichen hinzufügen"

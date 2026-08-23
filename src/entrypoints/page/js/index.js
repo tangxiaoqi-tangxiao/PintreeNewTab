@@ -16,7 +16,7 @@ import { ContextMenuBlank, closeMenu } from "./contextMenu.js";
 import { initBookmarkEditor, SaveBookmark, BookmarkEditErrorHide, EmptyBookmarkEdit, ToggleSvgOrImage, setCreateCard as setEditorCreateCard, setBookmarkDrag as setEditorBookmarkDrag, setMainContentIsNull as setEditorMainContentIsNull, setBookmarkIsNull as setEditorBookmarkIsNull, setFolderIsNull as setEditorFolderIsNull } from "./bookmarkEditor.js";
 import { Search, setRenderBookmarks as setSearchRenderBookmarks } from "./search.js";
 import { applyThemeMode, toggleTheme } from "./theme.js";
-import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode } from "./settings.js";
+import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode, SetDragToSidebar } from "./settings.js";
 import { i18n } from "./i18n.js";
 import { ShowChangelog } from "./changelog.js";
 import { BookmarkDrag } from "./drag.js";
@@ -72,6 +72,8 @@ function Initialize() {
     SetCloseContextMenu();
     // 设置书签新标签页打开
     SetBookmarkNewTab();
+    // 设置是否允许拖拽到侧边栏
+    SetDragToSidebar();
     // 设置文件夹图标显示模式
     SetFolderIconMode();
     // 设置文件夹默认排在所有书签最前面
@@ -284,7 +286,8 @@ function Initialize() {
                 return true;
             }
             const targetElement = event.target.closest(`.${BOOKMARK_LINK}`);
-            if (!targetElement) {
+            const targetFolderElement = event.target.closest('.folder-card');
+            if (!targetElement && !targetFolderElement) {
                 browser.storage.sync.get('ContextMenu', (data) => {
                     if (!data.ContextMenu) {
                         ContextMenuBlank(event);

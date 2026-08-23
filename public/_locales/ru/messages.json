@@ -74,6 +74,9 @@
     "del": {
         "message": "Удалить"
     },
+    "renameFolder": {
+        "message": "Переименовать"
+    },
     "infoEdit": {
         "message": "Редактирование информации"
     },
@@ -133,6 +136,9 @@
     },
     "setMoveFolderToFrontTip": {
         "message": "Папки будут перемещены в самое начало всех закладок"
+    },
+    "setDragToSidebar": {
+        "message": "Разрешить перетаскивание на боковую панель"
     },
     "bookmarkAdd": {
         "message": "Добавить закладку"

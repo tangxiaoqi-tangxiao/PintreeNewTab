@@ -4,7 +4,7 @@ import { getFaviconURL } from "@/entrypoints/page/utils/utils.js";
 import { BOOKMARK_LINK, BookmarkFolderActiveId, BreadcrumbsList, folderIconMode } from "./state.js";
 import { renderBreadcrumbs } from "./breadcrumb.js";
 import { updateSidebarActiveState } from "./sidebar.js";
-import { ContextMenuSet } from "./contextMenu.js";
+import { ContextMenuSet, ContextMenuFolder } from "./contextMenu.js";
 import { BookmarkDrag } from "./drag.js";
 
 import empty_svg from '/images/empty.svg';
@@ -78,8 +78,8 @@ export function createCard(link) {
 }
 
 // 创建文件夹卡片元素（按图标模式开关分发）
-export function createFolderCard(title, id, children, path) {
-    const folder = { id, title, children: children || [] };
+export function createFolderCard(title, id, children, path, parentId) {
+    const folder = { id, title, children: children || [], parentId };
     return folderIconMode
         ? createFolderIconCard(folder, path)
         : createClassicFolderCard(folder, path);
@@ -89,10 +89,14 @@ export function createFolderCard(title, id, children, path) {
 function createClassicFolderCard(folder, path) {
     const card = document.createElement('div');
     card.className = 'select-none folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
+    card.dataset.id = folder.id;
+    card.dataset.parentId = folder.parentId || '';
+    card.dataset.type = 'folder';
     card.onclick = () => {
         const newPath = path.concat(folder);
         renderBookmarks(folder.children, newPath);
     };
+    card.oncontextmenu = (e) => ContextMenuFolder(e, folder);
 
     const cardIcon = document.createElement('div');
     cardIcon.innerHTML = `
@@ -186,10 +190,14 @@ function createFolderPreview(folder) {
 function createFolderIconCard(folder, path) {
     const card = document.createElement('div');
     card.className = 'select-none folder-card text-gray rounded-lg cursor-pointer flex flex-col items-center';
+    card.dataset.id = folder.id;
+    card.dataset.parentId = folder.parentId || '';
+    card.dataset.type = 'folder';
     card.onclick = () => {
         const newPath = path.concat(folder);
         renderBookmarks(folder.children, newPath);
     };
+    card.oncontextmenu = (e) => ContextMenuFolder(e, folder);
 
     const cardIcon = createFolderPreview(folder);
 
@@ -266,7 +274,7 @@ export function renderBookmarks(data, path) {
         folderSection.id = "grid_folders";
 
         folders.forEach(folder => {
-            const card = createFolderCard(folder.title, folder.id, folder.children, path);
+            const card = createFolderCard(folder.title, folder.id, folder.children, path, folder.parentId);
             folderSection.appendChild(card);
         });
         container.appendChild(folderSection);
@@ -292,6 +300,7 @@ export function renderBookmarks(data, path) {
 
     if (BookmarkFolderActiveId) {
         BookmarkDrag("grid");
+        BookmarkDrag("grid_folders", { folder: true });
     }
 }
 

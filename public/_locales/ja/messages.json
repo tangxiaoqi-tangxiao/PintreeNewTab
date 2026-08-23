@@ -74,6 +74,9 @@
     "del": {
         "message": "削除"
     },
+    "renameFolder": {
+        "message": "名前を変更"
+    },
     "infoEdit": {
         "message": "情報編集"
     },
@@ -133,6 +136,9 @@
     },
     "setMoveFolderToFrontTip": {
         "message": "フォルダの位置がすべてのブックマークの先頭に移動します"
+    },
+    "setDragToSidebar": {
+        "message": "サイドバーへのドラッグを許可"
     },
     "bookmarkAdd": {
         "message": "ブックマークを追加"

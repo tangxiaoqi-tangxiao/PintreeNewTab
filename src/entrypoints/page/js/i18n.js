@@ -66,11 +66,19 @@ export function i18n() {
     setMoveFolderToFront_i18n.textContent = browser.i18n.getMessage("setMoveFolderToFront");
     moveFolderToFrontTip.setAttribute("data-tip", browser.i18n.getMessage("setMoveFolderToFrontTip"));
 
+    const setDragToSidebar_i18n = document.getElementById('setDragToSidebar_i18n');
+    setDragToSidebar_i18n.textContent = browser.i18n.getMessage("setDragToSidebar");
+
     copyUrl_i18n.textContent = browser.i18n.getMessage("copyUrl");
     editBookmark_i18n.textContent = browser.i18n.getMessage("editBookmark");
     del_i18n.textContent = browser.i18n.getMessage("del");
     bookmarkAdd_i18n.textContent = browser.i18n.getMessage("bookmarkAdd");
     newFolder_i18n.textContent = browser.i18n.getMessage("newFolder");
+
+    const renameFolder_i18n = document.getElementById('renameFolder_i18n');
+    const delFolder_i18n = document.getElementById('delFolder_i18n');
+    renameFolder_i18n.textContent = browser.i18n.getMessage("renameFolder");
+    delFolder_i18n.textContent = browser.i18n.getMessage("del");
 
     infoEdit_i18n.textContent = browser.i18n.getMessage("infoEdit");
     IconDescribe_i18n.textContent = browser.i18n.getMessage("IconDescribe");

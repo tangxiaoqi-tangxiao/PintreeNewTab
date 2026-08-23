@@ -74,6 +74,9 @@
     "del": {
         "message": "刪除"
     },
+    "renameFolder": {
+        "message": "重新命名"
+    },
     "infoEdit": {
         "message": "資訊編輯"
     },
@@ -133,6 +136,9 @@
     },
     "setMoveFolderToFrontTip": {
         "message": "資料夾位置會移動到所有書籤最前面"
+    },
+    "setDragToSidebar": {
+        "message": "允許拖曳到側邊欄"
     },
     "bookmarkAdd": {
         "message": "添加书签"

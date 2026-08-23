@@ -20,6 +20,17 @@ export function SetCloseContextMenu() {
     }
 }
 
+// 设置是否允许书签/文件夹拖拽到侧边栏（默认关闭）
+export function SetDragToSidebar() {
+    const checkbox = document.getElementById('dragToSidebar');
+    browser.storage.sync.get('DragToSidebar', (data) => {
+        checkbox.checked = data.DragToSidebar === true;
+    });
+    checkbox.onclick = () => {
+        browser.storage.sync.set({ 'DragToSidebar': checkbox.checked });
+    };
+}
+
 // 设置书签是否在新标签页打开
 export function SetBookmarkNewTab() {
     const checkbox = document.getElementById('bookmarkNewTab');

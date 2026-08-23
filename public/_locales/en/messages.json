@@ -74,6 +74,9 @@
     "del": {
         "message": "Delete"
     },
+    "renameFolder": {
+        "message": "Rename"
+    },
     "infoEdit": {
         "message": "Info Edit"
     },
@@ -133,6 +136,9 @@
     },
     "setMoveFolderToFrontTip": {
         "message": "Folders will be moved to the very front of all bookmarks"
+    },
+    "setDragToSidebar": {
+        "message": "Allow drag to sidebar"
     },
     "bookmarkAdd": {
         "message": "Add Bookmark"

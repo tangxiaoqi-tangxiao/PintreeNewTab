@@ -1,6 +1,6 @@
-import { BOOKMARK_LINK, firstLayer, BookmarkFolderActiveId } from "./state.js";
+import { BOOKMARK_LINK, firstLayer, BookmarkFolderActiveId, BreadcrumbsList } from "./state.js";
 import { findInTree, deleteFromTree, findParentFolders, fetchFaviconAsBase64 } from "@/entrypoints/page/utils/utils.js";
-import { CreateSidebarItem, GetParentIdElement } from "./sidebar.js";
+import { CreateSidebarItem, GetParentIdElement, renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds, updateSidebarActiveState } from "./sidebar.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { IconsStr } from "@/entrypoints/page/config/index.js";
 
@@ -145,6 +145,114 @@ export function ContextMenu(e, link) {
     };
 }
 
+// 文件夹右键菜单入口（读取设置决定是否显示）
+export function ContextMenuFolder(e, folder) {
+    e.preventDefault();
+    browser.storage.sync.get('ContextMenu', (data) => {
+        if (!data.ContextMenu) {
+            FolderMenu(e, folder);
+        }
+    });
+}
+
+// 文件夹右键菜单（重命名、删除）
+function FolderMenu(e, folder) {
+    const contextMenu = document.getElementById('context-menu-folder');
+
+    MenuPosition(e, contextMenu);
+
+    {
+        // 重命名文件夹（复用新建文件夹弹窗）
+        document.getElementById("renameFolder").onclick = () => {
+            const newFolder_modal = document.getElementById('newFolder_modal');
+            const newFolderName = document.getElementById('newFolderName');
+            const newFolderNameError = document.getElementById('newFolderNameError');
+            const folderSave = document.getElementById('folderSave');
+
+            newFolder_modal.showModal();
+            newFolderNameError.classList.add("hidden");
+            newFolderName.value = folder.title || "";
+
+            folderSave.onclick = () => {
+                let Name = newFolderName.value;
+                if (Name === "") {
+                    newFolderNameError.classList.remove("hidden");
+                    return;
+                }
+                newFolder_modal.close();
+                chrome.bookmarks.update(folder.id, { title: Name }, () => {
+                    if (ErrorMessageNotification()) {
+                        return;
+                    }
+                    // 同步更新本地书签树
+                    findInTree(firstLayer, (node) => {
+                        if (node.id === folder.id) {
+                            node.title = Name;
+                            return true;
+                        }
+                    });
+                    // 更新主内容文件夹卡片标题
+                    const card = e.target.closest('.folder-card');
+                    const cardTitle = card && card.querySelector('h2');
+                    if (cardTitle) {
+                        cardTitle.textContent = Name;
+                    }
+                    // 更新侧边栏中的文件夹名称
+                    const sidebarItem = GetParentIdElement(folder.id);
+                    const sidebarLink = sidebarItem && sidebarItem.querySelector('a');
+                    if (sidebarLink) {
+                        sidebarLink.textContent = Name;
+                    }
+                });
+            };
+        };
+
+        // 删除文件夹（连同内部书签一起删除）
+        document.getElementById("delFolder").onclick = () => {
+            if (folder.id == "" || folder.id == "0") {
+                return;
+            }
+            chrome.bookmarks.removeTree(folder.id, () => {
+                if (ErrorMessageNotification()) {
+                    return;
+                }
+                // 同步更新本地书签树
+                deleteFromTree(firstLayer, (node) => {
+                    if (node.id === folder.id) {
+                        return true;
+                    }
+                });
+                // 移除主内容中的文件夹卡片并处理空状态
+                const card = e.target.closest('.folder-card');
+                if (card) {
+                    card.remove();
+                    if (mainContentIsNullFn()) {
+                        showNoResultsMessageFn();
+                    } else if (folderIsNullFn()) {
+                        const gridElem = document.getElementById("grid_folders");
+                        const dividingLineElem = document.getElementById("dividingLine");
+                        if (gridElem) {
+                            gridElem.remove();
+                        }
+                        if (dividingLineElem) {
+                            dividingLineElem.remove();
+                        }
+                    }
+                }
+                // 文件夹删除会改变侧边栏树结构，重建并保持展开状态与激活路径
+                const expandedIds = collectExpandedFolderIds();
+                renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenu);
+                expandedIds.forEach(id => ExpandSidebarFolder(id));
+                updateSidebarActiveState(BreadcrumbsList);
+            });
+        };
+    }
+
+    contextMenu.oncontextmenu = function (e2) {
+        e2.preventDefault();
+    };
+}
+
 // 空白处右键菜单（创建书签、创建文件夹）
 export function ContextMenuBlank(e) {
     const contextMenu = document.getElementById('context-menu-blank');
@@ -237,7 +345,7 @@ export function ContextMenuBlank(e) {
                                 folderSection = document.createElement('div');
                                 folderSection.className = 'grid grid-cols-3 sm:grid-cols-6 lg:grid-cols-8 2xl:grid-cols-12 gap-6';
                                 folderSection.id = "grid_folders";
-                                folderSection.appendChild(createCardFn(Name, newFolder.id, [], newNode));
+                                folderSection.appendChild(createCardFn(Name, newFolder.id, [], newNode, newFolder.parentId));
                                 if (bookmarkIsNullFn()) {
                                     container.appendChild(folderSection);
                                 } else {
@@ -248,7 +356,7 @@ export function ContextMenuBlank(e) {
                                     container.insertBefore(folderSection, container.firstChild);
                                 }
                             } else {
-                                folderSection.appendChild(createCardFn(Name, newFolder.id, [], newNode));
+                                folderSection.appendChild(createCardFn(Name, newFolder.id, [], newNode, newFolder.parentId));
                             }
                             return true;
                         }
@@ -298,21 +406,24 @@ export function MenuPosition(e, element) {
 export function closeMenu(event) {
     const contextMenu = document.getElementById('context-menu');
     const contextMenu2 = document.getElementById('context-menu-blank');
+    const contextMenuFolder = document.getElementById('context-menu-folder');
     if (event && event.type === "contextmenu") {
         const targetElement = event.target.closest(`.${BOOKMARK_LINK}`);
         const targetElement2 = event.target.closest(`#main`);
+        const targetFolderElement = event.target.closest('.folder-card');
         if (!targetElement) {
             contextMenu.classList.add("hidden");
         }
-        if (targetElement) {
+        if (targetElement || targetFolderElement || !targetElement2) {
             contextMenu2.classList.add("hidden");
         }
-        if (!targetElement2) {
-            contextMenu2.classList.add("hidden");
+        if (!targetFolderElement) {
+            contextMenuFolder.classList.add("hidden");
         }
     } else {
         contextMenu.classList.add("hidden");
         contextMenu2.classList.add("hidden");
+        contextMenuFolder.classList.add("hidden");
     }
 }
 
