@@ -19,7 +19,7 @@ PintreeNewTab is an open-source project based on [Pintree](https://github.com/Pi
 ## Features to be Implemented
 
 - [x] Create folders
-- [ ] Move bookmarks to folders
+- [x] Move bookmarks to folders
 - [x] Save sidebar position
 - [x] Add AI search
 

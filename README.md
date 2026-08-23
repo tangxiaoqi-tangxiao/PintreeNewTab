@@ -20,7 +20,7 @@ PintreeNewTab 是一个基于[Pintree](https://github.com/Pintree-io/pintree)
 ## 待实现功能
 
 - [x] 创建文件夹
-- [ ] 可移动书签到文件夹
+- [x] 可移动书签到文件夹
 - [x] 保存侧边栏位置
 - [x] 新增AI搜索
 
