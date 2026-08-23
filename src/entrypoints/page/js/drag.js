@@ -1,8 +1,8 @@
 import Sortable from 'sortablejs';
-import { BookmarkFolderActiveId, firstLayer } from "./state.js";
+import { BookmarkFolderActiveId, firstLayer, BreadcrumbsList } from "./state.js";
 import { getFolderLength, reRenderCurrentFolder } from "./bookmarkRender.js";
 import { findInTree, deleteFromTree } from "@/entrypoints/page/utils/utils.js";
-import { renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds } from "./sidebar.js";
+import { renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds, updateSidebarActiveState } from "./sidebar.js";
 import { closeMenu } from "./contextMenu.js";
 
 // 拖拽状态：记录拖拽期间鼠标位置与被拖拽项，用于检测是否悬浮在侧边栏文件夹上
@@ -253,6 +253,8 @@ export function BookmarkDrag(grid_id, options = {}) {
                             const expandedIds = collectExpandedFolderIds();
                             renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenu);
                             expandedIds.forEach(id => ExpandSidebarFolder(id));
+                            // 重新应用激活路径的选中态（重建后 sidebar-active 会丢失）
+                            updateSidebarActiveState(BreadcrumbsList);
                         }
                     });
                 }
