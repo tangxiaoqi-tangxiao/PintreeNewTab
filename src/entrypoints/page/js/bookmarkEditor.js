@@ -54,9 +54,9 @@ export function initBookmarkEditor() {
     iconBorders.forEach((item) => {
         item.onclick = () => {
             iconBorders.forEach((Border) => {
-                Border.classList.remove('border-blue-400');
+                Border.classList.remove('border-main-500');
             });
-            item.classList.add('border-blue-400');
+            item.classList.add('border-main-500');
 
             if (item.classList.contains('image')) {
                 imageInput.click();
@@ -136,7 +136,7 @@ export function SaveBookmark(id, element) {
     const localPreviewImage = document.getElementById('localPreviewImage');
     const editBookmark_modal = document.getElementById('editBookmark_modal');
 
-    const iconBorder = document.querySelector('.iconBorder.border-blue-400');
+    const iconBorder = document.querySelector('.iconBorder.border-main-500');
 
     const img = element?.querySelector('img');
     const name = element?.querySelector('h2');

@@ -104,15 +104,15 @@ export function ContextMenu(e, link) {
                     defaultImage.src = data.base64;
                     defaultIcon.classList.remove("hidden");
                     iconBorder.forEach((item) => {
-                        item.classList.remove("border-blue-400");
+                        item.classList.remove("border-main-500");
                     });
-                    iconBorder[0].classList.add("border-blue-400");
+                    iconBorder[0].classList.add("border-main-500");
                 } else {
                     defaultIcon.classList.add("hidden");
                     iconBorder.forEach((item) => {
-                        item.classList.remove("border-blue-400");
+                        item.classList.remove("border-main-500");
                     });
-                    iconBorder[1].classList.add("border-blue-400");
+                    iconBorder[1].classList.add("border-main-500");
                 }
             });
             localPreviewImage.src = "";
@@ -280,9 +280,9 @@ export function ContextMenuBlank(e) {
             localPreviewImage.src = "";
             PreviewImage.src = "";
             iconBorder.forEach((item) => {
-                item.classList.remove("border-blue-400");
+                item.classList.remove("border-main-500");
             });
-            iconBorder[1].classList.add("border-blue-400");
+            iconBorder[1].classList.add("border-main-500");
             ToggleSvgOrImageFn(true);
             ToggleSvgOrImageFn(true, true);
 
