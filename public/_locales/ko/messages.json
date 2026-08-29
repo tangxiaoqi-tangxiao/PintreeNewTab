@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "웹사이트 링크는 비어 있을 수 없습니다"
     },
+    "invalidUrl": {
+        "message": "유효하지 않은 링크 주소"
+    },
+    "bookmarkExists": {
+        "message": "북마크가 이미 존재합니다"
+    },
     "websiteName": {
         "message": "웹사이트 이름"
     },

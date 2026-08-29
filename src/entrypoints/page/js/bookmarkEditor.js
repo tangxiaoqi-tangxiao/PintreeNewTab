@@ -151,11 +151,21 @@ export function SaveBookmark(id, element) {
     }
 
     if (!isValidUrl(websiteLink.value)) {
-        websiteLinkError2.classList.remove('hidden');
+        ShowLinkError(websiteLinkError2, "invalidUrl");
         websiteLinkError.classList.add('hidden');
         return;
     } else {
         websiteLinkError2.classList.add('hidden');
+    }
+
+    // 重复书签检查：在所有书签中查找相同链接
+    let excludeId = null;
+    if (id > 0) {
+        excludeId = id;
+    }
+    if (findDuplicateBookmark(websiteLink.value, excludeId)) {
+        ShowLinkError(websiteLinkError2, "bookmarkExists");
+        return;
     }
 
     if (websiteName.value === "") {
@@ -303,11 +313,35 @@ export function SaveBookmark(id, element) {
 // 隐藏书签编辑的所有错误提示
 export function BookmarkEditErrorHide() {
     const websiteLinkError = document.getElementById('websiteLinkError');
+    const websiteLinkError2 = document.getElementById('websiteLinkError2');
     const websiteNameError = document.getElementById('websiteNameError');
     const PreviewImageError = document.getElementById('PreviewImageError');
     websiteLinkError.classList.add('hidden');
+    websiteLinkError2.classList.add('hidden');
     websiteNameError.classList.add('hidden');
     PreviewImageError.classList.add('hidden');
+}
+
+// 在链接输入框下方显示错误提示（与无效链接提示同一位置）
+function ShowLinkError(element, messageKey) {
+    const span = element.querySelector("span");
+    if (span) {
+        span.textContent = browser.i18n.getMessage(messageKey);
+    }
+    element.classList.remove("hidden");
+}
+
+// 比较两个URL是否相同（忽略首尾空格与末尾斜杠）
+function isSameUrl(url1, url2) {
+    const normalize = (u) => String(u || "").trim().replace(/\/+$/, "");
+    return normalize(url1) === normalize(url2);
+}
+
+// 在整棵书签树中查找已存在相同链接的书签（可排除自身，用于编辑场景）
+function findDuplicateBookmark(url, excludeId) {
+    return findInTree(firstLayer, (node) =>
+        node.type === "link" && node.id !== excludeId && isSameUrl(node.url, url)
+    );
 }
 
 // 清空书签编辑表单的数据

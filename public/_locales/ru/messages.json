@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "Ссылка на сайт не может быть пустой"
     },
+    "invalidUrl": {
+        "message": "Неверный адрес ссылки"
+    },
+    "bookmarkExists": {
+        "message": "Закладка уже существует"
+    },
     "websiteName": {
         "message": "Название сайта"
     },

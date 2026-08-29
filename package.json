@@ -5,12 +5,18 @@
   "version": "1.1.1",
   "type": "module",
   "scripts": {
+    "sync-changelog": "node scripts/sync-changelog.mjs",
+    "prebuild": "npm run sync-changelog",
+    "prebuild:firefox": "npm run sync-changelog",
+    "prezip": "npm run sync-changelog",
+    "prezip:firefox": "npm run sync-changelog",
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
+    "release": "npm run sync-changelog && npm run zip",
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare"
   },

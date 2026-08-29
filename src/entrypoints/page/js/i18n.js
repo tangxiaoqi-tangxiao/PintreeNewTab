@@ -34,6 +34,7 @@ export function i18n() {
     const websiteLink_i18n = document.getElementById('websiteLink_i18n');
     const websiteLink = document.getElementById('websiteLink');
     const websiteLinkError_i18n = document.getElementById('websiteLinkError_i18n');
+    const websiteLinkError2_i18n = document.getElementById('websiteLinkError2_i18n');
     const websiteName_i18n = document.getElementById('websiteName_i18n');
     const websiteName = document.getElementById('websiteName');
     const websiteNameError_i18n = document.getElementById('websiteNameError_i18n');
@@ -85,6 +86,7 @@ export function i18n() {
     websiteLink_i18n.textContent = browser.i18n.getMessage("websiteLink");
     websiteLink.setAttribute("placeholder", browser.i18n.getMessage("websiteLinkPlaceholder"));
     websiteLinkError_i18n.textContent = browser.i18n.getMessage("websiteLinkError");
+    websiteLinkError2_i18n.textContent = browser.i18n.getMessage("invalidUrl");
     websiteName_i18n.textContent = browser.i18n.getMessage("websiteName");
     websiteName.setAttribute("placeholder", browser.i18n.getMessage("websiteNamePlaceholder"));
     websiteNameError_i18n.textContent = browser.i18n.getMessage("websiteNameError");

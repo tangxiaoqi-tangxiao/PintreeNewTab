@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "Website link cannot be empty"
     },
+    "invalidUrl": {
+        "message": "Invalid link address"
+    },
+    "bookmarkExists": {
+        "message": "Bookmark already exists"
+    },
     "websiteName": {
         "message": "Website Name"
     },

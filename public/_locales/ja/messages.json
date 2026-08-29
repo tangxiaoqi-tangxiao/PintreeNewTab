@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "ウェブサイトリンクは空にできません"
     },
+    "invalidUrl": {
+        "message": "無効なリンクアドレス"
+    },
+    "bookmarkExists": {
+        "message": "ブックマークは既に存在します"
+    },
     "websiteName": {
         "message": "ウェブサイト名"
     },

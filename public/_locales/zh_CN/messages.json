@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "网站链接不能为空"
     },
+    "invalidUrl": {
+        "message": "无效链接地址"
+    },
+    "bookmarkExists": {
+        "message": "书签已存在"
+    },
     "websiteName": {
         "message": "网站名称"
     },

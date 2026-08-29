@@ -1,4 +1,5 @@
 import { defineConfig } from 'wxt';
+import { getVersion } from './scripts/get-version.mjs';
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -8,7 +9,7 @@ export default defineConfig({
     name: '__MSG_appName__',
     description: '__MSG_appDesc__',
     default_locale: 'zh_CN',
-    version: "1.2.3",
+    version: getVersion(),
     permissions: ['storage',"bookmarks","favicon"],
     icons: {
       16: 'icon/favicon_16x16.png',

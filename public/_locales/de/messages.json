@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "Website-Link darf nicht leer sein"
     },
+    "invalidUrl": {
+        "message": "Ungültige Link-Adresse"
+    },
+    "bookmarkExists": {
+        "message": "Lesezeichen existiert bereits"
+    },
     "websiteName": {
         "message": "Website-Name"
     },

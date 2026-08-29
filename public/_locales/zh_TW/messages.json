@@ -92,6 +92,12 @@
     "websiteLinkError": {
         "message": "網站鏈接不能為空"
     },
+    "invalidUrl": {
+        "message": "無效連結位址"
+    },
+    "bookmarkExists": {
+        "message": "書籤已存在"
+    },
     "websiteName": {
         "message": "網站名稱"
     },
