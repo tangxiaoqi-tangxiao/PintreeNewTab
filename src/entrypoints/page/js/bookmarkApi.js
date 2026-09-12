@@ -2,6 +2,7 @@ import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { SetUpStr, IconsStr } from "@/entrypoints/page/config/index.js";
 import { firstLayer, setFirstLayer } from "./state.js";
 import { GetParentIdElement } from "./sidebar.js";
+import { preloadFaviconDefaultData } from "@/entrypoints/page/utils/utils.js";
 
 // 将浏览器书签节点转换为结构化数据格式
 export function bookmarkToStructuredData(bookmarkNode) {
@@ -132,6 +133,8 @@ export async function MoveFolderToFront() {
 // 书签初始化：获取书签数据并渲染导航
 export async function BookmarkInitialize(renderNavigation, closeMenuFn) {
     await MoveFolderToFront();
+    // 预加载浏览器默认图标像素数据，加速 favicon 判断，减少加载时的图标闪烁
+    preloadFaviconDefaultData();
     fetchBookmarks()
         .then(async data => {
             setFirstLayer(data);
