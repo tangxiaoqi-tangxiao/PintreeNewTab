@@ -109,11 +109,11 @@ function Initialize() {
     SideNavigationToggle.onclick = () => {
         browser.storage.sync.get('SideNavigationToggle', (data) => {
             if (data.SideNavigationToggle) {
-                browser.storage.sync.set({ SideNavigationToggle: false });
+                browser.storage.sync.set({ SideNavigationToggle: false }).catch((error) => console.error('[index] 保存侧边栏开关失败:', error));
                 SideNavigation.classList.add('lg:flex');
                 document.getElementById('main-content').classList.remove("mx-20");
             } else {
-                browser.storage.sync.set({ SideNavigationToggle: true });
+                browser.storage.sync.set({ SideNavigationToggle: true }).catch((error) => console.error('[index] 保存侧边栏开关失败:', error));
                 SideNavigation.classList.remove('lg:flex');
                 document.getElementById('main-content').classList.add("mx-20");
             }
@@ -196,13 +196,10 @@ function Initialize() {
 
                     currentTab_ = btn.dataset.tab;
 
-                    // 保存当前选中的搜索选项
-                    browser.storage.sync.set({
-                        SearchTab: {
-                            tab: tab_,
-                            currentTab: currentTab_
-                        }
-                    });
+                    // 仅用户真实点击时保存当前选中的搜索选项（初始化恢复状态时不写入，避免每次加载都触发存储配额）
+                    if (e.isTrusted) {
+                        saveSearchTab();
+                    }
                 }
                 // 默认选中第一项或恢复之前选中项
                 if ((currentTab === null && index === 0) || (currentTab === btn.dataset.tab)) {
@@ -212,9 +209,19 @@ function Initialize() {
             });
         }
 
+        // 保存当前搜索选项
+        function saveSearchTab() {
+            browser.storage.sync.set({
+                SearchTab: {
+                    tab: tab_,
+                    currentTab: currentTab_
+                }
+            }).catch((error) => console.error('[index] 保存搜索选项失败:', error));
+        }
+
         // 标签页点击事件
         tabs.forEach((tab) => {
-            tab.addEventListener("click", () => {
+            tab.addEventListener("click", (e) => {
                 // 移除所有 Tab 的选中样式
                 tabs.forEach((t) => {
                     t.classList.remove("bg-black", "text-white")
@@ -239,6 +246,10 @@ function Initialize() {
                         currentTab_ = null;
                     }
                     updateCollections(tab_, currentTab_);
+                    // 仅用户真实点击 Tab 时保存（初始化恢复时不写入）
+                    if (e.isTrusted) {
+                        saveSearchTab();
+                    }
                 });
             });
         });
@@ -350,7 +361,7 @@ function Initialize() {
             document.body.style.userSelect = '';
             document.body.style.cursor = '';
             const w = sidebarInner.offsetWidth;
-            browser.storage.sync.set({ [SIDEBAR_W]: w });
+            browser.storage.sync.set({ [SIDEBAR_W]: w }).catch((error) => console.error('[index] 保存侧边栏宽度失败:', error));
         });
     })();
 

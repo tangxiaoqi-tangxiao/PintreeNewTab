@@ -1,4 +1,4 @@
-import { setFolderIconMode } from "./state.js";
+﻿import { setFolderIconMode } from "./state.js";
 import { reRenderCurrentFolder } from "./bookmarkRender.js";
 
 // 设置右键菜单开关
@@ -13,9 +13,9 @@ export function SetCloseContextMenu() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            browser.storage.sync.set({ 'ContextMenu': true });
+            browser.storage.sync.set({ 'ContextMenu': true }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         } else {
-            browser.storage.sync.set({ 'ContextMenu': false });
+            browser.storage.sync.set({ 'ContextMenu': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         }
     }
 }
@@ -27,7 +27,7 @@ export function SetDragToSidebar() {
         checkbox.checked = data.DragToSidebar === true;
     });
     checkbox.onclick = () => {
-        browser.storage.sync.set({ 'DragToSidebar': checkbox.checked });
+        browser.storage.sync.set({ 'DragToSidebar': checkbox.checked }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
     };
 }
 
@@ -43,9 +43,9 @@ export function SetBookmarkNewTab() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            browser.storage.sync.set({ 'BookmarkNewTab': true });
+            browser.storage.sync.set({ 'BookmarkNewTab': true }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         } else {
-            browser.storage.sync.set({ 'BookmarkNewTab': false });
+            browser.storage.sync.set({ 'BookmarkNewTab': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         }
     }
 }
@@ -63,9 +63,9 @@ export function SetFolderIconMode() {
         const on = checkbox.checked;
         setFolderIconMode(on);
         if (on) {
-            browser.storage.sync.set({ 'FolderIconMode': true });
+            browser.storage.sync.set({ 'FolderIconMode': true }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         } else {
-            browser.storage.sync.set({ 'FolderIconMode': false });
+            browser.storage.sync.set({ 'FolderIconMode': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         }
         reRenderCurrentFolder();
     }
@@ -83,9 +83,9 @@ export function SetCacheIcon() {
     });
     checkbox.onclick = () => {
         if (checkbox.checked) {
-            browser.storage.sync.set({ 'CacheIcon': true });
+            browser.storage.sync.set({ 'CacheIcon': true }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         } else {
-            browser.storage.sync.set({ 'CacheIcon': false });
+            browser.storage.sync.set({ 'CacheIcon': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
         }
     }
 }
@@ -97,7 +97,7 @@ export function SetMoveFolderToFront() {
         checkbox.checked = !!data.MoveFolderToFront;
     });
     checkbox.onclick = () => {
-        browser.storage.sync.set({ 'MoveFolderToFront': checkbox.checked });
+        browser.storage.sync.set({ 'MoveFolderToFront': checkbox.checked }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
     };
 }
 
@@ -110,7 +110,7 @@ export function syncThemeModeRadio(mode) {
 
 // 写入主题模式（同时写入 storage.sync 与 localStorage 供首帧脚本使用）
 function saveThemeMode(mode) {
-    browser.storage.sync.set({ ThemeMode: mode });
+    browser.storage.sync.set({ ThemeMode: mode }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
     try {
         localStorage.setItem('ThemeMode', mode);
     } catch (e) { /* 忽略 localStorage 异常 */ }

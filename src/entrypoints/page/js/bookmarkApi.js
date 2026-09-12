@@ -65,16 +65,16 @@ export async function DelIconsCache() {
     });
 }
 
-// 展开默认文件夹（恢复上次活跃文件夹或展开第一个文件夹）
+// 展开默认文件夹（恢复上次活跃文件夹或展开第一个文件夹），返回 Promise 便于调用方等待展开完成后展示页面
 export function ExpandDefaultFolder() {
-    db.getData(SetUpStr, "ActiveId").then((value) => {
+    return db.getData(SetUpStr, "ActiveId").then((value) => {
         if (value) {
             let item = GetParentIdElement(value.data);
-            item.click();
+            item?.click();
         } else {
             const firstItem = firstLayer[0];
             let item = GetParentIdElement(firstItem.id);
-            item.click();
+            item?.click();
         }
     });
 }
@@ -133,18 +133,45 @@ export async function MoveFolderToFront() {
 export async function BookmarkInitialize(renderNavigation, closeMenuFn) {
     await MoveFolderToFront();
     fetchBookmarks()
-        .then(data => {
+        .then(async data => {
             setFirstLayer(data);
             if (firstLayer.length > 0) {
                 renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenuFn);
-                ExpandDefaultFolder();
+                // 初始化期间禁用箭头过渡（内联样式优先级最高，展开瞬间到位）
+                disableSidebarTransitions();
+                // 等待侧边栏默认文件夹展开完成后再隐藏遮罩，避免用户看到展开过程
+                await ExpandDefaultFolder();
             }
             hideLoadingOverlay();
+            // 首次用户进入/点击侧边栏时才恢复箭头过渡，避免"恢复时播放"产生可见动画
+            enableSidebarTransitionsOnInteraction();
         })
         .catch(error => {
             console.error(`${browser.i18n.getMessage("errorLoadingBookmarks")}`, error);
             hideLoadingOverlay();
         });
+}
+
+// 初始化期间禁用侧边栏箭头过渡：内联样式 transition:none 优先级高于任何 class，保证生效
+function disableSidebarTransitions() {
+    document.querySelectorAll('#navigation [class*="transition"]').forEach(el => {
+        el.style.transition = 'none';
+    });
+}
+
+// 首次用户进入/点击侧边栏时清除内联过渡样式，恢复点击时的箭头旋转动画
+function enableSidebarTransitionsOnInteraction() {
+    const nav = document.getElementById('navigation');
+    if (!nav) return;
+    const enable = () => {
+        document.querySelectorAll('#navigation [class*="transition"]').forEach(el => {
+            el.style.transition = '';
+        });
+        nav.removeEventListener('pointerover', enable);
+        nav.removeEventListener('click', enable);
+    };
+    nav.addEventListener('pointerover', enable);
+    nav.addEventListener('click', enable);
 }
 
 // 隐藏全屏加载遮罩，让整页内容一次性呈现

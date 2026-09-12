@@ -42,7 +42,7 @@ export function ShowChangelog() {
         // 确认按钮：记录已确认的版本号
         const confirmBtn = document.getElementById('changelogConfirm');
         confirmBtn.onclick = () => {
-            browser.storage.sync.set({ ChangelogConfirmed: current });
+            browser.storage.sync.set({ ChangelogConfirmed: current }).catch((error) => console.error('[changelog] 保存确认状态失败:', error));
             modal.close();
         };
 
