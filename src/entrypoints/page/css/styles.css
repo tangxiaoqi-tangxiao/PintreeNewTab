@@ -87,6 +87,12 @@
     transition: opacity 0.15s ease, box-shadow 0.15s ease;
 }
 
+/* 文件夹卡片（经典/图标模式）长按拖拽时不显示抬起阴影 */
+.folder-card.sortable-chosen,
+.folder-card.sortable-drag {
+    box-shadow: none;
+}
+
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }
