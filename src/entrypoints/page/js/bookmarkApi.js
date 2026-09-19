@@ -3,6 +3,7 @@ import { SetUpStr, IconsStr } from "@/entrypoints/page/config/index.js";
 import { firstLayer, setFirstLayer } from "./state.js";
 import { GetParentIdElement } from "./sidebar.js";
 import { preloadFaviconDefaultData } from "@/entrypoints/page/utils/utils.js";
+import { loadIconCache } from "./iconCache.js";
 
 // 将浏览器书签节点转换为结构化数据格式
 export function bookmarkToStructuredData(bookmarkNode) {
@@ -35,8 +36,17 @@ export async function fetchBookmarks() {
     });
 }
 
-// 删除已不存在的书签对应的缓存图标
+// 删除已不存在的书签对应的缓存图标（每天最多清理一次，避免每次刷新都全量扫描）
 export async function DelIconsCache() {
+    const LAST_RUN_KEY = 'DelIconsCacheLastRun';
+    const INTERVAL = 24 * 60 * 60 * 1000;
+    try {
+        const last = Number(localStorage.getItem(LAST_RUN_KEY) || 0);
+        if (last && Date.now() - last < INTERVAL) {
+            return;
+        }
+    } catch { /* localStorage 不可用时继续执行 */ }
+
     let datas = await fetchBookmarks();
     let ArrId = [];
     let DelArrId = [];
@@ -61,7 +71,9 @@ export async function DelIconsCache() {
         }
     }, () => {
         db.deleteMultipleData(IconsStr, DelArrId).then(() => {
-            console.log("删除缓存成功");
+            try {
+                localStorage.setItem(LAST_RUN_KEY, String(Date.now()));
+            } catch { /* 忽略 localStorage 异常 */ }
         });
     });
 }
@@ -132,7 +144,8 @@ export async function MoveFolderToFront() {
 
 // 书签初始化：获取书签数据并渲染导航
 export async function BookmarkInitialize(renderNavigation, closeMenuFn) {
-    await MoveFolderToFront();
+    // 一并完成文件夹前置排序与图标缓存预加载（渲染时同步取用图标，避免逐卡片查询 IndexedDB）
+    await Promise.all([MoveFolderToFront(), loadIconCache()]);
     // 预加载浏览器默认图标像素数据，加速 favicon 判断，减少加载时的图标闪烁
     preloadFaviconDefaultData();
     fetchBookmarks()

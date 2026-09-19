@@ -22,43 +22,74 @@ let _defaultImageData;
  * @returns {Promise} - 解析为包含base64编码图标的对象的Promise，如果获取失败则返回null
  */
 async function fetchFaviconAsBase64(url) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            if (!isValidUrl(url)) return null;
-            // 获取网站的 HTML 源代码
-            fetchWithTimeout(url, {
-                headers: _browserRelatedHeaders
-            }, 5000)
-                .then(response => response.text())
-                .then(async text => {
-                    // 使用 DOMParser 来解析 HTML
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(text, 'text/html');
+    if (!isValidUrl(url)) return null;
 
-                    // 查找 <link rel="icon"> 或 <link rel="shortcut icon">
-                    let iconLinks = Array.from(doc.querySelectorAll('link'))
-                        .filter(link => link.getAttribute('rel').includes('icon'))
-                        .map(link => link.getAttribute('href'));
+    // 并行：优先用浏览器本地 favicon 端点取图标（不依赖目标站跨域），同时抓取页面 HTML 取标题
+    const [endpointBase64, page] = await Promise.all([
+        fetchFaviconFromEndpoint(url),
+        fetchPageInfo(url),
+    ]);
 
-                    // 调用新的封装函数获取图标的 Blob 数据
-                    const {blob, faviconUrl} = await fetchFaviconBlobData(url, iconLinks);
+    // 端点未取到图标时，降级解析页面 <link rel="icon"> 兜底
+    let base64 = endpointBase64;
+    if (!base64 && page && page.iconLinks.length > 0) {
+        base64 = await fetchFaviconHtmlFallback(url, page.iconLinks);
+    }
 
-                    if (blob != null && (isImageBlob(blob, faviconUrl, ["ico"]))) {//判断是否是图片
-                        // 读取 Blob 数据并转换为 Base64
-                        const base64 = await convertBlobToBase64(blob);
-                        resolve({base64, title: doc.title});
-                    } else {
-                        resolve({base64: null, title: doc.title});
-                    }
-                }).catch(error => {
-                // console.error('Error fetching favicon:', error);
-                resolve(null);
-            });
-        } catch (error) {
-            // console.error('Error fetching favicon:', error);
-            resolve(null);
+    return { base64, title: page ? page.title : null };
+}
+
+// 通过浏览器本地 favicon 端点获取图标并转为 base64；站点无真实图标时返回 null。
+// 该端点由浏览器提供，不受目标站 CORS 限制，比直接抓取站点 HTML 更可靠。
+async function fetchFaviconFromEndpoint(url, size = 128) {
+    try {
+        const hasCustom = await checkFavicon(url);
+        if (!hasCustom) return null;
+        const response = await fetch(faviconURL(url, size));
+        if (!response.ok) return null;
+        const blob = await response.blob();
+        if (!blob || blob.size === 0) return null;
+        return await convertBlobToBase64(blob);
+    } catch (error) {
+        return null;
+    }
+}
+
+// 抓取站点 HTML，返回标题与按优先级排序的候选图标链接（可能因跨域限制失败，失败返回 null）
+async function fetchPageInfo(url) {
+    try {
+        const response = await fetchWithTimeout(url, { headers: _browserRelatedHeaders }, 5000);
+        const text = await response.text();
+        const doc = new DOMParser().parseFromString(text, 'text/html');
+        const iconLinks = Array.from(doc.querySelectorAll('link'))
+            .filter(link => (link.getAttribute('rel') || '').toLowerCase().includes('icon'))
+            .sort((a, b) => iconLinkPriority(a) - iconLinkPriority(b))
+            .map(link => link.getAttribute('href'));
+        return { title: doc.title || null, iconLinks };
+    } catch (error) {
+        return null;
+    }
+}
+
+// 图标链接优先级：普通 icon 优先，apple-touch-icon 次之（后者通常是大尺寸 PNG，不适合做小图标）
+function iconLinkPriority(link) {
+    const rel = (link.getAttribute('rel') || '').toLowerCase();
+    if (rel === 'icon' || rel.includes('shortcut icon')) return 0;
+    if (rel.includes('apple-touch-icon')) return 2;
+    return 1;
+}
+
+// 端点未取到图标时的兜底：按候选链接抓取图标并转 base64
+async function fetchFaviconHtmlFallback(url, iconLinks) {
+    try {
+        const { blob, faviconUrl } = await fetchFaviconBlobData(url, iconLinks);
+        if (blob != null && isImageBlob(blob, faviconUrl, ["ico"])) {
+            return await convertBlobToBase64(blob);
         }
-    });
+    } catch (error) {
+        /* 兜底失败忽略 */
+    }
+    return null;
 }
 
 /**
@@ -410,7 +441,7 @@ async function fetchFaviconBlobData(url, iconLinks) {
                 const iconResponse = await fetch(faviconUrl, {
                     headers: _browserRelatedHeaders
                 });
-                if (iconResponse.status === 200 || iconResponse.status === 200) {
+                if (iconResponse.ok) {
                     blob = await iconResponse.blob();
                     break;
                 }
@@ -421,7 +452,7 @@ async function fetchFaviconBlobData(url, iconLinks) {
             const iconResponse = await fetch(faviconUrl, {
                 headers: _browserRelatedHeaders
             });
-            if (iconResponse.status === 200) {
+            if (iconResponse.ok) {
                 blob = await iconResponse.blob();
             }
         }

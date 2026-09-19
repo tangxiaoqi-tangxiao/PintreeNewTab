@@ -3,6 +3,7 @@ import { findInTree, isValidUrl, fetchFaviconAsBase64, convertBlobToBase64, debo
 import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { IconsStr } from "@/entrypoints/page/config/index.js";
 import { CreateSidebarItemArrowIcon, GetParentIdElement } from "./sidebar.js";
+import { setCachedIcon, deleteCachedIcon } from "./iconCache.js";
 
 let createCardFn = null;
 let BookmarkDragFn = null;
@@ -202,6 +203,7 @@ export function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {
                         img.src = localPreviewImage.src;
                         if (localPreviewImage.src != location.href) {
+                            setCachedIcon(id, localPreviewImage.src);
                             db.getData(IconsStr, id).then((data) => {
                                 if (data) {
                                     db.updateData(IconsStr, { base64: localPreviewImage.src, id });
@@ -213,6 +215,7 @@ export function SaveBookmark(id, element) {
                     } else if (!iconBorder.classList.contains('default')) {
                         img.src = PreviewImage.src;
                         if (PreviewImage.src != location.href) {
+                            setCachedIcon(id, PreviewImage.src);
                             db.getData(IconsStr, id).then((data) => {
                                 if (data) {
                                     db.updateData(IconsStr, { base64: PreviewImage.src, id });
@@ -221,6 +224,7 @@ export function SaveBookmark(id, element) {
                                 }
                             });
                         } else {
+                            deleteCachedIcon(id);
                             db.deleteData(IconsStr, id);
                         }
                     }
@@ -261,11 +265,13 @@ export function SaveBookmark(id, element) {
                     if (iconBorder.classList.contains('image')) {
                         if (localPreviewImage.src != location.href) {
                             imgsrc = localPreviewImage.src;
+                            setCachedIcon(link.id, localPreviewImage.src);
                             db.addData(IconsStr, { base64: localPreviewImage.src, id: link.id });
                         }
                     } else if (!iconBorder.classList.contains('default')) {
                         if (PreviewImage.src != location.href) {
                             imgsrc = PreviewImage.src;
+                            setCachedIcon(link.id, PreviewImage.src);
                             db.addData(IconsStr, { base64: PreviewImage.src, id: link.id });
                         }
                     }

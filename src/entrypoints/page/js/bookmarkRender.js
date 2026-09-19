@@ -1,13 +1,11 @@
-import db from "@/entrypoints/page/utils/IndexedDB.js";
-import { IconsStr } from "@/entrypoints/page/config/index.js";
 import { getFaviconURL } from "@/entrypoints/page/utils/utils.js";
 import { BOOKMARK_LINK, BookmarkFolderActiveId, BreadcrumbsList, folderIconMode } from "./state.js";
 import { renderBreadcrumbs } from "./breadcrumb.js";
 import { updateSidebarActiveState } from "./sidebar.js";
 import { ContextMenuSet, ContextMenuFolder } from "./contextMenu.js";
 import { BookmarkDrag } from "./drag.js";
+import { getCachedIcon } from "./iconCache.js";
 
-import empty_svg from '/images/empty.svg';
 import default_svg from '/images/default-icon.svg';
 
 // 创建书签卡片元素
@@ -37,14 +35,13 @@ export function createCard(link) {
 
     const cardIcon = document.createElement('img');
 
-    cardIcon.src = empty_svg;
-    db.getData(IconsStr, id).then((data) => {
-        if (data) {
-            cardIcon.src = data.base64;
-        } else {
-            cardIcon.src = getFaviconURL(cardIcon, url) || default_svg;
-        }
-    });
+    // 优先用内存缓存中的自定义图标（同步），无则走 favicon 加载
+    const cachedIcon = getCachedIcon(id);
+    if (cachedIcon) {
+        cardIcon.src = cachedIcon;
+    } else {
+        cardIcon.src = getFaviconURL(cardIcon, url) || default_svg;
+    }
 
     cardIcon.alt = title;
     cardIcon.className = 'w-8 h-8 mr-4 rounded-full flex-shrink-0 card-icon-bg';
@@ -137,14 +134,12 @@ function createMiniFolderSvg(sizeClass = 'w-7') {
 
 // 加载子书签图标并设置到 img 元素（与 createCard 相同的取图逻辑）
 function loadChildFavicon(img, link) {
-    img.src = empty_svg;
-    db.getData(IconsStr, link.id).then((data) => {
-        if (data) {
-            img.src = data.base64;
-        } else {
-            img.src = getFaviconURL(img, link.url) || default_svg;
-        }
-    });
+    const cachedIcon = getCachedIcon(link.id);
+    if (cachedIcon) {
+        img.src = cachedIcon;
+    } else {
+        img.src = getFaviconURL(img, link.url) || default_svg;
+    }
     img.onerror = () => {
         img.src = default_svg;
     };
