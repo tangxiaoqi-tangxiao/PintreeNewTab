@@ -1,6 +1,4 @@
 import default_svg from '/images/default-icon.svg';
-import default_bmp from '/images/browser/default.bmp';
-import default_bmp2 from '/images/browser/default2.bmp';
 
 //全局变量
 const _browserRelatedHeaders = {
@@ -20,12 +18,12 @@ const _browserRelatedHeaders = {
 const _defaultIconSize = 32;
 // 像素比较的归一化尺寸（消除 DPR/尺寸差异）
 const _compareSize = 16;
-// 浏览器默认图标样本：不同缩放/浏览器下返回值不同，命中任一即视为无真实图标
-const _defaultFaviconSources = [default_bmp, default_bmp2];
+// 用于获取浏览器默认图标的无效地址（站点不存在，端点会回退到默认图标）
+const _defaultReferencePage = 'https://pintree-default.invalid/';
+// 默认图标参照缓存：按请求尺寸缓存
+const _defaultRefCache = new Map();
 // 域名级 favicon 判断结果缓存（避免同一域名重复异步判断）
 const _faviconCheckCache = new Map();
-let _defaultFaviconBytesList;
-let _defaultFaviconDataList;
 
 /**
  * 异步获取网站的favicon图标地址，并回调页面标题、兜底图标
@@ -479,31 +477,29 @@ function faviconURL(iconUrl, size) {
     return url.toString();
 }
 
-async function getDefaultFaviconBytesList() {
-    if (_defaultFaviconBytesList !== undefined) return _defaultFaviconBytesList;
-    const results = await Promise.allSettled(
-        _defaultFaviconSources.map(async (src) => {
-            const response = await fetch(src);
+// 用不存在的站点向浏览器端点取当前环境的默认图标作为参照，按尺寸缓存。
+// 返回值 { bytes, imageData }，取不到则为 null。
+async function getDefaultReference(size) {
+    if (_defaultRefCache.has(size)) return _defaultRefCache.get(size);
+    const promise = (async () => {
+        try {
+            const response = await fetch(faviconURL(_defaultReferencePage, size));
             if (!response.ok) return null;
-            const bytes = new Uint8Array(await response.arrayBuffer());
-            return bytes.length ? bytes : null;
-        })
-    );
-    _defaultFaviconBytesList = results
-        .filter((r) => r.status === 'fulfilled' && r.value)
-        .map((r) => r.value);
-    return _defaultFaviconBytesList;
-}
-
-async function getDefaultFaviconDataList() {
-    if (_defaultFaviconDataList !== undefined) return _defaultFaviconDataList;
-    const results = await Promise.allSettled(
-        _defaultFaviconSources.map((src) => loadImageData(src))
-    );
-    _defaultFaviconDataList = results
-        .filter((r) => r.status === 'fulfilled' && r.value)
-        .map((r) => r.value);
-    return _defaultFaviconDataList;
+            const blob = await response.blob();
+            const bytes = new Uint8Array(await blob.arrayBuffer());
+            const objectUrl = URL.createObjectURL(blob);
+            try {
+                const imageData = await loadImageData(objectUrl);
+                return { bytes, imageData };
+            } finally {
+                URL.revokeObjectURL(objectUrl);
+            }
+        } catch (error) {
+            return null;
+        }
+    })();
+    _defaultRefCache.set(size, promise);
+    return promise;
 }
 
 // 将图片缩放到固定小尺寸并取像素数据，用于跨 DPR/尺寸的近似比较
@@ -544,21 +540,23 @@ function areImageDataSimilar(a, b, tolerance = 12) {
 }
 
 // 判断浏览器端点返回的图是否为默认图标：请求失败也算作无真实图标。
-// 先精确字节比较，未命中再按归一化像素近似比较（适配 DPR/尺寸/编码差异）。
+// 参照物由端点对一个不存在站点返回的默认图标动态获取，自动适配浏览器/DPR/尺寸；
+// 先精确字节比较，未命中再按归一化像素近似比较。
 async function isDefaultFavicon(url, size) {
     try {
         const response = await fetch(faviconURL(url, size));
         if (!response.ok) return true;
         const blob = await response.blob();
         const bytes = new Uint8Array(await blob.arrayBuffer());
-        const byteSamples = await getDefaultFaviconBytesList();
-        if (byteSamples.some((data) => areBytesEqual(bytes, data))) return true;
+
+        const reference = await getDefaultReference(size);
+        if (!reference) return false;
+        if (areBytesEqual(bytes, reference.bytes)) return true;
 
         const objectUrl = URL.createObjectURL(blob);
         try {
             const targetData = await loadImageData(objectUrl);
-            const dataSamples = await getDefaultFaviconDataList();
-            return dataSamples.some((data) => areImageDataSimilar(targetData, data));
+            return areImageDataSimilar(targetData, reference.imageData);
         } finally {
             URL.revokeObjectURL(objectUrl);
         }
@@ -567,10 +565,9 @@ async function isDefaultFavicon(url, size) {
     }
 }
 
-// 预加载浏览器默认图标样本（初始化时提前调用，避免首屏逐个判断时等待）
+// 预加载默认图标参照（初始化时提前调用，避免首屏逐个判断时等待）
 export function preloadFaviconDefaultData() {
-    getDefaultFaviconBytesList();
-    return getDefaultFaviconDataList();
+    return getDefaultReference(_defaultIconSize);
 }
 
 // 检查站点是否拥有真实 favicon（非浏览器默认图标），结果按域名缓存
