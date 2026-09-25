@@ -1,5 +1,5 @@
 import { BookmarkFolderActiveId, BOOKMARK_LINK, firstLayer } from "./state.js";
-import { findInTree, isValidUrl, fetchFaviconAsBase64, convertBlobToBase64, debounce } from "@/entrypoints/page/utils/utils.js";
+import { findInTree, isValidUrl, fetchFavicon, convertBlobToBase64, debounce } from "@/entrypoints/page/utils/utils.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { IconsStr } from "@/entrypoints/page/config/index.js";
 import { CreateSidebarItemArrowIcon, GetParentIdElement } from "./sidebar.js";
@@ -34,17 +34,28 @@ export function initBookmarkEditor() {
     const refreshIcon = document.getElementById("refreshIcon");
 
     const debouncedSearch = debounce(async (event) => {
-        let data = await fetchFaviconAsBase64(event.target.value);
+        const requestedUrl = event.target.value;
+        const isCurrent = () => websiteLink.value === requestedUrl;
+        const data = await fetchFavicon(requestedUrl, {
+            onTitle: (title) => {
+                if (isCurrent() && websiteName.value.trim() === "") {
+                    websiteName.value = title;
+                }
+            },
+            onIcon: (base64) => {
+                if (!isCurrent()) return;
+                PreviewImage.src = base64;
+                ToggleSvgOrImage(false);
+            },
+        });
 
+        if (!isCurrent()) return;
         if (data) {
-            if (data.base64) {
-                PreviewImage.src = data.base64;
+            if (data.url) {
+                PreviewImage.src = data.url;
                 ToggleSvgOrImage(false);
             } else {
                 ToggleSvgOrImage(true);
-            }
-            if (websiteName.value.trim() === "" && data.title) {
-                websiteName.value = data.title;
             }
         } else {
             ToggleSvgOrImage(true);
@@ -67,27 +78,37 @@ export function initBookmarkEditor() {
 
     refreshIcon.ondblclick = () => {
         const url = websiteLink.value;
-        fetchFaviconAsBase64(url)
-            .then((data) => {
-                if (data) {
-                    if (websiteName.value.trim() === "" && data.title) {
-                        websiteName.value = data.title;
-                    }
-
-                    if (data.base64) {
-                        PreviewImage.src = data.base64;
-                        ToggleSvgOrImage(false);
-                    } else {
-                        ToggleSvgOrImage(true);
-                    }
+        const isCurrent = () => websiteLink.value === url;
+        fetchFavicon(url, {
+            onTitle: (title) => {
+                if (isCurrent() && websiteName.value.trim() === "") {
+                    websiteName.value = title;
+                }
+            },
+            onIcon: (base64) => {
+                if (!isCurrent()) return;
+                PreviewImage.src = base64;
+                ToggleSvgOrImage(false);
+            },
+        }).then((data) => {
+            if (!isCurrent()) return;
+            if (data) {
+                if (data.url) {
+                    PreviewImage.src = data.url;
+                    ToggleSvgOrImage(false);
                 } else {
                     ToggleSvgOrImage(true);
                 }
-            });
+            } else {
+                ToggleSvgOrImage(true);
+            }
+        });
     }
 
     imageInput.addEventListener('change', function (event) {
         const file = event.target.files[0];
+        // 清空以便再次选择同一文件时仍能触发 change
+        event.target.value = '';
 
         if (file) {
             convertBlobToBase64(file)
@@ -138,12 +159,13 @@ export function SaveBookmark(id, element) {
     const editBookmark_modal = document.getElementById('editBookmark_modal');
 
     const iconBorder = document.querySelector('.iconBorder.border-main-500');
+    const linkValue = websiteLink.value.trim();
 
     const img = element?.querySelector('img');
     const name = element?.querySelector('h2');
     const linkText = element?.querySelector('p');
 
-    if (websiteLink.value === "") {
+    if (linkValue === "") {
         websiteLinkError.classList.remove('hidden');
         websiteLinkError2.classList.add('hidden');
         return;
@@ -151,7 +173,7 @@ export function SaveBookmark(id, element) {
         websiteLinkError.classList.add('hidden');
     }
 
-    if (!isValidUrl(websiteLink.value)) {
+    if (!isValidUrl(linkValue)) {
         ShowLinkError(websiteLinkError2, "invalidUrl");
         websiteLinkError.classList.add('hidden');
         return;
@@ -164,7 +186,7 @@ export function SaveBookmark(id, element) {
     if (id > 0) {
         excludeId = id;
     }
-    if (findDuplicateBookmark(websiteLink.value, excludeId)) {
+    if (findDuplicateBookmark(linkValue, excludeId)) {
         ShowLinkError(websiteLinkError2, "bookmarkExists");
         return;
     }
@@ -186,7 +208,7 @@ export function SaveBookmark(id, element) {
     if (id > 0) {
         chrome.bookmarks.update(id, {
             title: websiteName.value,
-            url: websiteLink.value
+            url: linkValue
         }, (updatedBookmark) => {
             if (ErrorMessageNotification()) {
                 return;
@@ -194,10 +216,10 @@ export function SaveBookmark(id, element) {
             findInTree(firstLayer, (node) => {
                 if (node.id === id) {
                     node.title = websiteName.value;
-                    node.url = websiteLink.value;
-                    element.href = websiteLink.value;
+                    node.url = linkValue;
+                    element.href = linkValue;
 
-                    linkText.textContent = websiteLink.value;
+                    linkText.textContent = linkValue;
                     name.textContent = websiteName.value;
 
                     if (iconBorder.classList.contains('image')) {
@@ -214,7 +236,7 @@ export function SaveBookmark(id, element) {
                         }
                     } else if (!iconBorder.classList.contains('default')) {
                         img.src = PreviewImage.src;
-                        if (PreviewImage.src != location.href) {
+                        if (isPersistableIcon(PreviewImage.src)) {
                             setCachedIcon(id, PreviewImage.src);
                             db.getData(IconsStr, id).then((data) => {
                                 if (data) {
@@ -240,7 +262,7 @@ export function SaveBookmark(id, element) {
         chrome.bookmarks.create({
             parentId: BookmarkFolderActiveId,
             title: websiteName.value,
-            url: websiteLink.value
+            url: linkValue
         }, (newBookmark) => {
             if (ErrorMessageNotification()) {
                 return;
@@ -269,7 +291,7 @@ export function SaveBookmark(id, element) {
                             db.addData(IconsStr, { base64: localPreviewImage.src, id: link.id });
                         }
                     } else if (!iconBorder.classList.contains('default')) {
-                        if (PreviewImage.src != location.href) {
+                        if (isPersistableIcon(PreviewImage.src)) {
                             imgsrc = PreviewImage.src;
                             setCachedIcon(link.id, PreviewImage.src);
                             db.addData(IconsStr, { base64: PreviewImage.src, id: link.id });
@@ -341,6 +363,15 @@ function ShowLinkError(element, messageKey) {
 function isSameUrl(url1, url2) {
     const normalize = (u) => String(u || "").trim().replace(/\/+$/, "");
     return normalize(url1) === normalize(url2);
+}
+
+// 判断图标地址是否需要持久化：chrome-extension（浏览器本地端点）和 blob（会话级地址）
+// 都不写入 IndexedDB。渲染时会自动重新获取 chrome-extension 图标。
+function isPersistableIcon(src) {
+    return Boolean(src)
+        && src !== location.href
+        && !src.startsWith('chrome-extension://')
+        && !src.startsWith('blob:');
 }
 
 // 在整棵书签树中查找已存在相同链接的书签（可排除自身，用于编辑场景）

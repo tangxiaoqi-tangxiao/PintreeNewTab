@@ -1,4 +1,6 @@
 import default_svg from '/images/default-icon.svg';
+import default_bmp from '/images/browser/default.bmp';
+import default_bmp2 from '/images/browser/default2.bmp';
 
 //全局变量
 const _browserRelatedHeaders = {
@@ -13,49 +15,55 @@ const _browserRelatedHeaders = {
     "sec-ch-ua-platform-version": "15.0.0",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 };
-// 预加载默认图标数据
-let _defaultImageData;
+
+// 请求浏览器端点时使用的尺寸
+const _defaultIconSize = 32;
+// 像素比较的归一化尺寸（消除 DPR/尺寸差异）
+const _compareSize = 16;
+// 浏览器默认图标样本：不同缩放/浏览器下返回值不同，命中任一即视为无真实图标
+const _defaultFaviconSources = [default_bmp, default_bmp2];
+// 域名级 favicon 判断结果缓存（避免同一域名重复异步判断）
+const _faviconCheckCache = new Map();
+let _defaultFaviconBytesList;
+let _defaultFaviconDataList;
 
 /**
- * 异步获取网站的favicon图标，并将其转换为base64编码字符串
+ * 异步获取网站的favicon图标地址，并回调页面标题、兜底图标
  * @param {string} url - 要获取图标的网站的URL
- * @returns {Promise} - 解析为包含base64编码图标的对象的Promise，如果获取失败则返回null
+ * @param {{onTitle?: Function, onIcon?: Function}} [handlers] - onTitle 回调页面标题，onIcon 回调兜底图标
+ * @returns {Promise} - 解析为包含图标地址的对象，如果获取失败则返回null
  */
-async function fetchFaviconAsBase64(url) {
+async function fetchFavicon(url, { onTitle, onIcon } = {}) {
     if (!isValidUrl(url)) return null;
 
-    // 并行：优先用浏览器本地 favicon 端点取图标（不依赖目标站跨域），同时抓取页面 HTML 取标题
-    const [endpointBase64, page] = await Promise.all([
-        fetchFaviconFromEndpoint(url),
-        fetchPageInfo(url),
-    ]);
+    // 图标优先：走浏览器本地 favicon 端点，快速返回，不等待页面 HTML
+    const faviconUrl = await fetchFaviconFromEndpoint(url);
 
-    // 端点未取到图标时，降级解析页面 <link rel="icon"> 兜底
-    let base64 = endpointBase64;
-    if (!base64 && page && page.iconLinks.length > 0) {
-        base64 = await fetchFaviconHtmlFallback(url, page.iconLinks);
-    }
+    // 页面 HTML 后台获取（不阻塞图标显示）：
+    // 1) 补页面标题；2) 端点没拿到图标时，用 <link rel="icon"> 兜底
+    fetchPageInfo(url).then(async (page) => {
+        if (!page) return;
+        if (typeof onTitle === 'function' && page.title) {
+            onTitle(page.title);
+        }
+        if (!faviconUrl && typeof onIcon === 'function' && page.iconLinks.length > 0) {
+            const fallback = await fetchFaviconHtmlFallback(url, page.iconLinks);
+            if (fallback) onIcon(fallback);
+        }
+    });
 
-    return { base64, title: page ? page.title : null };
+    return { url: faviconUrl };
 }
 
-// 通过浏览器本地 favicon 端点获取图标并转为 base64；站点无真实图标时返回 null。
+// 通过浏览器本地 favicon 端点获取图标地址；站点无真实图标时返回 null。
 // 该端点由浏览器提供，不受目标站 CORS 限制，比直接抓取站点 HTML 更可靠。
 async function fetchFaviconFromEndpoint(url, size = 128) {
-    try {
-        const hasCustom = await checkFavicon(url);
-        if (!hasCustom) return null;
-        const response = await fetch(faviconURL(url, size));
-        if (!response.ok) return null;
-        const blob = await response.blob();
-        if (!blob || blob.size === 0) return null;
-        return await convertBlobToBase64(blob);
-    } catch (error) {
-        return null;
-    }
+    // 用最终展示的尺寸取图判定，返回同一个 URL，调用方 img 加载时可直接命中缓存
+    if (await isDefaultFavicon(url, size)) return null;
+    return faviconURL(url, size);
 }
 
-// 抓取站点 HTML，返回标题与按优先级排序的候选图标链接（可能因跨域限制失败，失败返回 null）
+// 后台抓取站点 HTML，返回标题与按优先级排序的候选图标链接（可能因跨域限制失败，失败返回 null）
 async function fetchPageInfo(url) {
     try {
         const response = await fetchWithTimeout(url, { headers: _browserRelatedHeaders }, 5000);
@@ -79,7 +87,7 @@ function iconLinkPriority(link) {
     return 1;
 }
 
-// 端点未取到图标时的兜底：按候选链接抓取图标并转 base64
+// 端点未取到图标时的后台兜底：按候选链接抓取图标并转 base64
 async function fetchFaviconHtmlFallback(url, iconLinks) {
     try {
         const { blob, faviconUrl } = await fetchFaviconBlobData(url, iconLinks);
@@ -464,11 +472,6 @@ async function fetchFaviconBlobData(url, iconLinks) {
     }
 }
 
-// 声明图像比较图片大小(越小速度越快，但是准确率会降低)
-const _compareSize = 2;
-// 域名级 favicon 判断结果缓存（避免同一域名重复异步判断）
-const _faviconCheckCache = new Map();
-
 function faviconURL(iconUrl, size) {
     const url = new URL(chrome.runtime.getURL("/_favicon/"));
     url.searchParams.set("pageUrl", iconUrl);
@@ -476,8 +479,35 @@ function faviconURL(iconUrl, size) {
     return url.toString();
 }
 
-// 加载图像并缩放为小尺寸像素数据
-function loadImage(url) {
+async function getDefaultFaviconBytesList() {
+    if (_defaultFaviconBytesList !== undefined) return _defaultFaviconBytesList;
+    const results = await Promise.allSettled(
+        _defaultFaviconSources.map(async (src) => {
+            const response = await fetch(src);
+            if (!response.ok) return null;
+            const bytes = new Uint8Array(await response.arrayBuffer());
+            return bytes.length ? bytes : null;
+        })
+    );
+    _defaultFaviconBytesList = results
+        .filter((r) => r.status === 'fulfilled' && r.value)
+        .map((r) => r.value);
+    return _defaultFaviconBytesList;
+}
+
+async function getDefaultFaviconDataList() {
+    if (_defaultFaviconDataList !== undefined) return _defaultFaviconDataList;
+    const results = await Promise.allSettled(
+        _defaultFaviconSources.map((src) => loadImageData(src))
+    );
+    _defaultFaviconDataList = results
+        .filter((r) => r.status === 'fulfilled' && r.value)
+        .map((r) => r.value);
+    return _defaultFaviconDataList;
+}
+
+// 将图片缩放到固定小尺寸并取像素数据，用于跨 DPR/尺寸的近似比较
+function loadImageData(src) {
     return new Promise((resolve, reject) => {
         const img = new Image();
         img.onload = () => {
@@ -489,30 +519,58 @@ function loadImage(url) {
             resolve(ctx.getImageData(0, 0, _compareSize, _compareSize));
         };
         img.onerror = reject;
-        img.src = url;
+        img.src = src;
     });
 }
 
-// 比较图像数据
-function areImageDataEqual(a, b) {
-    if (a.width !== b.width || a.height !== b.height) return false;
-    const dataA = a.data;
-    const dataB = b.data;
-    for (let i = 0; i < dataA.length; i++) {
-        if (dataA[i] !== dataB[i]) return false;
+// 比较两段字节数据是否完全一致
+function areBytesEqual(a, b) {
+    if (!a || !b || a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
     }
     return true;
 }
 
-// 预加载浏览器默认图标的像素数据（初始化时提前调用，避免首屏逐个判断时等待）
+// 比较两段像素数据是否近似一致（容忍重采样带来的差异）
+function areImageDataSimilar(a, b, tolerance = 12) {
+    if (!a || !b || a.width !== b.width || a.height !== b.height) return false;
+    const da = a.data;
+    const db = b.data;
+    for (let i = 0; i < da.length; i++) {
+        if (Math.abs(da[i] - db[i]) > tolerance) return false;
+    }
+    return true;
+}
+
+// 判断浏览器端点返回的图是否为默认图标：请求失败也算作无真实图标。
+// 先精确字节比较，未命中再按归一化像素近似比较（适配 DPR/尺寸/编码差异）。
+async function isDefaultFavicon(url, size) {
+    try {
+        const response = await fetch(faviconURL(url, size));
+        if (!response.ok) return true;
+        const blob = await response.blob();
+        const bytes = new Uint8Array(await blob.arrayBuffer());
+        const byteSamples = await getDefaultFaviconBytesList();
+        if (byteSamples.some((data) => areBytesEqual(bytes, data))) return true;
+
+        const objectUrl = URL.createObjectURL(blob);
+        try {
+            const targetData = await loadImageData(objectUrl);
+            const dataSamples = await getDefaultFaviconDataList();
+            return dataSamples.some((data) => areImageDataSimilar(targetData, data));
+        } finally {
+            URL.revokeObjectURL(objectUrl);
+        }
+    } catch (error) {
+        return true;
+    }
+}
+
+// 预加载浏览器默认图标样本（初始化时提前调用，避免首屏逐个判断时等待）
 export function preloadFaviconDefaultData() {
-    if (_defaultImageData) return Promise.resolve(_defaultImageData);
-    return loadImage(faviconURL("undefined", _compareSize))
-        .then((data) => {
-            _defaultImageData = data;
-            return data;
-        })
-        .catch(() => null);
+    getDefaultFaviconBytesList();
+    return getDefaultFaviconDataList();
 }
 
 // 检查站点是否拥有真实 favicon（非浏览器默认图标），结果按域名缓存
@@ -530,14 +588,7 @@ async function checkFavicon(url) {
 }
 
 async function checkFaviconWithoutCache(url) {
-    try {
-        const ref = await preloadFaviconDefaultData();
-        if (!ref) return false;
-        const targetData = await loadImage(faviconURL(url, _compareSize));
-        return !areImageDataEqual(targetData, ref);
-    } catch (e) {
-        return false;
-    }
+    return !(await isDefaultFavicon(url, _defaultIconSize));
 }
 
 // 获取站点 favicon：初始返回自定义默认图标，确认站点有真实图标后才异步替换为 favicon 地址。
@@ -551,7 +602,7 @@ function getFaviconURL(image, pageUrl, size = 32) {
 }
 
 export {
-    fetchFaviconAsBase64,
+    fetchFavicon,
     debounce,
     findInTree,
     deleteFromTree,

@@ -1,5 +1,5 @@
 import { BOOKMARK_LINK, firstLayer, BookmarkFolderActiveId, BreadcrumbsList } from "./state.js";
-import { findInTree, deleteFromTree, findParentFolders, fetchFaviconAsBase64 } from "@/entrypoints/page/utils/utils.js";
+import { findInTree, deleteFromTree, findParentFolders, fetchFavicon } from "@/entrypoints/page/utils/utils.js";
 import { CreateSidebarItem, GetParentIdElement, renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds, updateSidebarActiveState } from "./sidebar.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { IconsStr } from "@/entrypoints/page/config/index.js";
@@ -128,10 +128,18 @@ export function ContextMenu(e, link) {
 
             ToggleSvgOrImageFn(true);
             ToggleSvgOrImageFn(true, true);
-            fetchFaviconAsBase64(url)
+            const isCurrent = () => websiteLink.value === url;
+            fetchFavicon(url, {
+                onIcon: (base64) => {
+                    if (!isCurrent()) return;
+                    PreviewImage.src = base64;
+                    ToggleSvgOrImageFn(false);
+                },
+            })
                 .then((data) => {
-                    if (data && data.base64) {
-                        PreviewImage.src = data.base64;
+                    if (!isCurrent()) return;
+                    if (data && data.url) {
+                        PreviewImage.src = data.url;
                         ToggleSvgOrImageFn(false);
                     } else {
                         ToggleSvgOrImageFn(true);

@@ -30,9 +30,12 @@ html {
     color: rgb(156, 163, 175);
 }
 
-/*卡片提示最大宽度，防止超出卡片宽度，导致出现水平滚动条*/
+/* 卡片提示最大宽度，防止超出卡片宽度，导致出现水平滚动条；
+   长标题/长 URL 无空格时强制断行，避免文字溢出 tooltip 盒子撑大 scrollWidth */
 .bookmark-link .tooltip:before {
     max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* 右键添加书签/文件夹弹窗：取消关闭过渡动画，避免点击取消后延迟消失 */

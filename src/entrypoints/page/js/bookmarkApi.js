@@ -146,7 +146,7 @@ export async function MoveFolderToFront() {
 export async function BookmarkInitialize(renderNavigation, closeMenuFn) {
     // 一并完成文件夹前置排序与图标缓存预加载（渲染时同步取用图标，避免逐卡片查询 IndexedDB）
     await Promise.all([MoveFolderToFront(), loadIconCache()]);
-    // 预加载浏览器默认图标像素数据，加速 favicon 判断，减少加载时的图标闪烁
+    // 预加载浏览器默认图标数据，加速 favicon 判断，减少加载时的图标闪烁
     preloadFaviconDefaultData();
     fetchBookmarks()
         .then(async data => {
