@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "Copy URL"
     },
+    "openBookmarkFolder": {
+        "message": "Open containing folder"
+    },
     "editBookmark": {
         "message": "Edit Bookmark"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "Folders will be moved to the very front of all bookmarks"
     },
+    "setDragEnabled": {
+        "message": "Allow dragging bookmarks"
+    },
     "setDragToSidebar": {
-        "message": "Allow drag to sidebar"
+        "message": "Allow drag to folders"
     },
     "bookmarkAdd": {
         "message": "Add Bookmark"

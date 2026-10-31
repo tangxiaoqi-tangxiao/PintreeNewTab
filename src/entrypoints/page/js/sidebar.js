@@ -1,13 +1,21 @@
-import { BookmarkFolderActiveId, BreadcrumbsList, setBookmarkFolderActiveId, setBreadcrumbsList, firstLayer } from "./state.js";
+import { BookmarkFolderActiveId, BreadcrumbsList, setBookmarkFolderActiveId, setBreadcrumbsList } from "./state.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
 import { SetUpStr } from "@/entrypoints/page/config/index.js";
-import { findInTree, findParentFolders } from "@/entrypoints/page/utils/utils.js";
 
-let renderBookmarksFn = null;
+let navigateToFolderFn = null;
 
-// 设置渲染书签的回调函数
-export function setRenderBookmarks(fn) {
-    renderBookmarksFn = fn;
+// 设置跳转到指定文件夹的回调函数
+export function setNavigateToFolder(fn) {
+    navigateToFolderFn = fn;
+}
+
+// 箭头点击仅展开/折叠，不跳转、不更新书签内容
+function bindToggleIcon(toggleIcon, toggleFn, closeMenuFn) {
+    toggleIcon.onclick = (e) => {
+        e.stopPropagation();
+        closeMenuFn();
+        toggleFn();
+    };
 }
 
 // 渲染侧边栏导航（使用栈模拟递归构建文件夹树）
@@ -55,6 +63,11 @@ export function renderNavigation(folders, container, isFirstRender = false, path
                         }
                     }
 
+                    bindToggleIcon(toggleIcon, () => {
+                        subList.classList.toggle('hidden');
+                        toggleIcon.classList.toggle('rotate-90');
+                    }, closeMenuFn);
+
                     navItem.onclick = (e) => {
                         closeMenuFn();
                         e.stopPropagation();
@@ -63,22 +76,14 @@ export function renderNavigation(folders, container, isFirstRender = false, path
                             subList.classList.toggle('hidden');
                             toggleIcon.classList.toggle('rotate-90');
                         }
-                        renderBookmarksFn(folder.children, path.concat({
-                            id: folder.id,
-                            title: folder.title,
-                            children: folder.children
-                        }));
+                        navigateToFolderFn(folder.id);
                     };
                 } else {
                     navItem.onclick = (e) => {
                         closeMenuFn();
                         e.stopPropagation();
                         document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
-                        renderBookmarksFn(folder.children, path.concat({
-                            id: folder.id,
-                            title: folder.title,
-                            children: folder.children
-                        }));
+                        navigateToFolderFn(folder.id);
                     };
                 }
             }
@@ -139,14 +144,25 @@ export function CreateSidebarItem(folder, path, closeMenuFn) {
 
     if (navItem_.nextElementSibling && navItem_.nextElementSibling.tagName === 'UL') {
         container = navItem_.nextElementSibling;
-        if (!navItem_.querySelector("li>span")) {
-            navItem_.appendChild(CreateIconElement());
+        let icon = navItem_.querySelector(':scope > span');
+        if (!icon) {
+            icon = CreateIconElement();
+            navItem_.appendChild(icon);
         }
+        bindToggleIcon(icon, () => {
+            container.classList.toggle('hidden');
+            icon.classList.toggle('rotate-90');
+        }, closeMenuFn);
     } else {
         container = document.createElement('ul');
         let icon = CreateSidebarItemArrowIcon(folder.parentId);
         container.className = 'ml-4 space-y-2 hidden';
         navItem_.parentNode.insertBefore(container, navItem_.nextSibling);
+
+        bindToggleIcon(icon, () => {
+            container.classList.toggle('hidden');
+            icon.classList.toggle('rotate-90');
+        }, closeMenuFn);
 
         navItem_.onclick = (e) => {
             closeMenuFn();
@@ -154,14 +170,7 @@ export function CreateSidebarItem(folder, path, closeMenuFn) {
             document.querySelectorAll('#navigation .sidebar-active').forEach(el => el.classList.remove('sidebar-active'));
             container.classList.toggle('hidden');
             icon.classList.toggle('rotate-90');
-            let ParentNode = null;
-            findInTree(firstLayer, (node) => {
-                if (node.id === folder.parentId) {
-                    ParentNode = node;
-                    return true;
-                }
-            });
-            renderBookmarksFn(ParentNode.children, path);
+            navigateToFolderFn(folder.parentId);
         }
     }
 
@@ -169,6 +178,10 @@ export function CreateSidebarItem(folder, path, closeMenuFn) {
     const toggleIcon = CreateIconElement();
     if (folder.children && folder.children.length > 0) {
         navItem.appendChild(toggleIcon);
+        bindToggleIcon(toggleIcon, () => {
+            container.classList.toggle('hidden');
+            toggleIcon.classList.toggle('rotate-90');
+        }, closeMenuFn);
     }
     container.appendChild(navItem);
 
@@ -180,11 +193,7 @@ export function CreateSidebarItem(folder, path, closeMenuFn) {
             container.classList.toggle('hidden');
             toggleIcon.classList.toggle('rotate-90');
         }
-        renderBookmarksFn(folder.children, path.concat({
-            id: folder.id,
-            title: folder.title,
-            children: folder.children
-        }));
+        navigateToFolderFn(folder.id);
     };
 }
 
@@ -203,7 +212,7 @@ export function GetParentIdElement(ActiveId) {
 // 创建或获取侧边栏项的展开箭头图标
 export function CreateSidebarItemArrowIcon(parentId) {
     let navItem = GetParentIdElement(parentId);
-    let icon = navItem.querySelector("li>span");
+    let icon = navItem.querySelector(':scope > span');
     if (!icon) {
         icon = CreateIconElement();
         navItem.appendChild(icon);
@@ -237,7 +246,7 @@ export function CreateSidebarItemElement(title, id) {
 // 创建展开/折叠箭头图标元素
 export function CreateIconElement() {
     const toggleIcon = document.createElement('span');
-    toggleIcon.className = 'ml-2 transform transition-transform';
+    toggleIcon.className = 'ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full cursor-pointer text-gray-500 dark:text-gray-400 hover:bg-gray-200 hover:text-gray-700 dark:hover:bg-white/10 dark:hover:text-gray-100 transform transition';
     toggleIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
     return toggleIcon;
 }

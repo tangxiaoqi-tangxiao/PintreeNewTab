@@ -1,7 +1,6 @@
-import { firstLayer, BookmarkFolderActiveId, SearchOldBookmarkFolderActiveId, setSearchOldBookmarkFolderActiveId, setBookmarkFolderActiveId } from "./state.js";
+import { BookmarkFolderActiveId, SearchOldBookmarkFolderActiveId, setSearchOldBookmarkFolderActiveId, setBookmarkFolderActiveId } from "./state.js";
 import { fetchBookmarks } from "./bookmarkApi.js";
-import { GetParentIdElement } from "./sidebar.js";
-import { findInTree, findParentFolders } from "@/entrypoints/page/utils/utils.js";
+import { navigateToFolder } from "./bookmarkRender.js";
 
 let renderBookmarksFn = null;
 
@@ -10,30 +9,24 @@ export function setRenderBookmarks(fn) {
     renderBookmarksFn = fn;
 }
 
-// 在书签数据中递归搜索匹配的项
-export function searchInData(data, query, currentTab) {
+// 在书签数据中递归搜索匹配的项，并记录每项所在的父文件夹路径（parentPath）
+export function searchInData(data, query, currentTab, parentPath = []) {
     query = query.toLowerCase();
     let results = [];
     data.forEach(item => {
-        if (currentTab === "All_bookmarks") {
-            if (item.title.toLowerCase().includes(query)) {
-                results.push(item);
-            }
-            if (item.children) {
-                const childResults = searchInData(item.children, query, currentTab);
-                if (childResults.length > 0) {
-                    results = results.concat(childResults);
-                }
-            }
-        } else {
-            if (item.parentId == BookmarkFolderActiveId && item.title.toLowerCase().includes(query)) {
-                results.push(item);
-            }
-            if (item.children) {
-                const childResults = searchInData(item.children, query, currentTab);
-                if (childResults.length > 0) {
-                    results = results.concat(childResults);
-                }
+        const itemPath = item.children
+            ? parentPath.concat({ id: item.id, title: item.title })
+            : parentPath;
+        const isMatch = item.title.toLowerCase().includes(query)
+            && (currentTab === "All_bookmarks" || item.parentId == BookmarkFolderActiveId);
+        if (isMatch) {
+            item.folderPath = parentPath;
+            results.push(item);
+        }
+        if (item.children) {
+            const childResults = searchInData(item.children, query, currentTab, itemPath);
+            if (childResults.length > 0) {
+                results = results.concat(childResults);
             }
         }
     });
@@ -42,19 +35,7 @@ export function searchInData(data, query, currentTab) {
 
 // 清除搜索结果并恢复到指定文件夹的书签视图
 export function clearSearchResults(ActiveId) {
-    let item = GetParentIdElement(ActiveId);
-    item.classList.add("sidebar-active");
-
-    findInTree(firstLayer, (node) => {
-        if (node.id === ActiveId) {
-            let path = findParentFolders(firstLayer, ActiveId).slice(0, -1);
-            renderBookmarksFn(node.children, path.concat({
-                id: node.id,
-                title: node.title,
-                children: node.children
-            }));
-        }
-    });
+    navigateToFolder(ActiveId);
 }
 
 // 搜索书签（支持全部搜索和当前文件夹搜索）

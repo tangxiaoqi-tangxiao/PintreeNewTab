@@ -1,5 +1,5 @@
-import { getFaviconURL } from "@/entrypoints/page/utils/utils.js";
-import { BOOKMARK_LINK, BookmarkFolderActiveId, BreadcrumbsList, folderIconMode } from "./state.js";
+import { getFaviconURL, findInTree, findParentFolders } from "@/entrypoints/page/utils/utils.js";
+import { BOOKMARK_LINK, firstLayer, BookmarkFolderActiveId, BreadcrumbsList, folderIconMode } from "./state.js";
 import { renderBreadcrumbs } from "./breadcrumb.js";
 import { updateSidebarActiveState } from "./sidebar.js";
 import { ContextMenuSet, ContextMenuFolder } from "./contextMenu.js";
@@ -66,6 +66,27 @@ export function createCard(link) {
     cardContent.appendChild(cardTitle);
     cardContent.appendChild(cardUrl);
 
+    // 搜索结果中显示书签所在目录路径，便于定位来源
+    if (link.folderPath && link.folderPath.length > 0) {
+        const folderPathText = link.folderPath.map(folder => folder.title).join(' / ');
+
+        const cardPath = document.createElement('div');
+        cardPath.className = 'flex items-center gap-1 mt-1 min-w-0 text-gray-500 dark:text-gray-400';
+        cardPath.title = folderPathText;
+
+        const pathIcon = document.createElement('span');
+        pathIcon.className = 'flex-shrink-0';
+        pathIcon.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h7a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" /></svg>';
+
+        const pathText = document.createElement('span');
+        pathText.className = 'text-left text-[11px] truncate';
+        pathText.innerText = folderPathText;
+
+        cardPath.appendChild(pathIcon);
+        cardPath.appendChild(pathText);
+        cardContent.appendChild(cardPath);
+    }
+
     card.appendChild(cardIcon);
     card.appendChild(cardContent);
 
@@ -90,8 +111,7 @@ function createClassicFolderCard(folder, path) {
     card.dataset.parentId = folder.parentId || '';
     card.dataset.type = 'folder';
     card.onclick = () => {
-        const newPath = path.concat(folder);
-        renderBookmarks(folder.children, newPath);
+        navigateToFolder(folder.id);
     };
     card.oncontextmenu = (e) => ContextMenuFolder(e, folder);
 
@@ -105,7 +125,7 @@ function createClassicFolderCard(folder, path) {
         <rect x="0" y="10" width="100" height="70" class="folder__front right" />
       </svg>
     `;
-    cardIcon.className = 'mb-2';
+    cardIcon.className = 'mb-2 folder-icon-classic';
 
     const cardTitle = document.createElement('h2');
     cardTitle.className = 'text-xs font-normal text-center w-full truncate text-gray-900 dark:text-gray-100';
@@ -189,8 +209,7 @@ function createFolderIconCard(folder, path) {
     card.dataset.parentId = folder.parentId || '';
     card.dataset.type = 'folder';
     card.onclick = () => {
-        const newPath = path.concat(folder);
-        renderBookmarks(folder.children, newPath);
+        navigateToFolder(folder.id);
     };
     card.oncontextmenu = (e) => ContextMenuFolder(e, folder);
 
@@ -204,6 +223,16 @@ function createFolderIconCard(folder, path) {
     card.appendChild(cardTitle);
 
     return card;
+}
+
+// 通用跳转：根据文件夹 id 定位文件夹并渲染其内容（同步更新面包屑与侧边栏选中态）
+export function navigateToFolder(folderId) {
+    const folder = findInTree(firstLayer, (node) => node.id === folderId);
+    if (!folder) {
+        return false;
+    }
+    renderBookmarks(folder.children || [], findParentFolders(firstLayer, folderId));
+    return true;
 }
 
 // 按当前面包屑路径重新渲染主内容区域

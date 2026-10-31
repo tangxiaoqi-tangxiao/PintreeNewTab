@@ -4,6 +4,7 @@ export let BookmarkFolderActiveId = null; // 当前活跃的文件夹id
 export let SearchOldBookmarkFolderActiveId = null; // 搜索之前活跃的文件夹id
 export let BreadcrumbsList = []; // 面包屑列表
 export let folderIconMode = false; // 文件夹图标显示模式开关
+export let dragEnabled = true; // 是否允许拖动书签/文件夹（默认允许）
 
 export const BOOKMARK_LINK = "bookmark-link"; // 书签链接CSS类名
 
@@ -17,3 +18,5 @@ export function setSearchOldBookmarkFolderActiveId(id) { SearchOldBookmarkFolder
 export function setBreadcrumbsList(list) { BreadcrumbsList = list; }
 // 设置文件夹图标显示模式
 export function setFolderIconMode(v) { folderIconMode = v; }
+// 设置是否允许拖动
+export function setDragEnabled(v) { dragEnabled = v; }

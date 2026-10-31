@@ -9,23 +9,23 @@ import baidu_svg from '~/assets/svg/baidu.svg';
 
 // 模块导入
 import { BookmarkInitialize, DelIconsCache } from "./bookmarkApi.js";
-import { renderBookmarks, createFolderCard, createCard, showNoResultsMessage, mainContentIsNull, bookmarkIsNull, folderIsNull } from "./bookmarkRender.js";
-import { renderNavigation, setRenderBookmarks as setSidebarRenderBookmarks, CreateSidebarItem } from "./sidebar.js";
-import { setRenderBookmarksRef } from "./breadcrumb.js";
+import { renderBookmarks, navigateToFolder, createFolderCard, createCard, showNoResultsMessage, mainContentIsNull, bookmarkIsNull, folderIsNull } from "./bookmarkRender.js";
+import { renderNavigation, setNavigateToFolder as setSidebarNavigateToFolder, CreateSidebarItem } from "./sidebar.js";
+import { setNavigateToFolder as setBreadcrumbNavigateToFolder } from "./breadcrumb.js";
 import { ContextMenuBlank, closeMenu } from "./contextMenu.js";
 import { initBookmarkEditor, SaveBookmark, BookmarkEditErrorHide, EmptyBookmarkEdit, ToggleSvgOrImage, setCreateCard as setEditorCreateCard, setBookmarkDrag as setEditorBookmarkDrag, setMainContentIsNull as setEditorMainContentIsNull, setBookmarkIsNull as setEditorBookmarkIsNull, setFolderIsNull as setEditorFolderIsNull } from "./bookmarkEditor.js";
 import { Search, setRenderBookmarks as setSearchRenderBookmarks } from "./search.js";
 import { applyThemeMode, toggleTheme } from "./theme.js";
-import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode, SetDragToSidebar } from "./settings.js";
+import { SetCloseContextMenu, SetBookmarkNewTab, SetFolderIconMode, SetMoveFolderToFront, SetThemeMode, SetDragToSidebar, SetDragEnabled } from "./settings.js";
 import { i18n } from "./i18n.js";
 import { ShowChangelog } from "./changelog.js";
 import { BookmarkDrag } from "./drag.js";
 import { BookmarkFolderActiveId, BOOKMARK_LINK } from "./state.js";
-import { setCreateCard as setContextMenuCreateCard, setShowNoResultsMessage, setMainContentIsNull as setContextMenuMainContentIsNull, setBookmarkIsNull as setContextMenuBookmarkIsNull, setFolderIsNull as setContextMenuFolderIsNull, setInitBookmarkEditor, setSaveBookmark, setBookmarkEditErrorHide, setEmptyBookmarkEdit, setToggleSvgOrImage } from "./contextMenu.js";
+import { setCreateCard as setContextMenuCreateCard, setShowNoResultsMessage, setMainContentIsNull as setContextMenuMainContentIsNull, setBookmarkIsNull as setContextMenuBookmarkIsNull, setFolderIsNull as setContextMenuFolderIsNull, setInitBookmarkEditor, setSaveBookmark, setBookmarkEditErrorHide, setEmptyBookmarkEdit, setToggleSvgOrImage, setNavigateToFolder as setContextMenuNavigateToFolder } from "./contextMenu.js";
 
-// 跨模块依赖注入 - sidebar/breadcrumb/search 需要 renderBookmarks
-setSidebarRenderBookmarks(renderBookmarks);
-setRenderBookmarksRef(renderBookmarks);
+// 跨模块依赖注入 - sidebar/breadcrumb 需要跳转文件夹，search 需要渲染书签
+setSidebarNavigateToFolder(navigateToFolder);
+setBreadcrumbNavigateToFolder(navigateToFolder);
 setSearchRenderBookmarks(renderBookmarks);
 
 // 跨模块依赖注入 - contextMenu 需要渲染和编辑相关的函数
@@ -39,6 +39,7 @@ setSaveBookmark(SaveBookmark);
 setBookmarkEditErrorHide(BookmarkEditErrorHide);
 setEmptyBookmarkEdit(EmptyBookmarkEdit);
 setToggleSvgOrImage(ToggleSvgOrImage);
+setContextMenuNavigateToFolder(navigateToFolder);
 
 // 跨模块依赖注入 - bookmarkEditor 需要渲染和拖拽相关的函数
 setEditorCreateCard(createCard);
@@ -72,6 +73,8 @@ function Initialize() {
     SetCloseContextMenu();
     // 设置书签新标签页打开
     SetBookmarkNewTab();
+    // 设置是否允许拖动书签/文件夹
+    SetDragEnabled();
     // 设置是否允许拖拽到侧边栏
     SetDragToSidebar();
     // 设置文件夹图标显示模式
@@ -149,6 +152,8 @@ function Initialize() {
     (() => {
         let tab_ = null;
         let currentTab_ = null;
+        // 各搜索类型各自保留的选中项
+        const selectedByTab = {};
         // 搜索类型对应的选项
         const tabData = {
             bookmarks: ["All_bookmarks", "Current_bookmark"],
@@ -163,6 +168,8 @@ function Initialize() {
         // 切换 Tab 时更新集合按钮
         function updateCollections(tabKey, currentTab = null) {
             collections.innerHTML = "";
+            // 保存的选项不存在时回退到第一项
+            const validCurrentTab = tabData[tabKey].includes(currentTab) ? currentTab : null;
             let icons = {
                 "Google": google_svg,
                 "Baidu": baidu_svg,
@@ -195,6 +202,7 @@ function Initialize() {
                     btn.classList.remove("bg-gray-50", "hover:bg-gray-200");
 
                     currentTab_ = btn.dataset.tab;
+                    selectedByTab[tab_] = currentTab_;
 
                     // 仅用户真实点击时保存当前选中的搜索选项（初始化恢复状态时不写入，避免每次加载都触发存储配额）
                     if (e.isTrusted) {
@@ -202,19 +210,20 @@ function Initialize() {
                     }
                 }
                 // 默认选中第一项或恢复之前选中项
-                if ((currentTab === null && index === 0) || (currentTab === btn.dataset.tab)) {
+                if ((validCurrentTab === null && index === 0) || (validCurrentTab === btn.dataset.tab)) {
                     btn.click();
                 }
                 collections.appendChild(btn);
             });
         }
 
-        // 保存当前搜索选项
+        // 保存当前搜索选项（tab 为当前标签页，currentTabs 记录各标签页分别选中的选项）
         function saveSearchTab() {
             browser.storage.sync.set({
                 SearchTab: {
                     tab: tab_,
-                    currentTab: currentTab_
+                    currentTab: currentTab_,
+                    currentTabs: selectedByTab
                 }
             }).catch((error) => console.error('[index] 保存搜索选项失败:', error));
         }
@@ -234,42 +243,32 @@ function Initialize() {
 
                 tab_ = tab.dataset.tab;
 
-                // 恢复之前保存的搜索选项
-                browser.storage.sync.get('SearchTab', (data) => {
-                    if (data.SearchTab) {
-                        if (data.SearchTab.tab === tab_) {
-                            currentTab_ = data.SearchTab.currentTab;
-                        } else {
-                            currentTab_ = null;
-                        }
-                    } else {
-                        currentTab_ = null;
-                    }
-                    updateCollections(tab_, currentTab_);
-                    // 仅用户真实点击 Tab 时保存（初始化恢复时不写入）
-                    if (e.isTrusted) {
-                        saveSearchTab();
-                    }
-                });
+                // 恢复该标签页上次选中的搜索选项
+                currentTab_ = selectedByTab[tab_] || null;
+                updateCollections(tab_, currentTab_);
+                // 仅用户真实点击 Tab 时保存（初始化恢复时不写入）
+                if (e.isTrusted) {
+                    saveSearchTab();
+                }
             });
         });
 
         // 初始化搜索标签页状态
         browser.storage.sync.get('SearchTab', (data) => {
-            if (data.SearchTab) {
-                let Isdefault = true;
-                tabs.forEach((tab) => {
-                    if (tab.dataset.tab === data.SearchTab.tab) {
-                        Isdefault = false;
-                        tab.click();
-                        currentTab_ = data.SearchTab.currentTab;
-                        updateCollections(tab_, currentTab_);
-                    }
-                });
-                if (Isdefault) tabs[0]?.click();
-            } else {
-                tabs[0]?.click();
+            const saved = data.SearchTab;
+            if (saved) {
+                if (saved.currentTabs && typeof saved.currentTabs === 'object') {
+                    Object.assign(selectedByTab, saved.currentTabs);
+                } else if (saved.tab && saved.currentTab) {
+                    // 兼容旧数据格式：仅记录当前标签页的选中项
+                    selectedByTab[saved.tab] = saved.currentTab;
+                }
             }
+            const initialTab = saved && [...tabs].some((tab) => tab.dataset.tab === saved.tab)
+                ? saved.tab
+                : tabs[0]?.dataset.tab;
+            const initialTabElement = [...tabs].find((tab) => tab.dataset.tab === initialTab);
+            initialTabElement?.click();
         });
     })();
 

@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "URLをコピー"
     },
+    "openBookmarkFolder": {
+        "message": "フォルダを開く"
+    },
     "editBookmark": {
         "message": "ブックマークを編集"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "フォルダの位置がすべてのブックマークの先頭に移動します"
     },
+    "setDragEnabled": {
+        "message": "ブックマークのドラッグを許可"
+    },
     "setDragToSidebar": {
-        "message": "サイドバーへのドラッグを許可"
+        "message": "フォルダへのドラッグを許可"
     },
     "bookmarkAdd": {
         "message": "ブックマークを追加"

@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "Скопировать URL"
     },
+    "openBookmarkFolder": {
+        "message": "Открыть папку"
+    },
     "editBookmark": {
         "message": "Редактировать закладку"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "Папки будут перемещены в самое начало всех закладок"
     },
+    "setDragEnabled": {
+        "message": "Разрешить перетаскивание закладок"
+    },
     "setDragToSidebar": {
-        "message": "Разрешить перетаскивание на боковую панель"
+        "message": "Разрешить перетаскивание в папки"
     },
     "bookmarkAdd": {
         "message": "Добавить закладку"

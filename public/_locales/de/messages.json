@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "URL kopieren"
     },
+    "openBookmarkFolder": {
+        "message": "Übergeordneten Ordner öffnen"
+    },
     "editBookmark": {
         "message": "Lesezeichen bearbeiten"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "Ordner werden an den Anfang aller Lesezeichen verschoben"
     },
+    "setDragEnabled": {
+        "message": "Lesezeichen ziehen erlauben"
+    },
     "setDragToSidebar": {
-        "message": "Ziehen zur Seitenleiste erlauben"
+        "message": "Ziehen in Ordner erlauben"
     },
     "bookmarkAdd": {
         "message": "Lesezeichen hinzufügen"

@@ -1,4 +1,4 @@
-﻿import { setFolderIconMode } from "./state.js";
+﻿import { setFolderIconMode, setDragEnabled } from "./state.js";
 import { reRenderCurrentFolder } from "./bookmarkRender.js";
 
 // 设置右键菜单开关
@@ -20,11 +20,51 @@ export function SetCloseContextMenu() {
     }
 }
 
-// 设置是否允许书签/文件夹拖拽到侧边栏（默认关闭）
+// 同步"允许拖拽到文件夹"开关的可用状态：拖动关闭时该开关也必须关闭且不可操作
+function syncDragToSidebarAvailability(enabled) {
+    const sidebarCheckbox = document.getElementById('dragToSidebar');
+    if (!sidebarCheckbox) return;
+    sidebarCheckbox.disabled = !enabled;
+    if (!enabled) {
+        sidebarCheckbox.checked = false;
+    }
+}
+
+// 设置是否允许拖动书签/文件夹（默认允许）
+export function SetDragEnabled() {
+    const checkbox = document.getElementById('dragEnabled');
+    browser.storage.sync.get('DragEnabled', (data) => {
+        const on = data.DragEnabled !== false;
+        setDragEnabled(on);
+        checkbox.checked = on;
+        syncDragToSidebarAvailability(on);
+        if (!on) {
+            browser.storage.sync.set({ 'DragToSidebar': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
+            reRenderCurrentFolder();
+        }
+    });
+    checkbox.onclick = () => {
+        const on = checkbox.checked;
+        setDragEnabled(on);
+        browser.storage.sync.set({ 'DragEnabled': on }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
+        syncDragToSidebarAvailability(on);
+        if (!on) {
+            browser.storage.sync.set({ 'DragToSidebar': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
+        }
+        reRenderCurrentFolder();
+    };
+}
+
+// 设置是否允许书签/文件夹拖拽到文件夹（侧边栏/书签栏，默认关闭，且需先允许拖动）
 export function SetDragToSidebar() {
     const checkbox = document.getElementById('dragToSidebar');
-    browser.storage.sync.get('DragToSidebar', (data) => {
-        checkbox.checked = data.DragToSidebar === true;
+    browser.storage.sync.get(['DragEnabled', 'DragToSidebar'], (data) => {
+        const dragOn = data.DragEnabled !== false;
+        checkbox.disabled = !dragOn;
+        checkbox.checked = dragOn && data.DragToSidebar === true;
+        if (!dragOn && data.DragToSidebar === true) {
+            browser.storage.sync.set({ 'DragToSidebar': false }).catch((error) => console.error(`[settings] 保存设置失败:`, error));
+        }
     });
     checkbox.onclick = () => {
         browser.storage.sync.set({ 'DragToSidebar': checkbox.checked }).catch((error) => console.error(`[settings] 保存设置失败:`, error));

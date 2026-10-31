@@ -1,4 +1,4 @@
-import { BOOKMARK_LINK, firstLayer, BookmarkFolderActiveId, BreadcrumbsList } from "./state.js";
+import { BOOKMARK_LINK, firstLayer, BookmarkFolderActiveId, BreadcrumbsList, setSearchOldBookmarkFolderActiveId } from "./state.js";
 import { findInTree, deleteFromTree, findParentFolders, fetchFavicon } from "@/entrypoints/page/utils/utils.js";
 import { CreateSidebarItem, GetParentIdElement, renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds, updateSidebarActiveState } from "./sidebar.js";
 import db from "@/entrypoints/page/utils/IndexedDB.js";
@@ -14,7 +14,10 @@ let SaveBookmarkFn = null;
 let BookmarkEditErrorHideFn = null;
 let EmptyBookmarkEditFn = null;
 let ToggleSvgOrImageFn = null;
+let navigateToFolderFn = null;
 
+// 设置跳转文件夹的回调函数
+export function setNavigateToFolder(fn) { navigateToFolderFn = fn; }
 // 设置创建文件夹卡片的回调函数
 export function setCreateCard(fn) { createCardFn = fn; }
 // 设置显示无结果消息的回调函数
@@ -145,6 +148,28 @@ export function ContextMenu(e, link) {
                         ToggleSvgOrImageFn(true);
                     }
                 });
+        }
+        // 搜索结果跳转到书签所在目录（仅搜索结果中的书签带有 folderPath）
+        const openBookmarkFolder = document.getElementById("openBookmarkFolder");
+        if (openBookmarkFolder) {
+            const folderPath = link.folderPath;
+            if (folderPath && folderPath.length > 0) {
+                openBookmarkFolder.classList.remove("hidden");
+                openBookmarkFolder.onclick = () => {
+                    const parent = folderPath[folderPath.length - 1];
+                    if (!navigateToFolderFn(parent.id)) {
+                        return;
+                    }
+                    setSearchOldBookmarkFolderActiveId(parent.id);
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) {
+                        searchInput.value = '';
+                    }
+                };
+            } else {
+                openBookmarkFolder.classList.add("hidden");
+                openBookmarkFolder.onclick = null;
+            }
         }
     }
 

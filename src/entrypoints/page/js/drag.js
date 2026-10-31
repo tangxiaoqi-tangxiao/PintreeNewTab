@@ -1,11 +1,11 @@
 import Sortable from 'sortablejs';
-import { BookmarkFolderActiveId, firstLayer, BreadcrumbsList } from "./state.js";
+import { BookmarkFolderActiveId, firstLayer, BreadcrumbsList, dragEnabled } from "./state.js";
 import { getFolderLength, reRenderCurrentFolder } from "./bookmarkRender.js";
 import { findInTree, deleteFromTree } from "@/entrypoints/page/utils/utils.js";
 import { renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds, updateSidebarActiveState } from "./sidebar.js";
 import { closeMenu } from "./contextMenu.js";
 
-// 拖拽状态：记录拖拽期间鼠标位置与被拖拽项，用于检测是否悬浮在侧边栏文件夹上
+// 拖拽状态：记录拖拽期间鼠标位置与被拖拽项，用于检测是否悬浮在文件夹（侧边栏/书签栏）上
 let dragActive = false;
 let lastClientX = 0;
 let lastClientY = 0;
@@ -14,7 +14,8 @@ let currentDragParentId = null;      // 当前被拖拽项所在文件夹 id
 let currentDragDescendantIds = [];   // 拖拽文件夹时其所有后代 id（用于防止循环）
 let dragIsFolder = false;            // 当前拖拽的是否为文件夹
 let highlightedNavItem = null;
-let sidebarDragEnabled = false;      // 设置：是否允许拖拽到侧边栏（默认关闭）
+let highlightedFolderCard = null;
+let folderDragEnabled = false;      // 设置：是否允许拖拽到文件夹（侧边栏/书签栏，默认关闭）
 
 // 获取指定坐标下命中的侧边栏文件夹（返回 li 元素，未命中返回 null）
 function getSidebarFolderAtPoint(clientX, clientY) {
@@ -31,6 +32,34 @@ function getSidebarFolderAtPoint(clientX, clientY) {
         }
     }
     return null;
+}
+
+// 获取指定坐标下命中的主内容区文件夹卡片（返回 .folder-card 元素，未命中返回 null）
+function getFolderCardAtPoint(clientX, clientY) {
+    const elements = document.elementsFromPoint(clientX, clientY);
+    for (const el of elements) {
+        // 跳过拖拽克隆体/幽灵元素
+        if (el.classList && (el.classList.contains('sortable-ghost') || el.classList.contains('sortable-drag'))) {
+            continue;
+        }
+        const card = el.closest('.folder-card');
+        if (card) {
+            return card;
+        }
+    }
+    return null;
+}
+
+// 更新文件夹卡片的高亮遮罩
+function updateFolderDropHighlight(card) {
+    if (highlightedFolderCard === card) return;
+    if (highlightedFolderCard) {
+        highlightedFolderCard.classList.remove('folder-drop-target');
+    }
+    highlightedFolderCard = card;
+    if (card) {
+        card.classList.add('folder-drop-target');
+    }
 }
 
 // 在树中查找目标节点的父节点 id（基于 children 归属结构判断，
@@ -95,8 +124,16 @@ function onDragMove(e) {
     if (!point) return;
     lastClientX = point.clientX;
     lastClientY = point.clientY;
-    // 设置关闭时不高亮侧边栏文件夹
-    if (!sidebarDragEnabled) return;
+    // 设置关闭时不高亮任何文件夹
+    if (!folderDragEnabled) {
+        updateFolderDropHighlight(null);
+        updateSidebarDropHighlight(null);
+        return;
+    }
+    // 拖拽书签时高亮可放置的文件夹卡片（拖拽文件夹本身不处理）
+    const folderCard = dragIsFolder ? null : getFolderCardAtPoint(lastClientX, lastClientY);
+    const canDropToFolder = folderCard && folderCard.dataset.id !== currentDragParentId;
+    updateFolderDropHighlight(canDropToFolder ? folderCard : null);
     const navItem = getSidebarFolderAtPoint(lastClientX, lastClientY);
     updateSidebarDropHighlight(navItem && !isInvalidTarget(navItem) ? navItem : null);
 }
@@ -107,9 +144,10 @@ document.addEventListener('dragover', onDragMove, { passive: true });
 document.addEventListener('mousemove', onDragMove);
 document.addEventListener('touchmove', onDragMove, { passive: true });
 
-// 为书签/文件夹列表启用拖拽功能（支持拖拽到侧边栏文件夹实现移动）
+// 为书签/文件夹列表启用拖拽功能（支持拖拽到文件夹实现移动）
 // options.folder = true 时：拖拽的是文件夹（网格内可排序，也可拖到侧边栏文件夹，带防循环检查）
 export function BookmarkDrag(grid_id, options = {}) {
+    if (!dragEnabled) return;
     const isFolder = !!options.folder;
     const element = document.getElementById(grid_id);
     if (element) {
@@ -125,7 +163,7 @@ export function BookmarkDrag(grid_id, options = {}) {
                 currentDragDescendantIds = [];
                 // 每次拖拽开始时读取"允许拖拽到侧边栏"设置（默认关闭）
                 browser.storage.sync.get('DragToSidebar', (data) => {
-                    sidebarDragEnabled = data.DragToSidebar === true;
+                    folderDragEnabled = data.DragToSidebar === true;
                 });
                 if (currentDragId) {
                     const node = findInTree(firstLayer, (node) => node.id === currentDragId);
@@ -147,14 +185,16 @@ export function BookmarkDrag(grid_id, options = {}) {
                 const oe = evt.originalEvent;
                 const dropX = oe && oe.clientX != null ? oe.clientX : lastClientX;
                 const dropY = oe && oe.clientY != null ? oe.clientY : lastClientY;
-                // 先检测拖放位置是否命中侧边栏文件夹，再结束拖拽状态
+                // 先检测拖放位置是否命中侧边栏文件夹/主内容文件夹卡片，再结束拖拽状态
                 const targetNavItem = getSidebarFolderAtPoint(dropX, dropY);
+                const targetFolderCard = folderDragEnabled && !dragIsFolder ? getFolderCardAtPoint(dropX, dropY) : null;
                 dragActive = false;
                 updateSidebarDropHighlight(null);
                 highlightedNavItem = null;
+                updateFolderDropHighlight(null);
 
                 // 拖放到侧边栏文件夹上：将书签/文件夹移动到该文件夹（需设置开启）
-                if (sidebarDragEnabled && targetNavItem && !isInvalidTarget(targetNavItem) && draggedId) {
+                if (folderDragEnabled && targetNavItem && !isInvalidTarget(targetNavItem) && draggedId) {
                     const targetFolderId = targetNavItem.querySelector('a').dataset.id;
                     const draggedNode = findInTree(firstLayer, (node) => node.id === draggedId);
 
@@ -184,6 +224,27 @@ export function BookmarkDrag(grid_id, options = {}) {
                         reRenderCurrentFolder();
                     });
                     return;
+                }
+
+                // 拖放到主内容区的文件夹卡片上：将书签移动到该文件夹（需设置开启）
+                const targetFolderId = targetFolderCard && targetFolderCard.dataset.id;
+                if (folderDragEnabled && targetFolderId && draggedId && targetFolderId !== currentDragParentId) {
+                    const draggedNode = findInTree(firstLayer, (node) => node.id === draggedId);
+                    const targetFolder = findInTree(firstLayer, (node) => node.id === targetFolderId);
+                    if (draggedNode && targetFolder) {
+                        chrome.bookmarks.move(draggedId, { parentId: targetFolderId }, () => {
+                            if (chrome.runtime.lastError) {
+                                console.warn('移动书签到文件夹失败:', chrome.runtime.lastError.message);
+                                return;
+                            }
+                            deleteFromTree(firstLayer, (node) => node.id === draggedId);
+                            targetFolder.children = targetFolder.children || [];
+                            targetFolder.children.push(draggedNode);
+                            draggedNode.parentId = targetFolderId;
+                            reRenderCurrentFolder();
+                        });
+                        return;
+                    }
                 }
 
                 // 网格内位置未发生变化（如点击被误判为拖拽）：不移动、也不重建侧边栏，
@@ -243,19 +304,21 @@ export function BookmarkDrag(grid_id, options = {}) {
                             console.warn('移动书签失败:', chrome.runtime.lastError.message);
                             return;
                         }
-                        // 文件夹排序会改变侧边栏树顺序：同步本地树并重建侧边栏（保持展开状态）
-                        if (dragIsFolder) {
-                            const parentFolder = findInTree(firstLayer, (node) => node.id === BookmarkFolderActiveId);
-                            const children = parentFolder && parentFolder.children;
-                            if (children) {
-                                const idx = children.findIndex((child) => child.id === draggedId);
-                                if (idx !== -1) {
-                                    const [node] = children.splice(idx, 1);
-                                    let ins = targetIndex;
-                                    if (ins > idx) ins--;
-                                    children.splice(ins, 0, node);
-                                }
+                        // 同步本地树顺序（书签与文件夹都需要），否则切换文件夹后会恢复成旧顺序
+                        const parentFolder = findInTree(firstLayer, (node) => node.id === BookmarkFolderActiveId);
+                        const children = parentFolder && parentFolder.children;
+                        if (children) {
+                            const idx = children.findIndex((child) => child.id === draggedId);
+                            if (idx !== -1) {
+                                const [node] = children.splice(idx, 1);
+                                let ins = targetIndex;
+                                if (ins > idx) ins--;
+                                ins = Math.max(0, Math.min(ins, children.length));
+                                children.splice(ins, 0, node);
                             }
+                        }
+                        // 文件夹排序会改变侧边栏树顺序：重建侧边栏（保持展开状态）
+                        if (dragIsFolder) {
                             const expandedIds = collectExpandedFolderIds();
                             renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenu);
                             expandedIds.forEach(id => ExpandSidebarFolder(id));

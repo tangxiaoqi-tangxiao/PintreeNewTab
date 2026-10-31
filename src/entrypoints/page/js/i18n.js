@@ -26,6 +26,7 @@ export function i18n() {
     const moveFolderToFrontTip = document.getElementById('moveFolderToFrontTip');
     const copyUrl_i18n = document.getElementById('copyUrl_i18n');
     const editBookmark_i18n = document.getElementById('editBookmark_i18n');
+    const openBookmarkFolder_i18n = document.getElementById('openBookmarkFolder_i18n');
     const del_i18n = document.getElementById('del_i18n');
     const bookmarkAdd_i18n = document.getElementById('bookmarkAdd_i18n');
     const newFolder_i18n = document.getElementById('newFolder_i18n');
@@ -67,11 +68,15 @@ export function i18n() {
     setMoveFolderToFront_i18n.textContent = browser.i18n.getMessage("setMoveFolderToFront");
     moveFolderToFrontTip.setAttribute("data-tip", browser.i18n.getMessage("setMoveFolderToFrontTip"));
 
+    const setDragEnabled_i18n = document.getElementById('setDragEnabled_i18n');
+    setDragEnabled_i18n.textContent = browser.i18n.getMessage("setDragEnabled");
+
     const setDragToSidebar_i18n = document.getElementById('setDragToSidebar_i18n');
     setDragToSidebar_i18n.textContent = browser.i18n.getMessage("setDragToSidebar");
 
     copyUrl_i18n.textContent = browser.i18n.getMessage("copyUrl");
     editBookmark_i18n.textContent = browser.i18n.getMessage("editBookmark");
+    openBookmarkFolder_i18n.textContent = browser.i18n.getMessage("openBookmarkFolder");
     del_i18n.textContent = browser.i18n.getMessage("del");
     bookmarkAdd_i18n.textContent = browser.i18n.getMessage("bookmarkAdd");
     newFolder_i18n.textContent = browser.i18n.getMessage("newFolder");

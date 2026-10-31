@@ -24,8 +24,7 @@ export function renderBreadcrumbs(path) {
                     d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
             </svg >${item.title}`;
             a_element.onclick = () => {
-                const newPath = path.slice(0, index + 1);
-                renderBookmarksRef(item.children, newPath);
+                navigateToFolderRef(item.id);
             };
             li_element.appendChild(a_element);
         }
@@ -33,9 +32,9 @@ export function renderBreadcrumbs(path) {
     });
 }
 
-let renderBookmarksRef = null;
+let navigateToFolderRef = null;
 
-// 设置渲染书签的回调函数（面包屑点击时调用）
-export function setRenderBookmarksRef(fn) {
-    renderBookmarksRef = fn;
+// 设置跳转文件夹的回调函数（面包屑点击时调用）
+export function setNavigateToFolder(fn) {
+    navigateToFolderRef = fn;
 }

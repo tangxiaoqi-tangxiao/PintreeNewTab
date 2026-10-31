@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "URL 복사"
     },
+    "openBookmarkFolder": {
+        "message": "폴더 열기"
+    },
     "editBookmark": {
         "message": "북마크 편집"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "폴더 위치가 모든 북마크 맨 앞으로 이동합니다"
     },
+    "setDragEnabled": {
+        "message": "북마크 드래그 허용"
+    },
     "setDragToSidebar": {
-        "message": "사이드바로 드래그 허용"
+        "message": "폴더로 드래그 허용"
     },
     "bookmarkAdd": {
         "message": "북마크 추가"

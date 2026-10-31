@@ -69,6 +69,27 @@
     pointer-events: none;
 }
 
+/* 拖拽书签悬浮到主内容文件夹卡片时：只高亮文件夹图标区域，兼容经典图标与图标模式 */
+.folder-drop-target > :first-child {
+    position: relative;
+}
+
+.folder-drop-target > :first-child::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 0.75rem;
+    background-color: rgba(11, 166, 101, 0.16);
+    box-shadow: inset 0 0 0 1.5px rgba(11, 166, 101, 0.55);
+    pointer-events: none;
+}
+
+/* 经典文件夹本身是绿色，绿色遮罩不明显：改用白色内描边 + 绿色外圈 */
+.folder-drop-target > .folder-icon-classic::after {
+    background-color: rgba(255, 255, 255, 0.22);
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.95), 0 0 0 2px rgba(11, 166, 101, 0.6);
+}
+
 /* SortableJS 拖拽排序反馈动画（书签与文件夹通用）：
    拖动时原卡片淡出（浏览器拖拽快照跟随鼠标），并带轻微抬起阴影 */
 .sortable-ghost {

@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "複製地址"
     },
+    "openBookmarkFolder": {
+        "message": "開啟所在目錄"
+    },
     "editBookmark": {
         "message": "編輯書籤"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "資料夾位置會移動到所有書籤最前面"
     },
+    "setDragEnabled": {
+        "message": "允許拖曳書籤"
+    },
     "setDragToSidebar": {
-        "message": "允許拖曳到側邊欄"
+        "message": "允許拖曳到資料夾"
     },
     "bookmarkAdd": {
         "message": "添加书签"

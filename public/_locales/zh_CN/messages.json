@@ -68,6 +68,9 @@
     "copyUrl": {
         "message": "复制地址"
     },
+    "openBookmarkFolder": {
+        "message": "打开所在目录"
+    },
     "editBookmark": {
         "message": "编辑书签"
     },
@@ -143,8 +146,11 @@
     "setMoveFolderToFrontTip": {
         "message": "文件夹位置会移动到所有书签最前面"
     },
+    "setDragEnabled": {
+        "message": "允许拖动书签"
+    },
     "setDragToSidebar": {
-        "message": "允许拖拽到侧边栏"
+        "message": "允许拖拽到文件夹"
     },
     "bookmarkAdd": {
         "message": "添加书签"
