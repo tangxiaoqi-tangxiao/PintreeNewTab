@@ -2,7 +2,7 @@
 // 更新说明请写在 release.md，npm run build / zip 时自动同步
 export const changelogList = [
   {
-    title: "搜索、拖拽与设置优化",
+    title: "右键删除优化",
     content: [
       "1. 右键删除增加二次确认弹窗",
     ],
