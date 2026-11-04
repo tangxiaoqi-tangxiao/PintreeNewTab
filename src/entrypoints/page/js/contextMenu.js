@@ -62,24 +62,26 @@ export function ContextMenu(e, link) {
                 return;
             }
 
-            chrome.bookmarks.remove(id, function () {
-                deleteFromTree(firstLayer, (node) => {
-                    if (node.id === id) {
-                        return true;
+            OpenDeleteConfirm("deleteBookmarkConfirm", () => {
+                chrome.bookmarks.remove(id, function () {
+                    deleteFromTree(firstLayer, (node) => {
+                        if (node.id === id) {
+                            return true;
+                        }
+                    });
+                    const targetElement = e.target.closest(`.${BOOKMARK_LINK}`);
+                    if (targetElement) {
+                        targetElement.remove();
+                        if (mainContentIsNullFn()) {
+                            showNoResultsMessageFn();
+                        } else if (bookmarkIsNullFn()) {
+                            let grid_elem = document.getElementById("grid");
+                            let dividingLine_elem = document.getElementById("dividingLine");
+                            grid_elem.remove();
+                            dividingLine_elem.remove();
+                        }
                     }
                 });
-                const targetElement = e.target.closest(`.${BOOKMARK_LINK}`);
-                if (targetElement) {
-                    targetElement.remove();
-                    if (mainContentIsNullFn()) {
-                        showNoResultsMessageFn();
-                    } else if (bookmarkIsNullFn()) {
-                        let grid_elem = document.getElementById("grid");
-                        let dividingLine_elem = document.getElementById("dividingLine");
-                        grid_elem.remove();
-                        dividingLine_elem.remove();
-                    }
-                }
             });
         }
         document.getElementById("copy").onclick = () => {
@@ -245,38 +247,40 @@ function FolderMenu(e, folder) {
             if (folder.id == "" || folder.id == "0") {
                 return;
             }
-            chrome.bookmarks.removeTree(folder.id, () => {
-                if (ErrorMessageNotification()) {
-                    return;
-                }
-                // 同步更新本地书签树
-                deleteFromTree(firstLayer, (node) => {
-                    if (node.id === folder.id) {
-                        return true;
+            OpenDeleteConfirm("deleteFolderConfirm", () => {
+                chrome.bookmarks.removeTree(folder.id, () => {
+                    if (ErrorMessageNotification()) {
+                        return;
                     }
+                    // 同步更新本地书签树
+                    deleteFromTree(firstLayer, (node) => {
+                        if (node.id === folder.id) {
+                            return true;
+                        }
+                    });
+                    // 移除主内容中的文件夹卡片并处理空状态
+                    const card = e.target.closest('.folder-card');
+                    if (card) {
+                        card.remove();
+                        if (mainContentIsNullFn()) {
+                            showNoResultsMessageFn();
+                        } else if (folderIsNullFn()) {
+                            const gridElem = document.getElementById("grid_folders");
+                            const dividingLineElem = document.getElementById("dividingLine");
+                            if (gridElem) {
+                                gridElem.remove();
+                            }
+                            if (dividingLineElem) {
+                                dividingLineElem.remove();
+                            }
+                        }
+                    }
+                    // 文件夹删除会改变侧边栏树结构，重建并保持展开状态与激活路径
+                    const expandedIds = collectExpandedFolderIds();
+                    renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenu);
+                    expandedIds.forEach(id => ExpandSidebarFolder(id));
+                    updateSidebarActiveState(BreadcrumbsList);
                 });
-                // 移除主内容中的文件夹卡片并处理空状态
-                const card = e.target.closest('.folder-card');
-                if (card) {
-                    card.remove();
-                    if (mainContentIsNullFn()) {
-                        showNoResultsMessageFn();
-                    } else if (folderIsNullFn()) {
-                        const gridElem = document.getElementById("grid_folders");
-                        const dividingLineElem = document.getElementById("dividingLine");
-                        if (gridElem) {
-                            gridElem.remove();
-                        }
-                        if (dividingLineElem) {
-                            dividingLineElem.remove();
-                        }
-                    }
-                }
-                // 文件夹删除会改变侧边栏树结构，重建并保持展开状态与激活路径
-                const expandedIds = collectExpandedFolderIds();
-                renderNavigation(firstLayer, document.getElementById('navigation'), false, [], closeMenu);
-                expandedIds.forEach(id => ExpandSidebarFolder(id));
-                updateSidebarActiveState(BreadcrumbsList);
             });
         };
     }
@@ -471,6 +475,23 @@ export async function copyToClipboard(text) {
     } else {
         console.log('浏览器不支持复制到剪贴板');
     }
+}
+
+// 打开删除二次确认弹窗
+function OpenDeleteConfirm(messageKey, onConfirm) {
+    const modal = document.getElementById('deleteConfirm_modal');
+    const message = document.getElementById('deleteConfirmMessage');
+    const confirmBtn = document.getElementById('deleteConfirmBtn');
+    if (!modal || !message || !confirmBtn) {
+        return;
+    }
+    closeMenu();
+    message.textContent = browser.i18n.getMessage(messageKey);
+    confirmBtn.onclick = () => {
+        modal.close();
+        onConfirm();
+    };
+    modal.showModal();
 }
 
 // 显示错误消息提示

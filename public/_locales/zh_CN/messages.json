@@ -190,5 +190,17 @@
     },
     "ai_search": {
         "message": "AI 搜索"
+    },
+    "deleteConfirmTitle": {
+        "message": "确认删除"
+    },
+    "deleteBookmarkConfirm": {
+        "message": "删除后无法恢复，确定要删除该书签吗？"
+    },
+    "deleteFolderConfirm": {
+        "message": "删除文件夹会同时删除其中的所有书签，且无法恢复，确定要继续吗？"
+    },
+    "confirm": {
+        "message": "确定"
     }
 }

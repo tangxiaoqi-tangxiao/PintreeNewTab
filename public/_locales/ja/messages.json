@@ -190,5 +190,17 @@
     },
     "ai_search": {
         "message": "AI検索"
+    },
+    "deleteConfirmTitle": {
+        "message": "削除の確認"
+    },
+    "deleteBookmarkConfirm": {
+        "message": "削除すると元に戻せません。このブックマークを削除してもよろしいですか？"
+    },
+    "deleteFolderConfirm": {
+        "message": "フォルダを削除すると中のすべてのブックマークも削除され、元に戻せません。続行しますか？"
+    },
+    "confirm": {
+        "message": "確定"
     }
 }

@@ -190,5 +190,17 @@
     },
     "ai_search": {
         "message": "AI 搜索"
+    },
+    "deleteConfirmTitle": {
+        "message": "確認刪除"
+    },
+    "deleteBookmarkConfirm": {
+        "message": "刪除後無法復原，確定要刪除該書籤嗎？"
+    },
+    "deleteFolderConfirm": {
+        "message": "刪除資料夾會同時刪除其中的所有書籤，且無法復原，確定要繼續嗎？"
+    },
+    "confirm": {
+        "message": "確定"
     }
 }

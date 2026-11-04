@@ -190,5 +190,17 @@
     },
     "ai_search": {
         "message": "AI 검색"
+    },
+    "deleteConfirmTitle": {
+        "message": "삭제 확인"
+    },
+    "deleteBookmarkConfirm": {
+        "message": "삭제 후에는 복구할 수 없습니다. 이 북마크를 삭제하시겠습니까?"
+    },
+    "deleteFolderConfirm": {
+        "message": "폴더를 삭제하면 폴더 안의 모든 북마크도 함께 삭제되며 복구할 수 없습니다. 계속하시겠습니까?"
+    },
+    "confirm": {
+        "message": "확인"
     }
 }

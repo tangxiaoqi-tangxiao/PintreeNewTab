@@ -449,6 +449,20 @@
     </div>
 </dialog>
 
+<!-- 删除确认 -->
+<dialog class="modal" id="deleteConfirm_modal">
+    <div class="modal-box max-w-sm">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100"><span id="deleteConfirmTitle_i18n"></span></h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2" id="deleteConfirmMessage"></p>
+        <div class="flex justify-end gap-2 mt-6">
+            <form method="dialog">
+                <button class="btn"><span class="cancel_i18n"></span></button>
+            </form>
+            <button class="btn btn-error" id="deleteConfirmBtn"><span id="deleteConfirmBtn_i18n"></span></button>
+        </div>
+    </div>
+</dialog>
+
 <!-- 书签鼠标右键 -->
 <ul class="menu menu-md hidden absolute z-50 shadow-lg bg-base-200 rounded-box w-56" id="context-menu">
     <li id="copy">

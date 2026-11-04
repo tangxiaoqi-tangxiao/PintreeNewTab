@@ -190,5 +190,17 @@
     },
     "ai_search": {
         "message": "AI Search"
+    },
+    "deleteConfirmTitle": {
+        "message": "Confirm Delete"
+    },
+    "deleteBookmarkConfirm": {
+        "message": "This cannot be undone. Are you sure you want to delete this bookmark?"
+    },
+    "deleteFolderConfirm": {
+        "message": "Deleting the folder will also delete all bookmarks inside it and cannot be undone. Continue?"
+    },
+    "confirm": {
+        "message": "Confirm"
     }
 }

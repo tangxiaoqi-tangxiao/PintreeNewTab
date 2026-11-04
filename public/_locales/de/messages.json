@@ -190,5 +190,17 @@
     },
     "ai_search": {
         "message": "KI-Suche"
+    },
+    "deleteConfirmTitle": {
+        "message": "Löschen bestätigen"
+    },
+    "deleteBookmarkConfirm": {
+        "message": "Dieser Vorgang kann nicht rückgängig gemacht werden. Möchten Sie dieses Lesezeichen wirklich löschen?"
+    },
+    "deleteFolderConfirm": {
+        "message": "Beim Löschen des Ordners werden auch alle darin enthaltenen Lesezeichen gelöscht. Dies kann nicht rückgängig gemacht werden. Fortfahren?"
+    },
+    "confirm": {
+        "message": "Bestätigen"
     }
 }
