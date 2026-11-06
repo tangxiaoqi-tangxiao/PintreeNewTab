@@ -147,7 +147,7 @@
         "message": "Ordner werden an den Anfang aller Lesezeichen verschoben"
     },
     "setDragEnabled": {
-        "message": "Lesezeichen ziehen erlauben"
+        "message": "Lesezeichen oder Ordner ziehen erlauben"
     },
     "setDragToSidebar": {
         "message": "Ziehen in Ordner erlauben"

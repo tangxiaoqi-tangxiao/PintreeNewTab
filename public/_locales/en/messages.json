@@ -147,7 +147,7 @@
         "message": "Folders will be moved to the very front of all bookmarks"
     },
     "setDragEnabled": {
-        "message": "Allow dragging bookmarks"
+        "message": "Allow dragging bookmarks or folders"
     },
     "setDragToSidebar": {
         "message": "Allow drag to folders"

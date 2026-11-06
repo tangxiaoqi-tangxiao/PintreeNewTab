@@ -21,7 +21,7 @@ import { i18n } from "./i18n.js";
 import { ShowChangelog } from "./changelog.js";
 import { BookmarkDrag } from "./drag.js";
 import { BookmarkFolderActiveId, BOOKMARK_LINK } from "./state.js";
-import { setCreateCard as setContextMenuCreateCard, setShowNoResultsMessage, setMainContentIsNull as setContextMenuMainContentIsNull, setBookmarkIsNull as setContextMenuBookmarkIsNull, setFolderIsNull as setContextMenuFolderIsNull, setInitBookmarkEditor, setSaveBookmark, setBookmarkEditErrorHide, setEmptyBookmarkEdit, setToggleSvgOrImage, setNavigateToFolder as setContextMenuNavigateToFolder } from "./contextMenu.js";
+import { setCreateCard as setContextMenuCreateCard, setShowNoResultsMessage, setMainContentIsNull as setContextMenuMainContentIsNull, setBookmarkIsNull as setContextMenuBookmarkIsNull, setFolderIsNull as setContextMenuFolderIsNull, setInitBookmarkEditor, setSaveBookmark, setBookmarkEditErrorHide, setEmptyBookmarkEdit, setToggleSvgOrImage, setNavigateToFolder as setContextMenuNavigateToFolder, setBookmarkDrag as setContextMenuBookmarkDrag } from "./contextMenu.js";
 
 // 跨模块依赖注入 - sidebar/breadcrumb 需要跳转文件夹，search 需要渲染书签
 setSidebarNavigateToFolder(navigateToFolder);
@@ -40,6 +40,7 @@ setBookmarkEditErrorHide(BookmarkEditErrorHide);
 setEmptyBookmarkEdit(EmptyBookmarkEdit);
 setToggleSvgOrImage(ToggleSvgOrImage);
 setContextMenuNavigateToFolder(navigateToFolder);
+setContextMenuBookmarkDrag(BookmarkDrag);
 
 // 跨模块依赖注入 - bookmarkEditor 需要渲染和拖拽相关的函数
 setEditorCreateCard(createCard);

@@ -147,7 +147,7 @@
         "message": "資料夾位置會移動到所有書籤最前面"
     },
     "setDragEnabled": {
-        "message": "允許拖曳書籤"
+        "message": "允許拖曳書籤或資料夾"
     },
     "setDragToSidebar": {
         "message": "允許拖曳到資料夾"

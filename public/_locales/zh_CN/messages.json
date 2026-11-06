@@ -147,7 +147,7 @@
         "message": "文件夹位置会移动到所有书签最前面"
     },
     "setDragEnabled": {
-        "message": "允许拖动书签"
+        "message": "允许拖动书签或文件夹"
     },
     "setDragToSidebar": {
         "message": "允许拖拽到文件夹"

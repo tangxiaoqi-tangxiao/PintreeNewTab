@@ -147,7 +147,7 @@
         "message": "フォルダの位置がすべてのブックマークの先頭に移動します"
     },
     "setDragEnabled": {
-        "message": "ブックマークのドラッグを許可"
+        "message": "ブックマークまたはフォルダのドラッグを許可"
     },
     "setDragToSidebar": {
         "message": "フォルダへのドラッグを許可"

@@ -15,6 +15,7 @@ let BookmarkEditErrorHideFn = null;
 let EmptyBookmarkEditFn = null;
 let ToggleSvgOrImageFn = null;
 let navigateToFolderFn = null;
+let BookmarkDragFn = null;
 
 // 设置跳转文件夹的回调函数
 export function setNavigateToFolder(fn) { navigateToFolderFn = fn; }
@@ -38,6 +39,8 @@ export function setBookmarkEditErrorHide(fn) { BookmarkEditErrorHideFn = fn; }
 export function setEmptyBookmarkEdit(fn) { EmptyBookmarkEditFn = fn; }
 // 设置切换SVG/图片显示的回调函数
 export function setToggleSvgOrImage(fn) { ToggleSvgOrImageFn = fn; }
+// 设置启用拖拽的回调函数
+export function setBookmarkDrag(fn) { BookmarkDragFn = fn; }
 
 // 读取配置判断是否启用右键菜单，未禁用则显示
 export function ContextMenuSet(e, link) {
@@ -392,6 +395,8 @@ export function ContextMenuBlank(e) {
                                     container.insertBefore(dividingLine, container.firstChild);
                                     container.insertBefore(folderSection, container.firstChild);
                                 }
+                                // 新建的文件夹网格此前不存在，需要单独初始化拖拽排序
+                                BookmarkDragFn && BookmarkDragFn(folderSection.id, { folder: true });
                             } else {
                                 folderSection.appendChild(createCardFn(Name, newFolder.id, [], newNode, newFolder.parentId));
                             }

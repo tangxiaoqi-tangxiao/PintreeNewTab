@@ -1,5 +1,5 @@
 import Sortable from 'sortablejs';
-import { BookmarkFolderActiveId, firstLayer, BreadcrumbsList, dragEnabled } from "./state.js";
+import { BookmarkFolderActiveId, firstLayer, BreadcrumbsList, dragEnabled, BOOKMARK_LINK } from "./state.js";
 import { getFolderLength, reRenderCurrentFolder } from "./bookmarkRender.js";
 import { findInTree, deleteFromTree } from "@/entrypoints/page/utils/utils.js";
 import { renderNavigation, ExpandSidebarFolder, collectExpandedFolderIds, updateSidebarActiveState } from "./sidebar.js";
@@ -155,6 +155,8 @@ export function BookmarkDrag(grid_id, options = {}) {
             animation: 150,
             // 书签与文件夹网格均支持网格内排序
             sort: true,
+            // 显式限定可拖拽元素，保证动态新增的书签/文件夹卡片也能被识别
+            draggable: isFolder ? '.folder-card' : '.' + BOOKMARK_LINK,
             onStart: function (evt) {
                 dragActive = true;
                 dragIsFolder = isFolder;

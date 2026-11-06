@@ -147,7 +147,7 @@
         "message": "폴더 위치가 모든 북마크 맨 앞으로 이동합니다"
     },
     "setDragEnabled": {
-        "message": "북마크 드래그 허용"
+        "message": "북마크 또는 폴더 드래그 허용"
     },
     "setDragToSidebar": {
         "message": "폴더로 드래그 허용"
